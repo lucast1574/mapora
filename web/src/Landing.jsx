@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Logo, Button } from "./ui";
 import { api, appURL, number } from "./client";
+import BrandArrival, { createBrandArrival } from "./BrandArrival";
 gsap.registerPlugin(ScrollTrigger);
 const samples = {
   search: {
@@ -133,32 +134,68 @@ export default function Landing() {
     const frame = requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => cancelAnimationFrame(frame);
   }, [plans]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      let cleanupArrival = () => {};
       const scope = gsap.context(() => {
-        gsap
-          .timeline({ defaults: { ease: "power3.out" } })
-          .from(".landing-nav > *", {
-            y: -18,
-            opacity: 0,
-            stagger: 0.08,
-            duration: 0.65,
-          })
+        const entrance = gsap.timeline({ defaults: { ease: "power3.out" } });
+        const arrival = createBrandArrival(root.current);
+        const contentAt = arrival ? 1.8 : 0;
+        if (arrival) {
+          entrance.add(arrival, 0);
+          const events = [
+            "keydown",
+            "pointerdown",
+            "wheel",
+            "touchstart",
+            "focusin",
+          ];
+          const dismiss = () => {
+            entrance.progress(1);
+            gsap.set(root.current.querySelector(".brand-arrival"), {
+              display: "none",
+            });
+            cleanupArrival();
+          };
+          cleanupArrival = () =>
+            events.forEach((event) =>
+              window.removeEventListener(event, dismiss, true),
+            );
+          events.forEach((event) =>
+            window.addEventListener(event, dismiss, {
+              capture: true,
+              passive: true,
+            }),
+          );
+          arrival.eventCallback("onComplete", cleanupArrival);
+        }
+        entrance
+          .addLabel("content", contentAt)
+          .from(
+            ".landing-nav > *",
+            {
+              y: -18,
+              opacity: 0,
+              stagger: 0.08,
+              duration: 0.65,
+            },
+            "content",
+          )
           .from(
             ".hero-copy h1,.hero-copy p,.hero-copy .hero-actions",
             { y: 35, opacity: 0, stagger: 0.13, duration: 0.9 },
-            "-.25",
+            "content+=.12",
           )
           .from(
             ".map-stage",
             { y: 45, opacity: 0, rotation: 2, duration: 1 },
-            "-.9",
+            "content+=.05",
           )
           .from(
             ".coordinate-card",
             { y: 25, opacity: 0, duration: 0.7 },
-            "-.25",
+            "content+=.4",
           );
         gsap.to(".map-streets", {
           y: -16,
@@ -186,16 +223,21 @@ export default function Landing() {
           ease: "sine.inOut",
         });
         gsap.utils.toArray(".reveal-group").forEach((section) => {
-          gsap.fromTo(section.querySelectorAll(".reveal"), {
-            y: 32, opacity: 0,
-          }, {
-            y: 0,
-            opacity: 1,
-            clearProps: "opacity,transform",
-            stagger: 0.1,
-            duration: 0.8,
-            scrollTrigger: { trigger: section, start: "top 86%", once: true },
-          });
+          gsap.fromTo(
+            section.querySelectorAll(".reveal"),
+            {
+              y: 32,
+              opacity: 0,
+            },
+            {
+              y: 0,
+              opacity: 1,
+              clearProps: "opacity,transform",
+              stagger: 0.1,
+              duration: 0.8,
+              scrollTrigger: { trigger: section, start: "top 86%", once: true },
+            },
+          );
         });
         gsap.from(".route-stop", {
           y: 25,
@@ -220,12 +262,16 @@ export default function Landing() {
           scrollTrigger: { trigger: ".landing-footer", start: "top 90%" },
         });
       }, root);
-      return () => scope.revert();
+      return () => {
+        cleanupArrival();
+        scope.revert();
+      };
     });
     return () => mm.revert();
   }, []);
   return (
     <div className="landing" ref={root}>
+      <BrandArrival />
       <header className="landing-nav">
         <Logo />
         <nav aria-label="Principal">
@@ -255,8 +301,7 @@ export default function Landing() {
                 Crea tu API key <ArrowRight size={18} />
               </a>
               <span>
-                1.000 peticiones al mes, gratis.{" "}
-                <br />
+                1.000 peticiones al mes, gratis. <br />
                 Sin tarjeta para empezar.
               </span>
             </div>
