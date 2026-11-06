@@ -58,7 +58,7 @@ export default function Legal() {
         </p>
         <p>
           Si eliges Google, Firebase verifica tu identidad y Mapora recibe tu
-          identificador, nombre y correo verificado para vincular tu cuenta.
+          identificador, nombre, foto y correo verificado para vincular tu cuenta.
           Conservamos la sesión de Mapora mediante una cookie HttpOnly; no
           guardamos credenciales de Google en el navegador.
         </p>

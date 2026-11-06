@@ -66,3 +66,5 @@ CREATE TABLE IF NOT EXISTS map_views (
  payload jsonb NOT NULL,expires_at timestamptz NOT NULL
 );
 CREATE INDEX IF NOT EXISTS map_views_expiry ON map_views(expires_at);
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url text NOT NULL DEFAULT '';
