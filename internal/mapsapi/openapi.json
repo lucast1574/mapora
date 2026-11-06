@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Nexode Maps API",
-    "version": "1.0.0",
-    "description": "Public Go API for Google Maps link resolution, address search and reverse geocoding. No authentication. CORS allows all origins. Geographic results come from Photon/OpenStreetMap; the shared public Photon provider has usage limits and no availability guarantee.",
+    "title": "Mapora API",
+    "version": "2.0.0",
+    "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap.",
     "license": {
       "name": "Private application; geographic data © OpenStreetMap contributors (ODbL)",
       "url": "https://www.openstreetmap.org/copyright"
@@ -14,7 +14,14 @@
       "url": "https://maps-api.nexode.app"
     }
   ],
-  "security": [],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "BearerAuth": []
+    }
+  ],
   "paths": {
     "/health": {
       "get": {
@@ -22,14 +29,25 @@
         "responses": {
           "200": {
             "description": "Healthy"
+          },
+          "401": {
+            "description": "Missing, invalid or revoked API key"
+          },
+          "403": {
+            "description": "Account suspended or missing scope"
+          },
+          "429": {
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
           }
-        }
+        },
+        "security": [],
+        "description": ""
       }
     },
     "/v1/search": {
       "get": {
         "summary": "Search addresses, streets, districts and places",
-        "description": "Global OSM search with autocomplete, optional country filters, bounding box and location bias. Names use the local OSM language by default. No authentication.",
+        "description": "Global OSM search with autocomplete, optional country filters, bounding box and location bias. Names use the local OSM language by default. Requires an API key.",
         "parameters": [
           {
             "name": "q",
@@ -143,6 +161,15 @@
           },
           "504": {
             "description": "Timeout"
+          },
+          "401": {
+            "description": "Missing, invalid or revoked API key"
+          },
+          "403": {
+            "description": "Account suspended or missing scope"
+          },
+          "429": {
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
           }
         }
       }
@@ -196,6 +223,15 @@
           },
           "504": {
             "description": "Timeout"
+          },
+          "401": {
+            "description": "Missing, invalid or revoked API key"
+          },
+          "403": {
+            "description": "Account suspended or missing scope"
+          },
+          "429": {
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
           }
         }
       }
@@ -257,6 +293,15 @@
           },
           "504": {
             "description": "Timeout"
+          },
+          "401": {
+            "description": "Missing, invalid or revoked API key"
+          },
+          "403": {
+            "description": "Account suspended or missing scope"
+          },
+          "429": {
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
           }
         }
       },
@@ -307,8 +352,18 @@
           },
           "504": {
             "description": "Timeout"
+          },
+          "401": {
+            "description": "Missing, invalid or revoked API key"
+          },
+          "403": {
+            "description": "Account suspended or missing scope"
+          },
+          "429": {
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
           }
-        }
+        },
+        "description": ""
       }
     }
   },
@@ -390,6 +445,18 @@
             "type": "number"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Mapora API key"
       }
     }
   }
