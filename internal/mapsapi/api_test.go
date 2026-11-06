@@ -216,3 +216,14 @@ func TestOpenAPIAndHealth(t *testing.T) {
 		t.Fatal(value)
 	}
 }
+
+func TestStreetResultIncludesStreetNameInStreetAddress(t *testing.T) {
+	var f feature
+	if err := json.Unmarshal([]byte(`{"geometry":{"coordinates":[-77.03,-12.12]},"properties":{"type":"street","name":"Avenida José Larco","city":"Miraflores","country":"Perú","osm_type":"W","osm_id":569493965}}`), &f); err != nil {
+		t.Fatal(err)
+	}
+	p, ok := f.place()
+	if !ok || p.Street != "Avenida José Larco" || !strings.HasPrefix(p.StreetAddress, "Avenida José Larco, ") || p.Address != p.StreetAddress {
+		t.Fatal(p)
+	}
+}

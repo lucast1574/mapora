@@ -38,6 +38,7 @@ type feature struct {
 		Coordinates []float64 `json:"coordinates"`
 	} `json:"geometry"`
 	Properties struct {
+		Type        string `json:"type"`
 		Name        string `json:"name"`
 		Street      string `json:"street"`
 		HouseNumber string `json:"housenumber"`
@@ -63,13 +64,17 @@ func (f feature) place() (Place, bool) {
 		return Place{}, false
 	}
 	p := f.Properties
+	// Photon represents a street itself with name/type, without a street property.
+	if p.Street == "" && p.Type == "street" {
+		p.Street = p.Name
+	}
 	street := strings.TrimSpace(p.Street + " " + p.HouseNumber)
 	address := joinUnique(street, p.Locality, p.District, p.City, p.County, p.State, p.Postcode, p.Country)
 	if address == "" {
 		address = p.Name
 	}
 	return Place{ID: fmt.Sprintf("osm:%s:%d", p.OSMType, p.OSMID), PlaceName: p.Name,
-		Address: joinUnique(p.Name, address), StreetAddress: address, Latitude: lat, Longitude: lng,
+		Address: displayAddress(p.Name, address), StreetAddress: address, Latitude: lat, Longitude: lng,
 		Street: p.Street, HouseNumber: p.HouseNumber, District: p.District, City: p.City, State: p.State,
 		Country: p.Country, CountryCode: p.CountryCode, Postcode: p.Postcode,
 		GoogleMapsLink: fmt.Sprintf("https://www.google.com/maps?q=%.6f,%.6f", lat, lng), Source: "photon", Attribution: attribution}, true
