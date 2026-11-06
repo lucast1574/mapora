@@ -221,7 +221,7 @@ func (p *Platform) reset(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err == nil {
-		_, err = tx.ExecContext(r.Context(), "UPDATE users SET password_hash=$1 WHERE id=$2 AND NOT disabled", string(hash), id)
+		_, err = tx.ExecContext(r.Context(), "UPDATE users SET password_hash=$1,email_verified=true WHERE id=$2 AND NOT disabled", string(hash), id)
 	}
 	if err == nil {
 		_, err = tx.ExecContext(r.Context(), "DELETE FROM sessions WHERE user_id=$1", id)

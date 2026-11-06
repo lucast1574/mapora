@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS sessions (
  token_hash text PRIMARY KEY,user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
  expires_at timestamptz NOT NULL
 );
+ALTER TABLE users ADD COLUMN IF NOT EXISTS firebase_uid text;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified boolean NOT NULL DEFAULT false;
+CREATE UNIQUE INDEX IF NOT EXISTS users_firebase_uid ON users(firebase_uid) WHERE firebase_uid IS NOT NULL;
 CREATE INDEX IF NOT EXISTS session_expiry ON sessions(expires_at);
 CREATE TABLE IF NOT EXISTS api_keys (
  id text PRIMARY KEY,user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -58,3 +61,8 @@ CREATE TABLE IF NOT EXISTS audit_events (
  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,actor_id text NOT NULL REFERENCES users(id),
  action text NOT NULL,target_id text NOT NULL,created_at timestamptz NOT NULL DEFAULT now()
 );
+CREATE TABLE IF NOT EXISTS map_views (
+ token_hash text PRIMARY KEY,key_id text NOT NULL REFERENCES api_keys(id) ON DELETE CASCADE,
+ payload jsonb NOT NULL,expires_at timestamptz NOT NULL
+);
+CREATE INDEX IF NOT EXISTS map_views_expiry ON map_views(expires_at);

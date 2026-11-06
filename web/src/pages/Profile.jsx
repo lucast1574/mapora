@@ -81,7 +81,11 @@ export default function Profile({ user }) {
       <div className="settings-row">
         <div>
           <h2>Cambiar contraseña</h2>
-          <p>Usa una contraseña única, de 12 a 72 caracteres.</p>
+          <p>
+            Usa una contraseña única, de 12 a 72 caracteres. Si entras con
+            Google y aún no tienes una contraseña, puedes{" "}
+            <a href="/forgot">definirla por correo</a>.
+          </p>
         </div>
         <form onSubmit={password}>
           <label>

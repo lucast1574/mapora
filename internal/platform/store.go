@@ -20,6 +20,7 @@ var schema string
 type Config struct {
 	DatabaseURL, AdminEmail, AdminPassword, AppURL, SiteURL, StripeKey, StripeWebhookSecret, StripePortalConfig, ResendKey, MailFrom string
 	StripePrices                                                                                                                     map[string]string
+	FirebaseProjectID, FirebaseAPIKey, FirebaseAppID                                                                                 string
 }
 type Platform struct {
 	db         *sql.DB
@@ -27,6 +28,7 @@ type Platform struct {
 	geo        httpHandler
 	stripeHTTP httpClient
 	mailHTTP   httpClient
+	google     googleVerifier
 }
 
 func token(prefix string) string {
@@ -68,7 +70,14 @@ func New(ctx context.Context, c Config, geo httpHandler) (*Platform, error) {
 		db.Close()
 		return nil, err
 	}
-	p := &Platform{db: db, config: c, geo: geo, stripeHTTP: defaultHTTP(), mailHTTP: defaultHTTP()}
+	p := &Platform{db: db, config: c, geo: geo, stripeHTTP: defaultHTTP(), mailHTTP: defaultHTTP(), google: googleVerifier{client: defaultHTTP(), certURL: "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"}}
+	// The explicitly configured bootstrap owner is already trusted by deployment.
+	if c.AdminEmail != "" {
+		if _, err = db.ExecContext(ctx, "UPDATE users SET email_verified=true WHERE email=$1 AND role='admin'", c.AdminEmail); err != nil {
+			db.Close()
+			return nil, err
+		}
+	}
 	for plan, price := range c.StripePrices {
 		if price != "" {
 			if _, err = db.ExecContext(ctx, "UPDATE plans SET stripe_price_id=$1 WHERE id=$2 AND stripe_price_id=''", price, plan); err != nil {
@@ -87,7 +96,7 @@ func New(ctx context.Context, c Config, geo httpHandler) (*Platform, error) {
 			if e != nil {
 				return nil, e
 			}
-			_, err = db.ExecContext(ctx, "INSERT INTO users(id,email,name,password_hash,role,plan_id) VALUES($1,$2,'Lucas',$3,'admin','internal') ON CONFLICT(email) DO NOTHING", token("usr_"), c.AdminEmail, string(hashed))
+			_, err = db.ExecContext(ctx, "INSERT INTO users(id,email,name,password_hash,role,plan_id,email_verified) VALUES($1,$2,'Lucas',$3,'admin','internal',true) ON CONFLICT(email) DO NOTHING", token("usr_"), c.AdminEmail, string(hashed))
 		}
 		if err != nil {
 			return nil, fmt.Errorf("bootstrap admin: %w", err)

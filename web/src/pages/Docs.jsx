@@ -163,6 +163,30 @@ export default function Docs() {
         </div>
       </div>
       <div className="docs-notes">
+        <h2>Mapas con interfaz gráfica</h2>
+        <p>
+          Con el permiso <code>maps</code>, llama a <code>POST /v1/maps</code>{" "}
+          para obtener un enlace y un <code>embedHtml</code> listo para
+          insertar. También puedes{" "}
+          <a href="/app/maps">generarlo desde el panel</a>.
+        </p>
+        <pre>{`curl "https://maps-api.nexode.app/v1/maps" \\\n  -H "X-API-Key: TU_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"title":"Mi ubicación","center":{"latitude":-12.119906,"longitude":-77.028971},"zoom":14,"expiresIn":604800}'`}</pre>
+        <p>
+          El visor permite zoom, desplazamiento, pantalla completa y hasta 20{" "}
+          <code>markers</code> con <code>latitude</code>, <code>longitude</code>{" "}
+          y <code>label</code>. El centro conserva las coordenadas enviadas. El
+          enlace caduca en 7 días por defecto; <code>expiresIn</code> acepta
+          entre 60 segundos y 30 días. Si omites el centro, se toma el primer
+          marcador.
+        </p>
+        <p>
+          Generar el mapa consume una petición; sus visualizaciones y los
+          mosaicos cartográficos no suman peticiones a Mapora. Quien recibe el
+          enlace puede ver ese mapa, pero no obtiene la API key. Revocar la
+          clave o suspender la cuenta invalida sus enlaces. El fondo usa los
+          mosaicos públicos de OpenStreetMap, con disponibilidad limitada; no
+          incluye uso sin conexión ni descarga masiva.
+        </p>
         <h2>Cuotas, respuestas y datos</h2>
         <p>
           Las cabeceras <code>X-Quota-Limit</code>,{" "}

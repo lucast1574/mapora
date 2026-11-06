@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import Landing from "./Landing";
 import Dashboard from "./Dashboard";
@@ -6,6 +6,7 @@ import Auth from "./Auth";
 import { Logo } from "./ui";
 import "./style.css";
 const path = location.pathname;
+const MapViewer = lazy(() => import("./maps/MapViewer"));
 if (location.hostname === "app-mapora.nexode.app" && path === "/")
   location.replace("/app");
 function Legal() {
@@ -56,6 +57,20 @@ function Legal() {
           refiere a cuota mensual, no a capacidad concurrente o disponibilidad
           ilimitada.
         </p>
+        <h2>Mapas compartidos e inicio con Google</h2>
+        <p>
+          Los mapas compartidos guardan centro, marcadores, etiquetas y
+          caducidad. Cualquier persona que tenga el enlace puede ver esas
+          ubicaciones hasta que caduque o se revoque la clave que lo creó. El
+          navegador solicita el fondo cartográfico a OpenStreetMap, que recibe
+          la dirección IP y la zona consultada.
+        </p>
+        <p>
+          Si eliges Google, Firebase verifica tu identidad y Mapora recibe tu
+          identificador, nombre y correo verificado para vincular tu cuenta.
+          Conservamos la sesión de Mapora mediante una cookie HttpOnly; no
+          guardamos credenciales de Google en el navegador.
+        </p>
         <h2>Información que conservamos</h2>
         <p>
           Guardamos nombre, correo, contraseña cifrada mediante hash, sesiones,
@@ -87,7 +102,17 @@ function Legal() {
   );
 }
 createRoot(document.getElementById("root")).render(
-  path.startsWith("/app") ? (
+  path.startsWith("/map/") ? (
+    <Suspense
+      fallback={
+        <div className="page-loading" role="status">
+          Cargando mapa…
+        </div>
+      }
+    >
+      <MapViewer />
+    </Suspense>
+  ) : path.startsWith("/app") ? (
     <Dashboard />
   ) : ["/login", "/signup", "/forgot", "/reset"].includes(path) ? (
     <Auth />

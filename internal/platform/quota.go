@@ -12,6 +12,8 @@ import (
 
 func geoEndpoint(path string) string {
 	switch path {
+	case "/v1/maps":
+		return "maps"
 	case "/v1/search", "/search":
 		return "search"
 	case "/v1/reverse", "/reverse":
@@ -160,6 +162,11 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(204)
 		return
 	}
+	if r.URL.Path == "/v1/maps" && r.Method != "POST" {
+		w.Header().Set("Allow", "POST, OPTIONS")
+		problem(w, 405, "method", "Usa POST para generar un mapa.")
+		return
+	}
 	raw := r.Header.Get("X-API-Key")
 	if raw == "" {
 		raw = strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
@@ -199,6 +206,10 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Quota-Reset", a.End.Format(time.RFC3339))
 	start := time.Now()
 	writer := &statusWriter{ResponseWriter: w}
-	p.geo.ServeHTTP(writer, r)
+	if endpoint == "maps" {
+		p.createMap(writer, r, a)
+	} else {
+		p.geo.ServeHTTP(writer, r)
+	}
 	p.finish(a, endpoint, writer.status, time.Since(start))
 }

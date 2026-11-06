@@ -112,3 +112,18 @@ para probar. GET /health comprueba el proceso, no la disponibilidad de Photon.
 
 Logo original: web/public/logo.svg, un trazo M dentro de un marcador geográfico.
 General Sans de Fontshare, autoalojada. GSAP/ScrollTrigger con prefers-reduced-motion.
+
+
+## Mapas interactivos
+
+`POST /v1/maps` requiere una API key con el nuevo permiso `maps`. Las claves existentes conservan sus permisos; crea una clave con «Crear mapas interactivos» para habilitar esta operación. Envía `center: {latitude, longitude}`, `title`, `zoom` (1–19), `markers` (hasta 20 puntos) y `expiresIn` en segundos (60–2.592.000; por defecto 604.800). Si no envías marcadores, se coloca uno en el centro; si no envías centro, se usa el primer marcador. La proyección admite latitudes entre ±85.05112878 y longitudes entre ±180, incluidos ceros.
+
+La respuesta devuelve `url`, `embedHtml`, `expiresAt` y el mapa normalizado. La URL usa un token aleatorio de lectura de un solo mapa; en PostgreSQL se guarda su hash. Nunca incluye la API key. El visor `/map/{token}` puede incrustarse en otras páginas; las páginas de cuenta mantienen su protección contra iframes. La vista se consulta con `GET /v1/maps/view/{token}` y revisa caducidad, revocación de clave y suspensión del usuario en cada carga. Crear el mapa consume una petición. Las cargas y las interacciones del visor no suman peticiones a Mapora.
+
+El panel `/app/maps` permite generar, previsualizar y copiar el enlace/iframe. Leaflet 1.9.4 muestra mosaicos estándar de OpenStreetMap solicitados directamente por el navegador con atribución visible, caché HTTP normal y Referer de origen. No hay precarga masiva, modo sin conexión, satélite, rutas ni geolocalización del dispositivo. Los mosaicos públicos tienen disponibilidad best-effort y su propia política: https://operations.osmfoundation.org/policies/tiles/.
+
+## Google mediante Firebase
+
+Proyecto independiente: `mapora-platform`. Configura `FIREBASE_PROJECT_ID`, `FIREBASE_API_KEY` y `FIREBASE_APP_ID`; estos valores de cliente se entregan desde `/console/auth/providers`. Habilita Google y autoriza los dominios de Mapora en Firebase. El cliente abre Google mediante Firebase Auth, usa persistencia solo en memoria y entrega el ID token a `POST /console/google`; después descarta la sesión Firebase. Mapora emite su cookie HttpOnly habitual.
+
+El servidor verifica RS256 con certificados públicos cacheados de Google, issuer y audience del proyecto, expiración, emisión, auth_time, UID, correo verificado y proveedor `google.com`. Vincula por UID/correo a la cuenta existente, conservando rol, plan, claves y uso; usuarios nuevos son `user`/Free. La primera vinculación invalida las sesiones y enlaces de recuperación anteriores. Para cuentas de correo aún no verificado también desactiva la contraseña anterior, evitando conservar credenciales de una preinscripción ajena; el propietario puede definir una contraseña mediante recuperación por correo. El administrador bootstrap y quienes verificaron correo por recuperación conservan su contraseña. No se conceden privilegios a partir del correo enviado por el navegador.

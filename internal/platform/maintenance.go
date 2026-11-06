@@ -19,7 +19,7 @@ func (p *Platform) Maintain(ctx context.Context) {
 	}
 }
 func (p *Platform) maintainOnce(ctx context.Context) {
-	for _, query := range []string{"DELETE FROM sessions WHERE expires_at<now()", "DELETE FROM reset_tokens WHERE expires_at<now()", "DELETE FROM auth_attempts WHERE window_start<now()-interval '2 days'", "DELETE FROM rate_buckets WHERE minute<now()-interval '2 days'", "DELETE FROM usage_events WHERE created_at<now()-interval '180 days'"} {
+	for _, query := range []string{"DELETE FROM map_views WHERE expires_at<now()", "DELETE FROM sessions WHERE expires_at<now()", "DELETE FROM reset_tokens WHERE expires_at<now()", "DELETE FROM auth_attempts WHERE window_start<now()-interval '2 days'", "DELETE FROM rate_buckets WHERE minute<now()-interval '2 days'", "DELETE FROM usage_events WHERE created_at<now()-interval '180 days'"} {
 		_, _ = p.db.ExecContext(ctx, query)
 	}
 	rows, err := p.db.QueryContext(ctx, "SELECT id FROM users WHERE customer_id IS NOT NULL AND subscription_status IN ('active','trialing','past_due') ORDER BY billing_end LIMIT 1000")

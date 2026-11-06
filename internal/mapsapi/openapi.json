@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Mapora API",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap.",
     "license": {
       "name": "Private application; geographic data © OpenStreetMap contributors (ODbL)",
@@ -365,6 +365,138 @@
         },
         "description": ""
       }
+    },
+    "/v1/maps": {
+      "post": {
+        "summary": "Create an interactive, embeddable map",
+        "description": "Requires maps scope. Consumes one admitted API request. Returns an opaque public view capability, never an API key. Opening/panning/zooming the viewer does not consume additional Mapora requests. Links expire (7 days by default, 30 maximum) and become unavailable when the issuing key is revoked or the account disabled. Public OpenStreetMap raster tiles are loaded directly by the browser, with no availability guarantee.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "anyOf": [
+                  {
+                    "required": [
+                      "center"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "markers"
+                    ]
+                  }
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 160
+                  },
+                  "center": {
+                    "$ref": "#/components/schemas/MapPoint"
+                  },
+                  "markers": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "$ref": "#/components/schemas/MapPoint"
+                    }
+                  },
+                  "zoom": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 19,
+                    "default": 14
+                  },
+                  "expiresIn": {
+                    "type": "integer",
+                    "minimum": 60,
+                    "maximum": 2592000,
+                    "default": 604800
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Map created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "embedHtml": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "map": {
+                      "type": "object"
+                    },
+                    "usage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid coordinates, markers, zoom or lifetime"
+          },
+          "401": {
+            "description": "Missing or invalid API key"
+          },
+          "403": {
+            "description": "maps scope required or suspended account"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Storage or quota unavailable"
+          }
+        }
+      }
+    },
+    "/v1/maps/view/{token}": {
+      "get": {
+        "summary": "Read the map described by a view capability",
+        "security": [],
+        "description": "Public only to holders of the opaque map token. Does not grant geocoding, account access or key access. Does not consume quota. No-store responses preserve revocation and expiry checks.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Map specification and expiry"
+          },
+          "404": {
+            "description": "Invalid, expired, revoked or suspended map"
+          },
+          "503": {
+            "description": "Storage unavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -443,6 +575,30 @@
           },
           "tookMs": {
             "type": "number"
+          }
+        }
+      },
+      "MapPoint": {
+        "type": "object",
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "minimum": -85.05112878,
+            "maximum": 85.05112878
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 160
           }
         }
       }

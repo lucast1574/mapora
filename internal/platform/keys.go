@@ -39,13 +39,13 @@ func (p *Platform) createKey(w http.ResponseWriter, r *http.Request) {
 		Name   string
 		Scopes []string
 	}
-	if decode(w, r, &in) != nil || len(strings.TrimSpace(in.Name)) < 2 || len(in.Name) > 80 || len(in.Scopes) == 0 || len(in.Scopes) > 3 {
+	if decode(w, r, &in) != nil || len(strings.TrimSpace(in.Name)) < 2 || len(in.Name) > 80 || len(in.Scopes) == 0 || len(in.Scopes) > 4 {
 		problem(w, 400, "invalid", "Pon un nombre a la clave y elige al menos un permiso.")
 		return
 	}
 	seen := map[string]bool{}
 	for _, s := range in.Scopes {
-		if (s != "search" && s != "reverse" && s != "resolve") || seen[s] {
+		if (s != "search" && s != "reverse" && s != "resolve" && s != "maps") || seen[s] {
 			problem(w, 400, "scope", "Permisos inválidos.")
 			return
 		}

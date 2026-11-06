@@ -165,6 +165,7 @@ export default function Keys() {
                 ["search", "Buscar direcciones"],
                 ["resolve", "Resolver enlaces de Maps"],
                 ["reverse", "Obtener dirección desde coordenadas"],
+                ["maps", "Crear mapas interactivos"],
               ].map(([v, label]) => (
                 <label className="check-row" key={v}>
                   <input

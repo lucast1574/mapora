@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   ArrowUpRight,
+  MapPinned,
 } from "lucide-react";
 import { Logo, Notice } from "./ui";
 import { useData } from "./useData";
@@ -20,10 +21,12 @@ import Billing from "./pages/Billing";
 import Profile from "./pages/Profile";
 import Docs from "./pages/Docs";
 import Admin from "./pages/Admin";
+import Maps from "./pages/Maps";
 import { siteURL } from "./client";
 const links = [
   ["", "Resumen", LayoutDashboard],
   ["keys", "API keys", KeyRound],
+  ["maps", "Mapas", MapPinned],
   ["usage", "Consumo", ChartNoAxesCombined],
   ["billing", "Plan y facturación", CreditCard],
   ["docs", "Documentación", BookOpen],
@@ -119,6 +122,8 @@ export default function Dashboard() {
         <main className="app-sheet">
           {page === "keys" ? (
             <Keys />
+          ) : page === "maps" ? (
+            <Maps />
           ) : page === "usage" ? (
             <Usage />
           ) : page === "billing" ? (
