@@ -255,9 +255,9 @@ export default function Landing() {
                 Crea tu API key <ArrowRight size={18} />
               </a>
               <span>
-                1.000 peticiones al mes, gratis.
+                1.000 peticiones al mes, gratis.{" "}
                 <br />
-                 Sin tarjeta para empezar.
+                Sin tarjeta para empezar.
               </span>
             </div>
           </div>
