@@ -18,9 +18,11 @@ export default function Auth() {
   async function withGoogle() {
     setBusy(true);
     setError("");
+    setMessage("Elige tu cuenta en la ventana de Google.");
     try {
       const { googleIdentity } = await import("./google-client");
       const idToken = await googleIdentity(google);
+      setMessage("Verificando tu acceso a Mapora…");
       await api("/console/google", "POST", { idToken });
       location.assign("/app");
     } catch (e) {
@@ -41,6 +43,7 @@ export default function Auth() {
       );
     } finally {
       setBusy(false);
+      setMessage("");
     }
   }
   const title =
