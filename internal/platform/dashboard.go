@@ -37,7 +37,7 @@ func (p *Platform) plans(w http.ResponseWriter, r *http.Request) {
 		v.Visible = true
 		out = append(out, v)
 	}
-	reply(w, 200, map[string]any{"plans": out, "currency": "USD", "billing": "monthly", "unit": "Una consulta geográfica completada (HTTP 2xx) equivale a una unidad, incluso si utiliza caché."})
+	reply(w, 200, map[string]any{"plans": out, "currency": "USD", "billing": "monthly", "unit": "Cada petición autenticada admitida consume una unidad, incluso desde caché o si devuelve un error. Los rechazos por clave, permisos, cuota o velocidad no consumen unidades."})
 }
 func (p *Platform) usage(w http.ResponseWriter, r *http.Request) {
 	u := current(r)
