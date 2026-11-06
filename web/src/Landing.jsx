@@ -129,6 +129,11 @@ export default function Landing() {
       .catch(() => {});
   }, []);
   useEffect(() => {
+    // Pricing arrives asynchronously and changes the scroll positions below it.
+    const frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(frame);
+  }, [plans]);
+  useEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       const scope = gsap.context(() => {
@@ -181,9 +186,12 @@ export default function Landing() {
           ease: "sine.inOut",
         });
         gsap.utils.toArray(".reveal-group").forEach((section) => {
-          gsap.from(section.querySelectorAll(".reveal"), {
-            y: 32,
-            opacity: 0,
+          gsap.fromTo(section.querySelectorAll(".reveal"), {
+            y: 32, opacity: 0,
+          }, {
+            y: 0,
+            opacity: 1,
+            clearProps: "opacity,transform",
             stagger: 0.1,
             duration: 0.8,
             scrollTrigger: { trigger: section, start: "top 86%", once: true },
@@ -485,7 +493,7 @@ export default function Landing() {
             <br />
             tu próxima idea?
           </h2>
-          <a className="button reveal" href={`${appURL}/signup`}>
+          <a className="button" href={`${appURL}/signup`}>
             Dale un punto de partida <ArrowRight size={18} />
           </a>
         </section>
