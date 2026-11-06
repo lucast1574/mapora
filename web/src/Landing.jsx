@@ -249,7 +249,7 @@ export default function Landing() {
               <span>
                 1.000 peticiones al mes, gratis.
                 <br />
-                Sin tarjeta para empezar.
+                 Sin tarjeta para empezar.
               </span>
             </div>
           </div>

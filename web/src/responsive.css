@@ -53,7 +53,7 @@
   .mini-key,
   .mini-usage {
     padding: 16px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .mini-account .avatar {
     display: none;
@@ -228,7 +228,7 @@
   .integration-code pre {
     grid-column: 1;
     grid-row: auto;
-    font-size: 12px;
+    font-size: 13px;
   }
   .integration-code > a {
     margin-top: 6px;
@@ -470,7 +470,7 @@
   }
   .endpoint-row > span:last-child {
     grid-column: 2;
-    font-size: 12px;
+    font-size: 13px;
   }
   .chart-heading {
     flex-wrap: wrap;
@@ -521,7 +521,7 @@
   .map-label-top {
     right: 7%;
     top: 17%;
-    font-size: 12px;
+    font-size: 13px;
     padding: 8px 10px;
   }
   .coordinate-card {
@@ -534,11 +534,11 @@
     font-size: 21px;
   }
   .coordinate-card small {
-    font-size: 12px;
+    font-size: 13px;
   }
   .map-caption {
     padding: 18px 20px;
-    font-size: 12px;
+    font-size: 13px;
     gap: 12px;
   }
   .map-caption > span {
@@ -573,17 +573,17 @@
     min-height: 365px;
   }
   .specimen-top {
-    font-size: 11px;
+    font-size: 13px;
     gap: 10px;
   }
   .response-specimen pre {
-    font-size: 12px;
+    font-size: 13px;
   }
   .request-path {
-    font-size: 11px;
+    font-size: 13px;
   }
   .specimen-bottom {
-    font-size: 11px;
+    font-size: 13px;
   }
   .journey {
     padding: 64px 20px;
@@ -618,7 +618,7 @@
     font-size: 23px;
   }
   .integration-code pre {
-    font-size: 11px;
+    font-size: 13px;
   }
   .price-column {
     padding: 28px 24px;
@@ -667,10 +667,10 @@
   }
   .footer-links > a:last-child {
     flex-basis: 100%;
-    font-size: 12px;
+    font-size: 13px;
   }
   .footer-bottom {
-    font-size: 11px;
+    font-size: 13px;
     gap: 20px;
   }
   .app-sheet {
@@ -681,7 +681,7 @@
     padding: 24px 18px;
   }
   .app-topbar {
-    font-size: 12px;
+    font-size: 13px;
   }
   .page-title h1 {
     font-size: 25px;
@@ -715,10 +715,10 @@
     font-size: 34px;
   }
   .metrics-strip small {
-    font-size: 11px;
+    font-size: 13px;
   }
   .metrics-strip > div > span {
-    font-size: 12px;
+    font-size: 13px;
   }
   .overview-grid {
     gap: 20px;
@@ -752,7 +752,7 @@
     margin-top: 24px;
   }
   .period-note p {
-    font-size: 12px;
+    font-size: 13px;
     margin-bottom: 0;
   }
   .section-heading {
@@ -763,7 +763,7 @@
     font-size: 18px;
   }
   .section-heading > span {
-    font-size: 11px;
+    font-size: 13px;
   }
   .key-summary {
     padding: 16px;
@@ -806,14 +806,14 @@
   }
   .docs-intro pre {
     padding: 18px;
-    font-size: 11px;
+    font-size: 13px;
   }
   .code-guide pre {
-    font-size: 11px;
+    font-size: 13px;
     padding: 18px;
   }
   .playground-response pre {
-    font-size: 11px;
+    font-size: 13px;
   }
   .admin-metrics {
     gap: 24px 16px;
@@ -822,20 +822,20 @@
     font-size: 30px;
   }
   .admin-metrics span {
-    font-size: 12px;
+    font-size: 13px;
   }
   .admin-plan-row {
     gap: 12px;
     padding: 20px 0;
   }
   .admin-plan-row > span {
-    font-size: 12px;
+    font-size: 13px;
   }
   .auth-brand {
     padding: 24px 20px;
   }
   .auth-brand > a:last-child {
-    font-size: 12px;
+    font-size: 13px;
   }
   .auth-brand .brand {
     font-size: 26px;

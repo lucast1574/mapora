@@ -72,7 +72,7 @@ function Metrics({ data }) {
         </strong>
         <small>
           {data.unlimited
-            ? "Scale sin cuota mensual"
+            ? "Sin cuota mensual"
             : `De ${number(data.plan.monthlyLimit)} incluidas`}
         </small>
       </div>
