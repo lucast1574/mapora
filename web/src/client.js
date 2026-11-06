@@ -17,12 +17,9 @@ export async function api(path, method = "GET", body, headers = {}) {
   }
   return data;
 }
-export const appURL = location.hostname.endsWith("nexode.app")
-  ? "https://app-mapora.nexode.app"
-  : "";
-export const siteURL = location.hostname.endsWith("nexode.app")
-  ? "https://mapora.nexode.app"
-  : "";
+const localDevelopment = import.meta.env.DEV && typeof location !== "undefined";
+export const appURL = localDevelopment ? "" : "https://app-mapora.nexode.app";
+export const siteURL = localDevelopment ? "" : "https://mapora.nexode.app";
 export const number = (value) =>
   new Intl.NumberFormat("es-PE").format(value || 0);
 export const date = (value) =>

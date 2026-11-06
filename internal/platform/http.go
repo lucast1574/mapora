@@ -76,6 +76,9 @@ func (p *Platform) Handler() http.Handler {
 	mux.HandleFunc("POST /stripe/webhook", p.webhook)
 	mux.HandleFunc("GET /v1/maps/view/{token}", p.mapView)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/console/") || strings.HasPrefix(r.URL.Path, "/v1/") || strings.HasPrefix(r.URL.Path, "/map/") || r.URL.Path == "/stripe/webhook" || r.URL.Path == "/health" || r.URL.Path == "/openapi.json" || geoEndpoint(r.URL.Path) != "" {
+			w.Header().Set("X-Robots-Tag", "noindex, nofollow, noarchive")
+		}
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "same-origin")
 		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://checkout.stripe.com https://billing.stripe.com")

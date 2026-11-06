@@ -8,7 +8,7 @@ export function Logo({ large = false }) {
       href="/"
       aria-label="Mapora, inicio"
     >
-      <img src="/logo.svg" alt="" />
+      <img src="/logo.svg" alt="" width="36" height="40" />
       <span>
         mapora<span className="brand-dot">.</span>
       </span>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "vite": "8.3.6"
   }
 }

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Play, ArrowUpRight } from "lucide-react";
-import { api } from "../client";
+import { api, appURL } from "../client";
 import { Button, Notice, Select } from "../ui";
-export default function Docs() {
+export default function Docs({ heading = "De la dirección al dato" }) {
   const [operation, setOperation] = useState("search"),
     [key, setKey] = useState(""),
     [input, setInput] = useState("Miraflores"),
@@ -38,7 +38,7 @@ export default function Docs() {
     <>
       <div className="page-title">
         <div>
-          <h1>De la dirección al dato</h1>
+          <h1>{heading}</h1>
           <p>Integra una operación y prueba una petición real.</p>
         </div>
         <a
@@ -81,6 +81,12 @@ export default function Docs() {
             "/v1/resolve",
             "url, includeAddress",
             "Resuelve un enlace de Google Maps. includeAddress:false omite la consulta de dirección.",
+          ],
+          [
+            "POST",
+            "/v1/maps",
+            "center, markers, title, zoom, expiresIn",
+            "Genera un enlace y un iframe para mostrar un mapa interactivo. Requiere el permiso maps.",
           ],
         ].map(([method, path, params, description]) => (
           <article key={path}>
@@ -168,7 +174,7 @@ export default function Docs() {
           Con el permiso <code>maps</code>, llama a <code>POST /v1/maps</code>{" "}
           para obtener un enlace y un <code>embedHtml</code> listo para
           insertar. También puedes{" "}
-          <a href="/app/maps">generarlo desde el panel</a>.
+          <a href={`${appURL}/app/maps`}>generarlo desde el panel</a>.
         </p>
         <pre>{`curl "https://maps-api.nexode.app/v1/maps" \\\n  -H "X-API-Key: TU_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"title":"Mi ubicación","center":{"latitude":-12.119906,"longitude":-77.028971},"zoom":14,"expiresIn":604800}'`}</pre>
         <p>

@@ -127,3 +127,18 @@ El panel `/app/maps` permite generar, previsualizar y copiar el enlace/iframe. L
 Proyecto independiente: `mapora-platform`. Configura `FIREBASE_PROJECT_ID`, `FIREBASE_API_KEY` y `FIREBASE_APP_ID`; estos valores de cliente se entregan desde `/console/auth/providers`. Habilita Google y autoriza los dominios de Mapora en Firebase. El cliente abre Google mediante Firebase Auth, usa persistencia solo en memoria y entrega el ID token a `POST /console/google`; después descarta la sesión Firebase. Mapora emite su cookie HttpOnly habitual.
 
 El servidor verifica RS256 con certificados públicos cacheados de Google, issuer y audience del proyecto, expiración, emisión, auth_time, UID, correo verificado y proveedor `google.com`. Vincula por UID/correo a la cuenta existente, conservando rol, plan, claves y uso; usuarios nuevos son `user`/Free. La primera vinculación invalida las sesiones y enlaces de recuperación anteriores. Para cuentas de correo aún no verificado también desactiva la contraseña anterior, evitando conservar credenciales de una preinscripción ajena; el propietario puede definir una contraseña mediante recuperación por correo. El administrador bootstrap y quienes verificaron correo por recuperación conservan su contraseña. No se conceden privilegios a partir del correo enviado por el navegador.
+
+
+## SEO y páginas públicas
+
+`npm --prefix web run build` compila el cliente y prerenderiza las siete páginas públicas con React en el proceso de construcción. El servidor Go sirve HTML completo y el cliente lo hidrata; el panel, acceso y visor compartido utilizan un shell separado con `noindex`. No hay un servidor Node en producción.
+
+Rutas canónicas: `/`, `/documentacion`, `/api-busqueda-direcciones`, `/resolver-enlaces-google-maps`, `/geocodificacion-inversa`, `/mapas-interactivos` y `/legal`. El proceso genera títulos y descripciones propios, canonical, Open Graph/Twitter, JSON-LD de Organization/WebSite/WebPage/Service y migas de navegación. No se añaden reseñas, métricas de clientes ni valoraciones ficticias. La API de mapas se documenta sin prometer disponibilidad de Photon o los mosaicos públicos de OpenStreetMap.
+
+`/sitemap.xml` solo contiene esas páginas. `robots.txt` referencia el sitemap; las páginas de cuenta y mapas compartidos permanecen rastreables para que se pueda leer su `noindex`, mientras las rutas de API y consola no se anuncian para el rastreo. Las rutas inexistentes devuelven HTTP 404 real. Las variantes con barra final y los duplicados públicos del host de API/panel redirigen a `https://mapora.nexode.app`; las rutas y métodos de la API conservan su comportamiento.
+
+`GOOGLE_SITE_VERIFICATION` añade la etiqueta de verificación de Search Console al HTML público. Su valor es un token público de verificación, no una credencial de inicio de sesión. Las imágenes sociales PNG 1200×630 y los iconos se generan con Resvg a partir de los SVG de marca; la tarjeta conserva los trazados de General Sans sin depender de fuentes externas. Las fuentes de interfaz están alojadas localmente.
+
+Para un cambio futuro de dominio, actualizar juntos `web/src/public/content.js`, `web/src/client.js`, los hosts canónicos de `web/embed.go`, configuración de despliegue y proveedores de autenticación/pagos, redirecciones, verificación y sitemap de Search Console. No eliminar las URLs antiguas sin preparar las redirecciones correspondientes.
+
+Validación: ejecutar primero el build del frontend y después `go test ./...` y `go vet ./...`. Los tests del paquete `web` comprueban HTML prerenderizado, metadatos únicos, JSON-LD válido, sitemap, exclusión de páginas privadas, redirecciones, HEAD, escape de la etiqueta de verificación y 404 reales.

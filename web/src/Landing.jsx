@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Logo, Button } from "./ui";
 import { api, appURL, number } from "./client";
+import { ResourceLinks } from "./public/PublicPage";
 import BrandArrival, { createBrandArrival } from "./BrandArrival";
 gsap.registerPlugin(ScrollTrigger);
 const samples = {
@@ -278,6 +279,7 @@ export default function Landing() {
           <a href="#producto">Producto</a>
           <a href="#integracion">Integración</a>
           <a href="#planes">Planes</a>
+          <a href="/documentacion">Documentación</a>
         </nav>
         <a className="nav-login" href={`${appURL}/login`}>
           Iniciar sesión
@@ -293,8 +295,8 @@ export default function Landing() {
               en tu código.
             </h1>
             <p>
-              Direcciones, lugares y enlaces de Google Maps. Conéctalos a tu
-              aplicación con una sola API.
+              API de mapas, búsqueda de direcciones y enlaces de Google Maps.
+              Conéctalos a tu aplicación con una sola API.
             </p>
             <div className="hero-actions">
               <a className="button" href={`${appURL}/signup`}>
@@ -350,6 +352,10 @@ export default function Landing() {
               <CodeSample sample={samples[selected]} />
             </div>
           </div>
+        </section>
+        <section className="landing-resources">
+          <h2>Una API. Cuatro formas de conectar.</h2>
+          <ResourceLinks />
         </section>
         <section className="journey reveal-group" id="integracion">
           <div className="section-intro reveal">
@@ -418,7 +424,7 @@ export default function Landing() {
           <div className="integration-code reveal" data-ui>
             <span>Una cabecera. Tres posibilidades.</span>
             <pre>{`fetch("https://maps-api.nexode.app/v1/search?q=Lima", {\n  headers: { "X-API-Key": "TU_API_KEY" }\n})`}</pre>
-            <a href={`${appURL}/app/docs`}>
+            <a href="/documentacion">
               Ver documentación <ArrowUpRight size={18} />
             </a>
           </div>
@@ -549,7 +555,7 @@ export default function Landing() {
         </div>
         <div className="footer-links">
           <Logo />
-          <a href={`${appURL}/app/docs`}>Documentación</a>
+          <a href="/documentacion">Documentación</a>
           <a href={`${appURL}/login`}>Mi cuenta</a>
           <a href="/legal">Condiciones y privacidad</a>
           <a
