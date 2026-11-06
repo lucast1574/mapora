@@ -1,0 +1,396 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Nexode Maps API",
+    "version": "1.0.0",
+    "description": "Public Go API for Google Maps link resolution, address search and reverse geocoding. No authentication. CORS allows all origins. Geographic results come from Photon/OpenStreetMap; the shared public Photon provider has usage limits and no availability guarantee.",
+    "license": {
+      "name": "Private application; geographic data © OpenStreetMap contributors (ODbL)",
+      "url": "https://www.openstreetmap.org/copyright"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://maps-api.nexode.app"
+    }
+  ],
+  "security": [],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Local process health (does not test providers)",
+        "responses": {
+          "200": {
+            "description": "Healthy"
+          }
+        }
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "summary": "Search addresses, streets, districts and places",
+        "description": "Global OSM search with autocomplete, optional country filters, bounding box and location bias. Names use the local OSM language by default. No authentication.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "Text, 2 to 200 characters",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum results, 1 to 20 (default 8)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "countrycodes",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated country codes: pe,co,ec",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "required": false,
+            "description": "Latitude of preferred search area",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": false,
+            "description": "Longitude of preferred search area; lon is also accepted",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "bbox",
+            "in": "query",
+            "required": false,
+            "description": "Restrict to minLng,minLat,maxLng,maxLat",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "description": "es/local (local names), en, de or fr",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search candidates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Location"
+                      }
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "cached": {
+                      "type": "boolean"
+                    },
+                    "tookMs": {
+                      "type": "integer"
+                    },
+                    "attribution": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Google Maps link could not be resolved"
+          },
+          "502": {
+            "description": "Geocoding provider unavailable"
+          },
+          "503": {
+            "description": "Service busy"
+          },
+          "504": {
+            "description": "Timeout"
+          }
+        }
+      }
+    },
+    "/v1/reverse": {
+      "get": {
+        "summary": "Reverse geocode coordinates",
+        "description": "Top-level coordinates remain the requested point. matchedLatitude/matchedLongitude identify the nearby OSM feature. The nearest feature may be a POI, not an exact street address.",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "description": "Latitude",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": true,
+            "description": "Longitude; lon is also accepted",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Google Maps link could not be resolved"
+          },
+          "502": {
+            "description": "Geocoding provider unavailable"
+          },
+          "503": {
+            "description": "Service busy"
+          },
+          "504": {
+            "description": "Timeout"
+          }
+        }
+      }
+    },
+    "/v1/resolve": {
+      "post": {
+        "summary": "Resolve a Google Maps link",
+        "description": "Keeps the exact Google pin and selected venue name. includeAddress defaults to true. If address lookup fails, coordinates remain available and addressStatus is unavailable. includeAddress=false skips reverse geocoding. cached refers to the link/pin cache. resolved_url retains the expanded URL. This does not call Google Places.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "maxLength": 4096
+                  },
+                  "includeAddress": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              },
+              "example": {
+                "url": "https://www.google.com/maps/place/Plaza+Mayor/@-12.0453,-77.0309,17z",
+                "includeAddress": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Google Maps link could not be resolved"
+          },
+          "502": {
+            "description": "Geocoding provider unavailable"
+          },
+          "503": {
+            "description": "Service busy"
+          },
+          "504": {
+            "description": "Timeout"
+          }
+        }
+      },
+      "get": {
+        "summary": "Resolve via query parameters",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "description": "Google Maps HTTPS link",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeAddress",
+            "in": "query",
+            "required": false,
+            "description": "Whether to reverse geocode the pin",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Google Maps link could not be resolved"
+          },
+          "502": {
+            "description": "Geocoding provider unavailable"
+          },
+          "503": {
+            "description": "Service busy"
+          },
+          "504": {
+            "description": "Timeout"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Location": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "placeName": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "street": {
+            "type": "string"
+          },
+          "houseNumber": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          },
+          "googleMapsLink": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "resolved_url": {
+            "type": "string"
+          },
+          "addressStatus": {
+            "type": "string"
+          },
+          "matchedPlaceName": {
+            "type": "string"
+          },
+          "matchedLatitude": {
+            "type": "number"
+          },
+          "matchedLongitude": {
+            "type": "number"
+          },
+          "cached": {
+            "type": "boolean"
+          },
+          "tookMs": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
