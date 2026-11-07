@@ -59,7 +59,7 @@ export const pages = {
       },
       {
         title: "Cuándo consultar una dirección",
-        text: "includeAddress es true por defecto. Cuando está activado, Mapora intenta añadir una referencia de dirección desde Photon/OpenStreetMap. Esa referencia puede corresponder a un lugar cercano y no sustituye las coordenadas del pin original. Si tu flujo solo necesita el nombre y el punto, envía includeAddress:false para omitir esta consulta externa. La latencia depende del enlace, la caché y los proveedores; no hay un tiempo de respuesta garantizado.",
+        text: "includeAddress es true por defecto. Cuando está activado, Mapora intenta añadir una referencia de dirección desde Photon/OpenStreetMap. Esa referencia puede corresponder a un lugar cercano y no sustituye las coordenadas del pin original. Si tu flujo solo necesita el nombre y el punto, envía includeAddress:false para omitir esta consulta de dirección. La latencia depende del enlace, la caché y los proveedores; no hay un tiempo de respuesta garantizado.",
       },
       {
         title: "Cómo tratar una dirección no disponible",

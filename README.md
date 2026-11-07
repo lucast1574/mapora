@@ -76,11 +76,13 @@ pagada nueva automáticamente. No se guardan números de tarjeta.
 
 ## Proveedor geográfico
 
-PHOTON_BASE_URL configura el índice externo. Por defecto https://photon.komoot.io,
-que permite uso moderado y no da SLA: https://github.com/komoot/photon#demo-server.
-La API y la plataforma están alojadas en Nexode; el índice geográfico no está
-autoalojado. Para mayor volumen, reemplazarlo por una instancia propia/contratada.
-El tráfico frío al proveedor tiene dos inicios por segundo y cuatro pendientes.
+PHOTON_BASE_URL configura el motor geográfico. Producción utiliza una instancia
+privada de Photon 1.3.0 con el índice mundial de OpenStreetMap en el mismo servidor,
+sin puertos ni dominio públicos. Configuración y mantenimiento: `infra/photon/`.
+PHOTON_MIN_INTERVAL_MS permite ajustar el ritmo: 50 ms para el motor privado,
+con cuatro consultas simultáneas como máximo. El valor por defecto sigue siendo
+500 ms para no aumentar el tráfico si se configura el demo público de Photon.
+El demo https://photon.komoot.io no ofrece SLA; no es la dependencia de producción.
 Caché en memoria: 24 MiB/2048 entradas; búsqueda 15 minutos, pin/dirección 24 horas.
 Se pierde al reiniciar. Solicitudes concurrentes iguales comparten trabajo.
 

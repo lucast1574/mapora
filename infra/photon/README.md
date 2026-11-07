@@ -19,3 +19,11 @@ Conservar un respaldo del valor anterior de `PHOTON_BASE_URL` para rollback. Una
 Las actualizaciones son una operación de mantenimiento explícita. Descargar un dump compatible nuevo en staging, verificar su checksum, extraer en una carpeta nueva y probarlo antes de intercambiarlo por el índice activo. Nunca descomprimir encima de un índice abierto. Conservar el índice anterior hasta validar el nuevo. No se ejecutan actualizaciones o descargas automáticas sobre producción.
 
 Fuentes: https://github.com/komoot/photon y https://download1.graphhopper.com/public/ . Datos © OpenStreetMap contributors, ODbL 1.0; conservar atribución en las respuestas y visores.
+
+## Prueba del motor privado
+
+Desde el servidor con permisos Docker, ejecutar `python3 infra/photon/smoke.py`.
+Comprueba estado, búsquedas filtradas en PE/CO/GB/JP e inversa. Solo utiliza
+ubicaciones públicas de prueba; no necesita claves de clientes. Guarda evidencia
+en `/var/lib/mapora-photon/smoke-results.json`. Después del cambio de conexión,
+validar también los endpoints públicos con una clave temporal de la API.
