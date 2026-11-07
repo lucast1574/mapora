@@ -21,6 +21,14 @@ type API struct {
 }
 
 func New(provider string) (*API, error) {
+	return NewWithInterval(provider, 500*time.Millisecond)
+}
+
+// Public providers stay paced by default; a private engine can opt into a shorter interval.
+func NewWithInterval(provider string, interval time.Duration) (*API, error) {
+	if interval < 10*time.Millisecond || interval > 5*time.Second {
+		return nil, errors.New("PHOTON_MIN_INTERVAL_MS must be between 10 and 5000")
+	}
 	u, err := url.Parse(provider)
 	if err != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" {
 		return nil, errors.New("invalid PHOTON_BASE_URL")
@@ -30,7 +38,7 @@ func New(provider string) (*API, error) {
 	transport.MaxConnsPerHost = 16
 	return &API{provider: strings.TrimRight(provider, "/"), upstream: &http.Client{Transport: transport, Timeout: 7 * time.Second},
 		google: &http.Client{Transport: transport, Timeout: 7 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }},
-		cache:  newCache(), providerSlots: make(chan struct{}, 4), providerPace: time.NewTicker(500 * time.Millisecond), requests: make(chan struct{}, 64)}, nil
+		cache:  newCache(), providerSlots: make(chan struct{}, 4), providerPace: time.NewTicker(interval), requests: make(chan struct{}, 64)}, nil
 }
 
 func (s *API) Handler() http.Handler {

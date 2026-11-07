@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -24,7 +25,16 @@ func main() {
 	if provider == "" {
 		provider = "https://photon.komoot.io"
 	}
-	api, err := mapsapi.New(provider)
+	interval := 500
+	if raw := os.Getenv("PHOTON_MIN_INTERVAL_MS"); raw != "" {
+		parsed, err := strconv.Atoi(raw)
+		if err != nil {
+			slog.Error("invalid PHOTON_MIN_INTERVAL_MS")
+			os.Exit(1)
+		}
+		interval = parsed
+	}
+	api, err := mapsapi.NewWithInterval(provider, time.Duration(interval)*time.Millisecond)
 	if err != nil {
 		slog.Error("configuration failed", "error", err)
 		os.Exit(1)
