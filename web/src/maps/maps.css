@@ -4,6 +4,22 @@
   gap: 36px;
   margin-top: 36px;
 }
+.maps-builder label,
+.coverage-builder label,
+.coverage-check label {
+  margin: 0;
+}
+.maps-builder .address-search > label,
+.coverage-builder .address-search > label,
+.coverage-check .address-search > label {
+  margin: 0 0 8px;
+}
+.map-settings form > .map-usage-note {
+  margin: 0 !important;
+}
+.map-settings form h2 {
+  margin: 8px 0 0;
+}
 .map-draft .map-canvas {
   height: 480px;
 }

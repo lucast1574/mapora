@@ -205,6 +205,7 @@ export default function Coverage() {
                   : "Puedes mover el mapa sin añadir puntos."}
             </p>
             <MapCanvas
+              showSelectionMarker={false}
               spec={spec}
               onSelect={
                 drawing && !busy
@@ -384,6 +385,7 @@ export default function Coverage() {
                 </Button>
               </div>
               <MapCanvas
+                showSelectionMarker={false}
                 spec={{
                   center: {
                     longitude: viewedZone.geometry.coordinates[0][0][0],

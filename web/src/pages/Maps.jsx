@@ -293,6 +293,7 @@ export default function Maps() {
                 <span>Vista previa</span>
               </div>
               <MapCanvas
+                showSelectionMarker={!!point}
                 spec={{
                   center:
                     point &&

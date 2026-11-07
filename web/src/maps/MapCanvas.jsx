@@ -12,6 +12,7 @@ export default function MapCanvas({
   onSelect,
   tileBase = "/console/tiles",
   apiKey = "",
+  showSelectionMarker = true,
 }) {
   const host = useRef(null),
     mapRef = useRef(null),
@@ -239,7 +240,7 @@ export default function MapCanvas({
       lastRoute.current = spec.route;
     }
     let dragMarker;
-    if (onSelect) {
+    if (onSelect && showSelectionMarker) {
       dragMarker = new maplibregl.Marker({ draggable: true, color: accent })
         .setLngLat([spec.center.longitude, spec.center.latitude])
         .addTo(map);
@@ -249,7 +250,7 @@ export default function MapCanvas({
       });
     }
     return () => dragMarker?.remove();
-  }, [spec, ready, accent, !!onSelect]);
+  }, [spec, ready, accent, !!onSelect, showSelectionMarker]);
   return (
     <div className="map-canvas">
       <div
