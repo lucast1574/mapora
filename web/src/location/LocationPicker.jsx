@@ -17,6 +17,8 @@ export default function LocationPicker({
   theme = "light",
   accent = "#123f3b",
   initialCenter = { latitude: -12.119906, longitude: -77.028971 },
+  className = "",
+  style,
 }) {
   const [point, setPoint] = useState(initialCenter),
     [message, setMessage] = useState(
@@ -84,6 +86,8 @@ export default function LocationPicker({
         if (version !== revision.current) return;
         const selected = {
           ...result,
+          placeName:
+            result.placeName || result.street || "Ubicación seleccionada",
           latitude: p.latitude,
           longitude: p.longitude,
           source: "user_pin",
@@ -109,7 +113,11 @@ export default function LocationPicker({
     [point, theme, accent],
   );
   return (
-    <section className="location-picker" aria-label="Selector de ubicación">
+    <section
+      className={`location-picker ${className}`}
+      style={style}
+      aria-label="Selector de ubicación"
+    >
       <AddressSearch
         apiKey={apiKey}
         baseURL={baseURL}

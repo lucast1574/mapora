@@ -1,6 +1,7 @@
 import { mkdirSync, copyFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 mkdirSync("dist/downloads", { recursive: true });
+copyFileSync("../sdk/index.d.ts", "../sdk/dist/index.d.ts");
 if (!process.env.npm_execpath)
   throw new Error("Run SDK packaging through npm run build");
 execFileSync(

@@ -35,6 +35,10 @@ func (p *Platform) listKeys(w http.ResponseWriter, r *http.Request) {
 		}
 		keys = append(keys, k)
 	}
+	if rows.Err() != nil {
+		problem(w, 503, "storage", "No se pudieron cargar las claves.")
+		return
+	}
 	reply(w, 200, map[string]any{"keys": keys})
 }
 func (p *Platform) createKey(w http.ResponseWriter, r *http.Request) {

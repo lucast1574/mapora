@@ -15,7 +15,6 @@
     "@protomaps/basemaps": "5.7.2",
     "@radix-ui/react-select": "latest",
     "gsap": "latest",
-    "leaflet": "^1.9.4",
     "lucide-react": "latest",
     "maplibre-gl": "6.16.0",
     "react": "19.3.1",

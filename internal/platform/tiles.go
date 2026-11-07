@@ -1,6 +1,8 @@
 package platform
 
 import (
+	"database/sql"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -15,6 +17,7 @@ func (p *Platform) tiles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "X-API-Key, Authorization")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Max-Age", "86400")
 		w.WriteHeader(204)
 		return
 	}
@@ -31,11 +34,19 @@ func (p *Platform) tiles(w http.ResponseWriter, r *http.Request) {
 		if len(token) == 67 && strings.HasPrefix(token, "mv_") {
 			err := p.db.QueryRowContext(r.Context(), `SELECT true FROM map_views m JOIN api_keys k ON k.id=m.key_id JOIN users u ON u.id=k.user_id WHERE m.token_hash=$1 AND m.expires_at>now() AND k.revoked_at IS NULL AND NOT u.disabled`, digest(token)).Scan(&authorized)
 			if err != nil {
+				if !errors.Is(err, sql.ErrNoRows) {
+					problem(w, 503, "tiles_unavailable", "No se pudo comprobar el acceso al mapa. Reintenta.")
+					return
+				}
 				authorized = false
 			}
 		}
 	} else if strings.HasPrefix(r.URL.Path, "/console/") {
 		_, err := p.session(r)
+		if err != nil && !errors.Is(err, http.ErrNoCookie) && !errors.Is(err, sql.ErrNoRows) {
+			problem(w, 503, "tiles_unavailable", "No se pudo comprobar la sesión. Reintenta.")
+			return
+		}
 		authorized = err == nil
 	} else {
 		raw := r.Header.Get("X-API-Key")
@@ -45,6 +56,10 @@ func (p *Platform) tiles(w http.ResponseWriter, r *http.Request) {
 		var kind string
 		var scopes, origins []string
 		err := p.db.QueryRowContext(r.Context(), `SELECT k.kind,k.scopes,k.allowed_origins FROM api_keys k JOIN users u ON u.id=k.user_id WHERE k.token_hash=$1 AND k.revoked_at IS NULL AND NOT u.disabled`, digest(raw)).Scan(&kind, &scopes, &origins)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			problem(w, 503, "tiles_unavailable", "No se pudo comprobar la clave. Reintenta.")
+			return
+		}
 		if err == nil {
 			for _, scope := range scopes {
 				if scope == "maps" || scope == "search" {

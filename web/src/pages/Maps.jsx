@@ -247,8 +247,9 @@ export default function Maps() {
         </section>
       </div>
       <p className="map-provider-note">
-        El fondo cartográfico utiliza OpenStreetMap y depende de su
-        disponibilidad. No incluye mapas sin conexión ni imágenes satelitales.
+        La cartografía vectorial mundial se sirve desde Mapora con datos de
+        OpenStreetMap y Protomaps. No incluye mapas sin conexión ni imágenes
+        satelitales.
       </p>
     </>
   );

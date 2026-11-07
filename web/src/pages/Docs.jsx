@@ -190,9 +190,9 @@ export default function Docs({ heading = "De la dirección al dato" }) {
           Generar el mapa consume una petición; sus visualizaciones y los
           mosaicos cartográficos no suman peticiones a Mapora. Quien recibe el
           enlace puede ver ese mapa, pero no obtiene la API key. Revocar la
-          clave o suspender la cuenta invalida sus enlaces. El fondo usa los
-          mosaicos públicos de OpenStreetMap, con disponibilidad limitada; no
-          incluye uso sin conexión ni descarga masiva.
+          clave o suspender la cuenta invalida sus enlaces. La cartografía
+          vectorial mundial se sirve desde Mapora con datos de OpenStreetMap y
+          Protomaps; no incluye uso sin conexión ni descarga masiva.
         </p>
         <h2>Cuotas, respuestas y datos</h2>
         <p>

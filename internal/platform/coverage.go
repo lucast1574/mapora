@@ -1,7 +1,9 @@
 package platform
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"github.com/lucast1574/nexode-maps-api/internal/mapsapi"
 	"net/http"
 )
@@ -106,7 +108,11 @@ func (p *Platform) checkCoverage(w http.ResponseWriter, r *http.Request, a allow
 		var z mapsapi.Zone
 		err := p.db.QueryRowContext(r.Context(), "SELECT payload FROM coverage_zones WHERE id=$1 AND user_id=$2", id, a.UserID).Scan(&raw)
 		if err != nil {
-			problem(w, 404, "not_found", "Zona no encontrada en tu cuenta.")
+			if errors.Is(err, sql.ErrNoRows) {
+				problem(w, 404, "not_found", "Zona no encontrada en tu cuenta.")
+			} else {
+				problem(w, 503, "storage", "No se pudo comprobar la cobertura. Reintenta.")
+			}
 			return
 		}
 		if json.Unmarshal(raw, &z) != nil {

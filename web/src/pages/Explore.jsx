@@ -178,7 +178,20 @@ export default function Explore() {
                     ["Número", point.houseNumber],
                     ["Distrito", point.district],
                     ["Ciudad", point.city],
-                    ["Precisión", point.quality?.precision],
+                    [
+                      "Precisión",
+                      {
+                        address: "Dirección con número",
+                        house: "Dirección con número",
+                        street: "Calle",
+                        city: "Ciudad",
+                        district: "Distrito",
+                        state: "Región",
+                        country: "País",
+                        place: "Lugar",
+                        pin: "Pin elegido",
+                      }[point.quality?.precision] || point.quality?.precision,
+                    ],
                   ].map(([label, value]) => (
                     <div key={label}>
                       <dt>{label}</dt>
@@ -360,7 +373,7 @@ export default function Explore() {
                         onClick={() => setPoint(p)}
                       >
                         <span>
-                          {p.placeName}
+                          {p.placeName || p.streetAddress || "Lugar sin nombre en la fuente"}
                           <small>{p.streetAddress}</small>
                         </span>
                         <strong>{Math.round(p.distanceMeters)} m</strong>

@@ -78,6 +78,50 @@ func TestBrowserKeysOriginAndScopeBeforeQuota(t *testing.T) {
 		t.Fatal(w.Code)
 	}
 }
+
+func TestStatusIncludesQuotaDatabaseFailureWithoutDetails(t *testing.T) {
+	p := databasePlatform(t)
+	p.geo = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reply(w, 200, map[string]any{"status": "operational", "components": map[string]string{"search": "operational"}})
+	})
+	w, value := callHTTP(p, "GET", "/status", "", nil, "")
+	if w.Code != 200 || value["components"].(map[string]any)["database"] != "operational" {
+		t.Fatal(w.Code, value)
+	}
+	p.db.Close()
+	w, value = callHTTP(p, "GET", "/status", "", nil, "")
+	if w.Code != 200 || value["status"] != "degraded" || value["components"].(map[string]any)["database"] != "unavailable" {
+		t.Fatal(w.Code, value)
+	}
+	if strings.Contains(w.Body.String(), "postgres") || strings.Contains(w.Body.String(), "connection") {
+		t.Fatal("database details leaked")
+	}
+}
+func TestSessionStorageOutageIsNotExpiredLogin(t *testing.T) {
+	p := databasePlatform(t)
+	_, cookie := signupTest(t, p)
+	p.db.Close()
+	w, value := callHTTP(p, "GET", "/console/session", "", cookie, "")
+	if w.Code != 503 || value["code"] != "session_unavailable" {
+		t.Fatal(w.Code, value)
+	}
+}
+func TestWrongBatchMethodDoesNotSpendQuota(t *testing.T) {
+	p := databasePlatform(t)
+	u, cookie := signupTest(t, p)
+	w, key := callHTTP(p, "POST", "/console/keys", `{"name":"Batch","scopes":["batch"]}`, cookie, "")
+	if w.Code != 201 {
+		t.Fatal(w.Code)
+	}
+	w, _ = callHTTP(p, "GET", "/v1/batch", "", nil, text(key["key"]))
+	if w.Code != 405 {
+		t.Fatal(w.Code)
+	}
+	var used int
+	if err := p.db.QueryRow("SELECT COALESCE(sum(used),0) FROM usage_buckets WHERE user_id=$1", u.ID).Scan(&used); err != nil || used != 0 {
+		t.Fatal(used, err)
+	}
+}
 func TestCoverageOwnershipAndTilesAuthentication(t *testing.T) {
 	p := databasePlatform(t)
 	_, one := signupTest(t, p)

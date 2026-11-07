@@ -9,12 +9,17 @@
     "licenses"
   ],
   "exports": {
-    ".": "./dist/mapora-react.js",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mapora-react.js",
+      "default": "./dist/mapora-react.js"
+    },
     "./style.css": "./dist/mapora.css"
   },
   "peerDependencies": {
     "react": ">=19 <20",
     "react-dom": ">=19 <20"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "types": "./dist/index.d.ts"
 }

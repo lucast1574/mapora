@@ -118,11 +118,11 @@ General Sans de Fontshare, autoalojada. GSAP/ScrollTrigger con prefers-reduced-m
 
 ## Mapas interactivos
 
-`POST /v1/maps` requiere una API key con el nuevo permiso `maps`. Las claves existentes conservan sus permisos; crea una clave con «Crear mapas interactivos» para habilitar esta operación. Envía `center: {latitude, longitude}`, `title`, `zoom` (1–19), `markers` (hasta 20 puntos) y `expiresIn` en segundos (60–2.592.000; por defecto 604.800). Si no envías marcadores, se coloca uno en el centro; si no envías centro, se usa el primer marcador. La proyección admite latitudes entre ±85.05112878 y longitudes entre ±180, incluidos ceros.
+`POST /v1/maps` requiere una API key con el nuevo permiso `maps`. Las claves existentes conservan sus permisos; crea una clave con «Crear mapas interactivos» para habilitar esta operación. Envía `center: {latitude, longitude}`, `title`, `zoom` (1–19), `markers` (hasta 200 puntos) y `expiresIn` en segundos (60–2.592.000; por defecto 604.800). Si no envías marcadores, se coloca uno en el centro; si no envías centro, se usa el primer marcador. La proyección admite latitudes entre ±85.05112878 y longitudes entre ±180, incluidos ceros.
 
 La respuesta devuelve `url`, `embedHtml`, `expiresAt` y el mapa normalizado. La URL usa un token aleatorio de lectura de un solo mapa; en PostgreSQL se guarda su hash. Nunca incluye la API key. El visor `/map/{token}` puede incrustarse en otras páginas; las páginas de cuenta mantienen su protección contra iframes. La vista se consulta con `GET /v1/maps/view/{token}` y revisa caducidad, revocación de clave y suspensión del usuario en cada carga. Crear el mapa consume una petición. Las cargas y las interacciones del visor no suman peticiones a Mapora.
 
-El panel `/app/maps` permite generar, previsualizar y copiar el enlace/iframe. Leaflet 1.9.4 muestra mosaicos estándar de OpenStreetMap solicitados directamente por el navegador con atribución visible, caché HTTP normal y Referer de origen. No hay precarga masiva, modo sin conexión, satélite, rutas ni geolocalización del dispositivo. Los mosaicos públicos tienen disponibilidad best-effort y su propia política: https://operations.osmfoundation.org/policies/tiles/.
+El panel `/app/maps` permite generar, previsualizar y copiar el enlace/iframe. MapLibre GL muestra cartografía vectorial mundial propia con datos OpenStreetMap/Protomaps, fuentes y sprites locales, atribución visible y caché HTTP normal. El visor admite temas, agrupación de marcadores, polígonos y geometría de ruta. No hay modo sin conexión, satélite ni geolocalización del dispositivo.
 
 ## Google mediante Firebase
 

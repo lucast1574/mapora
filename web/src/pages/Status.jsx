@@ -10,9 +10,7 @@ export default function Status() {
       <div className="page-title">
         <div>
           <h1>El estado de Mapora.</h1>
-          <p>
-            Comprobaciones actuales del motor geográfico y del motor de rutas.
-          </p>
+          <p>Búsqueda, cartografía, rutas y acceso a tus datos.</p>
         </div>
         <button
           className="button secondary"
@@ -40,7 +38,11 @@ export default function Status() {
                     ? "Búsqueda y direcciones"
                     : name === "cartography"
                       ? "Fondo cartográfico mundial"
-                      : "Rutas y matrices"}
+                      : name === "database"
+                        ? "Cuentas y cuotas"
+                        : name === "geography"
+                          ? "Servicios geográficos"
+                          : "Rutas y matrices"}
                 </strong>
                 <span>
                   {status === "operational"

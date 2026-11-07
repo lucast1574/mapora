@@ -175,9 +175,11 @@ export default function Batch() {
           >
             {waitSeconds > 0
               ? `Continuar en ${waitSeconds} s`
-              : results.length
-                ? "Continuar importación"
-                : "Procesar direcciones"}
+              : results.length === items.length && items.length
+                ? "Importación completada"
+                : results.length
+                  ? "Continuar importación"
+                  : "Procesar direcciones"}
           </Button>
           {busy && (
             <Button

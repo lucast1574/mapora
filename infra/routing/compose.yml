@@ -6,7 +6,7 @@ services:
     entrypoint: ["valhalla_service"]
     command: ["/custom_files/valhalla.json", "2"]
     volumes:
-      - /var/lib/mapora-next/routing:/custom_files:ro
+      - /var/lib/mapora-next/routing-v2:/custom_files:ro
     networks: [dokploy-network]
     deploy:
       replicas: 1

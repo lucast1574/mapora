@@ -45,6 +45,7 @@ export default function MapCanvas({
           "FullscreenControl.Enter": "Abrir pantalla completa",
           "FullscreenControl.Exit": "Salir de pantalla completa",
           "AttributionControl.ToggleAttribution": "Ver atribución",
+          "Marker.Title": "Pin de ubicación",
         },
         transformRequest: (url) =>
           apiKey && url.startsWith(new URL(tileBase, location.href).href)

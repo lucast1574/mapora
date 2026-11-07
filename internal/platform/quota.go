@@ -185,12 +185,18 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-API-Key")
 	w.Header().Set("Access-Control-Expose-Headers", "X-Cache, X-Quota-Limit, X-Quota-Remaining, X-Quota-Reset, Retry-After")
 	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Max-Age", "86400")
 		w.WriteHeader(204)
 		return
 	}
-	if r.URL.Path == "/v1/maps" && r.Method != "POST" {
+	postOnly := r.URL.Path == "/v1/maps" || geoEndpoint(r.URL.Path) == "routing" || geoEndpoint(r.URL.Path) == "batch" || geoEndpoint(r.URL.Path) == "coverage"
+	if postOnly && r.Method != "POST" {
 		w.Header().Set("Allow", "POST, OPTIONS")
-		problem(w, 405, "method", "Usa POST para generar un mapa.")
+		message := "Usa POST para esta operación."
+		if r.URL.Path == "/v1/maps" {
+			message = "Usa POST para generar un mapa."
+		}
+		problem(w, 405, "method", message)
 		return
 	}
 	raw := r.Header.Get("X-API-Key")

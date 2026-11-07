@@ -2,6 +2,7 @@ package platform
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -47,6 +48,10 @@ func (p *Platform) private(fn http.HandlerFunc, admin bool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u, err := p.session(r)
 		if err != nil {
+			if !errors.Is(err, http.ErrNoCookie) && !errors.Is(err, sql.ErrNoRows) {
+				problem(w, 503, "session_unavailable", "No se pudo verificar la sesión. Reintenta en un momento.")
+				return
+			}
 			problem(w, 401, "unauthorized", "Inicia sesión para continuar.")
 			return
 		}
@@ -67,6 +72,7 @@ func (p *Platform) Handler() http.Handler {
 	mux.HandleFunc("POST /console/forgot", p.forgot)
 	mux.HandleFunc("POST /console/reset", p.reset)
 	mux.HandleFunc("GET /console/plans", p.plans)
+	mux.HandleFunc("GET /status", p.status)
 	routes := map[string]http.HandlerFunc{"GET /console/session": p.me, "POST /console/logout": p.logout, "PATCH /console/me": p.profile, "POST /console/password": p.password, "GET /console/keys": p.listKeys, "POST /console/keys": p.createKey, "DELETE /console/keys/{id}": p.revokeKey, "GET /console/usage": p.usage, "POST /console/billing/checkout": p.checkout, "POST /console/billing/portal": p.portal, "POST /console/billing/sync": p.syncBilling}
 	for route, fn := range routes {
 		mux.HandleFunc(route, p.private(fn, false))
@@ -93,9 +99,9 @@ func (p *Platform) Handler() http.Handler {
 		if strings.HasPrefix(r.URL.Path, "/map/") {
 			// Only the capability-based viewer is embeddable; account pages stay protected.
 			w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
-			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'")
+			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'")
 		}
-		if strings.HasPrefix(r.URL.Path, "/v1/tiles/") || strings.HasPrefix(r.URL.Path, "/v1/maps/view/") {
+		if r.URL.Path == "/status" || strings.HasPrefix(r.URL.Path, "/v1/tiles/") || strings.HasPrefix(r.URL.Path, "/v1/maps/view/") {
 			mux.ServeHTTP(w, r)
 			return
 		}
