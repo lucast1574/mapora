@@ -54,6 +54,31 @@ const samples = {
       source: "photon",
     },
   },
+  routes: {
+    title: "Recorre las calles.",
+    description: "Rutas en América para auto, bicicleta y a pie. Geometría GeoJSON, instrucciones y matrices de tiempos, conservando tus puntos originales.",
+    route: "POST /v1/routes",
+    result: {
+      profile: "driving",
+      distanceMeters: 1183,
+      coverage: "americas",
+      traffic: "not_included",
+    },
+  },
+  maps: {
+    status: "201 Created",
+    title: "Muéstralo a tu manera.",
+    description: "Mapas con marcadores agrupados, polígonos y rutas. Elige estilo y color, y comparte un enlace o iframe sin exponer tu clave.",
+    route: "POST /v1/maps",
+    result: {
+      map: {
+        title: "Mi ubicación",
+        theme: "light",
+        accent: "#174c43",
+        center: { latitude: -12.1199, longitude: -77.029 },
+      },
+    },
+  },
 };
 function MapArtwork() {
   return (
@@ -108,9 +133,9 @@ function CodeSample({ sample }) {
       <div className="specimen-top">
         <span>
           <span className="status-dot" />
-          200 OK
+          {sample.status || "200 OK"}
         </span>
-        <span>Respuesta de ejemplo</span>
+        <span>Extracto de respuesta de ejemplo</span>
       </div>
       <code className="request-path">{sample.route}</code>
       <pre>{JSON.stringify(sample.result, null, 2)}</pre>
@@ -295,8 +320,8 @@ export default function Landing() {
               en tu código.
             </h1>
             <p>
-              API de mapas, búsqueda de direcciones y enlaces de Google Maps.
-              Conéctalos a tu aplicación con una sola API.
+              Búsqueda mundial, ubicaciones y rutas por calles en América.
+              Conecta los datos a tu aplicación y muestra un mapa cuando lo necesites.
             </p>
             <div className="hero-actions">
               <a className="button" href={`${appURL}/signup`}>
@@ -354,7 +379,9 @@ export default function Landing() {
           </div>
         </section>
         <section className="landing-resources">
-          <h2>Una API. Cuatro formas de conectar.</h2>
+          <h2>De la consulta a tu integración.</h2>
+          <p>Autocompletado, búsqueda por país y ciudad, lugares cercanos, lotes de direcciones y zonas de cobertura. Usa respuestas JSON, un buscador sin mapa o el selector visual de React.</p>
+          <a className="text-link" href="/documentacion#docs-referencia">Consultar todos los endpoints <ArrowUpRight size={18} /></a>
           <ResourceLinks />
         </section>
         <section className="journey reveal-group" id="integracion">
@@ -422,8 +449,8 @@ export default function Landing() {
             </article>
           </div>
           <div className="integration-code reveal" data-ui>
-            <span>Una cabecera. Tres posibilidades.</span>
-            <pre>{`fetch("https://maps-api.nexode.app/v1/search?q=Lima", {\n  headers: { "X-API-Key": "TU_API_KEY" }\n})`}</pre>
+            <span>Desde tu backend, con tu clave privada.</span>
+            <pre>{`const response = await fetch(\n  "https://maps-api.nexode.app/v1/search?q=Lima",\n  { headers: { "X-API-Key": process.env.MAPORA_API_KEY } }\n);\nif (!response.ok) throw new Error("No se pudo buscar");\nconst locations = await response.json();`}</pre>
             <a href="/documentacion">
               Ver documentación <ArrowUpRight size={18} />
             </a>
@@ -463,7 +490,7 @@ export default function Landing() {
                   <ul>
                     <li>
                       <Check size={17} />
-                      Búsqueda, resolución y geocodificación
+                      Direcciones, cercanos, lotes, cobertura, rutas y mapas
                     </li>
                     <li>
                       <Check size={17} />
@@ -514,6 +541,18 @@ export default function Landing() {
               [
                 "¿De dónde vienen las direcciones?",
                 "Mapora consulta Photon con datos de OpenStreetMap y mantiene una caché propia. La cobertura depende de esos datos y del proveedor. No es Google Places ni una verificación física de cada dirección.",
+              ],
+              [
+                "¿Puedo limitar la búsqueda a un país o una ciudad?",
+                "Sí. countrycodes limita por país. Para campos separados, /v1/geocode admite city, street y otros componentes. En búsqueda libre y autocompletado, lat/lng prioriza una zona y bbox acota un área; no tienen un filtro city independiente.",
+              ],
+              [
+                "¿Tengo que mostrar un mapa?",
+                "No. Puedes consumir los datos JSON desde tu backend, usar MaporaAddressSearch sin mapa o MaporaLocationPicker con un pin ajustable. Mostrar un mapa o compartir un iframe es opcional.",
+              ],
+              [
+                "¿Dónde puedo calcular rutas?",
+                "En América, incluidos Estados Unidos y Canadá, según las vías del perfil driving, walking o cycling. La búsqueda y la cartografía son mundiales. Las duraciones no incluyen tráfico en tiempo real y un trayecto sin conexión no se reemplaza por una línea recta.",
               ],
               [
                 "¿Qué sucede al agotar mi cuota?",

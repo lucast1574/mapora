@@ -156,6 +156,8 @@
   font-size: clamp(32px, 3.2vw, 48px);
   margin-bottom: 28px;
 }
+.landing-resources > p { max-width: 760px; font-size: 17px; line-height: 1.75; color: var(--muted); }
+.landing-resources > .text-link { margin: 8px 0 24px; }
 .public-footer {
   max-width: 1440px;
   margin: auto;

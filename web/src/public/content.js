@@ -3,12 +3,12 @@ export const pages = {
   "/": {
     title: "Mapora | API de mapas, direcciones y geocodificación",
     description:
-      "Integra búsqueda de direcciones, geocodificación, enlaces de Google Maps y mapas interactivos. API keys, cuotas por usuario y un plan gratuito para empezar.",
+      "Integra búsqueda mundial, autocompletado, rutas por calles en América, matrices, zonas y mapas. API keys y planes por peticiones, con un plan gratuito.",
   },
   "/documentacion": {
     title: "Documentación de la API de mapas | Mapora",
     description:
-      "Consulta endpoints, parámetros, ejemplos de integración, API keys y cuotas de Mapora. Prueba búsqueda, geocodificación y enlaces de Google Maps con tu clave.",
+      "Referencia de Mapora: direcciones, filtros por país y ciudad, lotes, cobertura, rutas, matrices, mapas y SDK. Ejemplos, claves, cuotas y probador de API.",
     heading: "Documentación de la API de Mapora",
   },
   "/api-busqueda-direcciones": {
@@ -33,11 +33,15 @@ export const pages = {
       },
       {
         title: "Búsqueda mientras se escribe",
-        text: "Puedes utilizar este endpoint para construir una experiencia de autocompletado en tu propia interfaz. Aplica una espera breve entre cambios de texto, cancela las consultas anteriores y evita enviar términos demasiado cortos. Cada petición autenticada admitida consume una unidad, también si la respuesta viene de caché. Cancelar una petición en el navegador no garantiza que no haya sido admitida por el servidor.",
+        text: "Usa GET /v1/autocomplete o el componente MaporaAddressSearch para mostrar sugerencias sin obligarte a mostrar un mapa. El componente consulta desde tres caracteres, espera 350 ms y cancela resultados anteriores. Cada petición admitida consume una unidad, también desde caché; cancelar un fetch no garantiza que no haya sido admitido. Invalida la selección anterior cuando la persona edite el texto.",
+      },
+      {
+        title: "País, ciudad y área de búsqueda",
+        text: "countrycodes=PE restringe a Perú; puedes enviar hasta diez países separados por comas. Para buscar por componentes separados usa GET /v1/geocode con street, housenumber, city, district, state, county o postcode. En búsqueda libre y autocompletado, lat/lng prioriza cercanía y bbox acota un rectángulo minLng,minLat,maxLng,maxLat; no existe un filtro city independiente en esos endpoints. El campo city de geocode forma parte de la consulta y no garantiza un límite administrativo.",
       },
       {
         title: "Del resultado al mapa",
-        text: "Guarda el nombre elegido junto con su latitud y longitud. Con esas coordenadas puedes generar un mapa interactivo mediante POST /v1/maps, o consultar una referencia de dirección con GET /v1/reverse. El buscador no entrega rutas de navegación, cálculo de trayectos ni una API de Google Places.",
+        text: "Guarda el nombre elegido junto con su latitud y longitud y los componentes de dirección disponibles. Mostrar un mapa es opcional: los endpoints devuelven JSON. Puedes consultar una referencia con GET /v1/reverse, generar un mapa con POST /v1/maps o calcular rutas por calles en América con POST /v1/routes y tiempos por pares con POST /v1/matrix. Mapora no es Google Places y no certifica domicilios.",
       },
     ],
   },

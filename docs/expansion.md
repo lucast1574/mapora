@@ -1,6 +1,6 @@
 # Mapora: expansión geográfica
 
-La búsqueda sigue siendo mundial. La cartografía vectorial propia también cubre el mundo. El motor de rutas empieza con Sudamérica, México, Centroamérica y Caribe y se amplía a toda América sin cambiar el contrato HTTP ni los SDK. La construcción mundial fue cancelada por decisión del propietario; no confundir la cobertura mundial de búsqueda/cartografía con la de rutas.
+La búsqueda y la cartografía vectorial cubren el mundo. El motor de rutas y matrices está activo en toda América, incluidos Estados Unidos y Canadá, según las vías disponibles para cada perfil. No confundir la cobertura mundial de búsqueda/cartografía con la de rutas. La landing y el panel comparten la referencia de `web/src/pages/Docs.jsx` y el catálogo de ejemplos de `web/src/docs/operations.js`.
 
 ## Contratos y consumo
 
