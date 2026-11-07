@@ -170,6 +170,15 @@
 .map-canvas *:focus {
   outline: none !important;
 }
+.map-canvas .maplibregl-canvas:focus-visible {
+  filter: brightness(0.96);
+}
+.map-canvas .maplibregl-popup-close-button:focus-visible,
+.map-canvas .maplibregl-ctrl-attrib a:focus-visible {
+  background: var(--mint, #cdebe0);
+  text-decoration: underline;
+  box-shadow: none;
+}
 .map-canvas .leaflet-marker-icon:focus-visible {
   filter: brightness(0.7);
 }
