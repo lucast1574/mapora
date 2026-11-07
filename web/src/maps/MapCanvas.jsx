@@ -40,12 +40,14 @@ export default function MapCanvas({
         attributionControl: false,
         respectPrefersReducedMotion: true,
         locale: {
+          "Map.Title": "Mapa",
           "NavigationControl.ZoomIn": "Acercar mapa",
           "NavigationControl.ZoomOut": "Alejar mapa",
           "FullscreenControl.Enter": "Abrir pantalla completa",
           "FullscreenControl.Exit": "Salir de pantalla completa",
           "AttributionControl.ToggleAttribution": "Ver atribución",
           "Marker.Title": "Pin de ubicación",
+          "Popup.Close": "Cerrar detalle",
         },
         transformRequest: (url) =>
           apiKey && url.startsWith(new URL(tileBase, location.href).href)

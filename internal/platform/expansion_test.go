@@ -122,6 +122,30 @@ func TestWrongBatchMethodDoesNotSpendQuota(t *testing.T) {
 		t.Fatal(used, err)
 	}
 }
+
+func TestRoutingScopePreservesActualOperationInUsage(t *testing.T) {
+	p := databasePlatform(t)
+	p.geo = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { reply(w, 200, map[string]bool{"ok": true}) })
+	u, cookie := signupTest(t, p)
+	w, key := callHTTP(p, "POST", "/console/keys", `{"name":"Routes","scopes":["routing"]}`, cookie, "")
+	if w.Code != 201 {
+		t.Fatal(w.Code)
+	}
+	for _, operation := range []string{"routes", "matrix"} {
+		w, _ = callHTTP(p, "POST", "/v1/"+operation, `{}`, nil, text(key["key"]))
+		if w.Code != 200 {
+			t.Fatal(operation, w.Code)
+		}
+		var count int
+		if err := p.db.QueryRow("SELECT count(*) FROM usage_events WHERE user_id=$1 AND endpoint=$2", u.ID, operation).Scan(&count); err != nil || count != 1 {
+			t.Fatal(operation, count, err)
+		}
+	}
+	var used int
+	if err := p.db.QueryRow("SELECT COALESCE(sum(used),0) FROM usage_buckets WHERE user_id=$1", u.ID).Scan(&used); err != nil || used != 2 {
+		t.Fatal(used, err)
+	}
+}
 func TestCoverageOwnershipAndTilesAuthentication(t *testing.T) {
 	p := databasePlatform(t)
 	_, one := signupTest(t, p)

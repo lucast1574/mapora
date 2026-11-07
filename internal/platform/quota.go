@@ -237,6 +237,10 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("X-Quota-Reset", a.End.Format(time.RFC3339))
 	start := time.Now()
+	operation := endpoint
+	if strings.HasPrefix(r.URL.Path, "/v1/") {
+		operation = strings.TrimPrefix(r.URL.Path, "/v1/")
+	}
 	writer := &statusWriter{ResponseWriter: w}
 	if r.URL.Path == "/v1/coverage/check" {
 		p.checkCoverage(writer, r, a)
@@ -245,5 +249,5 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 	} else {
 		p.geo.ServeHTTP(writer, r)
 	}
-	p.finish(a, endpoint, writer.status, time.Since(start))
+	p.finish(a, operation, writer.status, time.Since(start))
 }

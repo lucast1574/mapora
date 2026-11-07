@@ -3,6 +3,24 @@ import { ArrowUpRight, KeyRound, ArrowRight } from "lucide-react";
 import { useData } from "../useData";
 import { Notice, Empty } from "../ui";
 import { number, date } from "../client";
+const operationNames = {
+  search: "Búsqueda de direcciones",
+  autocomplete: "Autocompletado",
+  geocode: "Dirección estructurada",
+  reverse: "Dirección desde coordenadas",
+  resolve: "Resolver enlace",
+  maps: "Crear mapa",
+  nearby: "Lugares cercanos",
+  batch: "Lote de direcciones",
+  coverage: "Cobertura directa",
+  "coverage/check": "Zonas guardadas",
+  routes: "Ruta por calles",
+  matrix: "Matriz de trayectos",
+  routing: "Rutas y matrices",
+};
+function Operation({ value }) {
+  return <span>{operationNames[value] || value}</span>;
+}
 function Chart({ daily }) {
   const max = Math.max(1, ...daily.map((d) => d.success + d.failed));
   const total = daily.reduce((n, d) => n + d.success + d.failed, 0);
@@ -107,7 +125,7 @@ function Recent({ recent }) {
               {recent.map((r, i) => (
                 <tr key={i}>
                   <td>
-                    <code>/v1/{r.endpoint}</code>
+                    <Operation value={r.endpoint} />
                   </td>
                   <td>{r.keyName}</td>
                   <td>
@@ -213,7 +231,7 @@ export function Usage() {
             {data.endpoints.length ? (
               data.endpoints.map((e) => (
                 <div className="endpoint-row" key={e.endpoint}>
-                  <code>/v1/{e.endpoint}</code>
+                  <Operation value={e.endpoint} />
                   <span>{number(e.total)} peticiones</span>
                   <span>{number(e.latencyMs)} ms de media</span>
                 </div>
