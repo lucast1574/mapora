@@ -32,6 +32,9 @@
   position: relative;
   z-index: 3;
 }
+.address-search.is-open {
+  z-index: 4;
+}
 .address-search > label {
   display: block;
   font-size: 13px;

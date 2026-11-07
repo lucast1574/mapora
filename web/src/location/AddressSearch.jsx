@@ -41,7 +41,7 @@ export default function AddressSearch({
     onSelect?.(place);
   }
   return (
-    <div className="address-search" ref={root}>
+    <div className={`address-search${open ? " is-open" : ""}`} ref={root}>
       <label htmlFor={id}>{label}</label>
       <div className="address-input">
         <Search size={18} />
@@ -65,6 +65,7 @@ export default function AddressSearch({
           disabled={!apiKey || disabled}
           value={query}
           onFocus={() => results.length && setOpen(true)}
+          onBlur={() => setOpen(false)}
           onChange={(e) => {
             setQuery(e.target.value);
             setOpen(true);
