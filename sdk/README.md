@@ -28,6 +28,10 @@ without address, then its nearby address when lookup completes. Save exact
 source feature. Address quality describes source completeness, not verification.
 Respect the attribution displayed by the map.
 
+`MaporaAddressSearch` also accepts `onQueryChange(query)`. Use it to invalidate
+a previously selected address when the user edits the text, before submitting
+a route, coverage check or another operation that requires a confirmed selection.
+
 TypeScript declarations are included. `baseURL` defaults to the production API;
 `className` and `style` let your app compose the picker. With a strict CSP, allow
 your API base in `connect-src`, the bundled same-origin worker in `worker-src`,

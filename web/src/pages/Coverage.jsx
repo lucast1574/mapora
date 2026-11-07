@@ -253,6 +253,10 @@ export default function Coverage() {
             <AddressSearch
               apiKey={key}
               label="Dirección a comprobar"
+              onQueryChange={() => {
+                setPoint(null);
+                setResult(null);
+              }}
               onSelect={(p) => {
                 setPoint(p);
                 setResult(null);

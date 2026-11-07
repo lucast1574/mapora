@@ -230,6 +230,10 @@ export default function Explore() {
                     apiKey={key}
                     country={country}
                     label="Origen"
+                    onQueryChange={() => {
+                      setStart(null);
+                      setResult(null);
+                    }}
                     onSelect={(p) => {
                       setStart(p);
                       setResult(null);
@@ -240,6 +244,10 @@ export default function Explore() {
                     apiKey={key}
                     country={country}
                     label="Destino"
+                    onQueryChange={() => {
+                      setEnd(null);
+                      setResult(null);
+                    }}
                     onSelect={(p) => {
                       setEnd(p);
                       setResult(null);

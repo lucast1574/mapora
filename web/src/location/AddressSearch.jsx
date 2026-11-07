@@ -8,6 +8,7 @@ export default function AddressSearch({
   country = "",
   baseURL = "",
   onSelect,
+  onQueryChange,
   label = "Buscar dirección",
   bias,
   disabled = false,
@@ -67,7 +68,9 @@ export default function AddressSearch({
           onFocus={() => results.length && setOpen(true)}
           onBlur={() => setOpen(false)}
           onChange={(e) => {
+            chosen.current = "";
             setQuery(e.target.value);
+            onQueryChange?.(e.target.value);
             setOpen(true);
             setActive(-1);
           }}

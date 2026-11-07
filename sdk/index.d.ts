@@ -45,6 +45,7 @@ export interface AddressSearchProps {
   baseURL?: string;
   country?: string;
   onSelect?: (location: Location) => void;
+  onQueryChange?: (query: string) => void;
   label?: string;
   bias?: Point;
   disabled?: boolean;
