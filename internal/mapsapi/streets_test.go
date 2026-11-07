@@ -31,6 +31,7 @@ func TestStreetSearchScopesNumbersAndOriginalPins(t *testing.T) {
 	for _, tc := range []struct{ query, city, want, number string }{
 		{"TOMAS JEFFERSON 289", "Trujillo", "street:trujillo", "289"},
 		{"Ca. Tomás Jefferson N° 289", "Trujillo", "street:trujillo", "289"},
+		{"t omás JEFFERSON 289", "Trujillo", "street:trujillo", "289"},
 		{"Ca. Tomás Jeff", "Trujillo", "street:trujillo", ""},
 		{"Tomás Jefferson 289, Trujillo, Perú", "", "street:trujillo", "289"},
 		{"Tomás Jefferson", "Lima", "street:lima", ""},

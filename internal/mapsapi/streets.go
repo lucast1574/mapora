@@ -284,7 +284,26 @@ func (idx *streetIndex) search(text string, values, query url.Values) []Place {
 		if len(ts) == 0 {
 			return nil
 		}
-		return idx.candidates(ts, scoped, query, requested)
+		if hits := idx.candidates(ts, scoped, query, requested); len(hits) > 0 {
+			return hits
+		}
+	}
+	// Recover an accidental split initial ("t omas") only when the joined
+	// token actually exists in the index and the remaining street also matches.
+	for i := 0; i+1 < len(ts); i++ {
+		if len(ts[i]) != 1 || len(ts[i+1]) < 3 || ts[i][0] < 'a' || ts[i][0] > 'z' {
+			continue
+		}
+		joined := ts[i] + ts[i+1]
+		if len(idx.tokens[joined]) == 0 {
+			continue
+		}
+		repaired := append([]string{}, ts[:i]...)
+		repaired = append(repaired, joined)
+		repaired = append(repaired, ts[i+2:]...)
+		if hits := idx.candidates(repaired, scoped, query, requested); len(hits) > 0 {
+			return hits
+		}
 	}
 	return nil
 }
