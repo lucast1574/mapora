@@ -57,8 +57,13 @@ espacio y el rendimiento reales antes de decidir si generar el extracto tar.
    instrucciones, cuotas y el panel real. Conservar el índice anterior para
    revertir el volumen sin restaurar bases de clientes.
 
-toda América se activan cambiando el volumen del compose a su directorio una
-vez validado; no cambiar solamente la etiqueta de cobertura. El servicio mantiene
+El compose apunta al índice de toda América, validado con 19 comprobaciones de
+rutas, perfiles y matrices. En `valhalla.json`, configurar
+`loki.use_connectivity=false` antes de iniciar el servidor: la comprobación
+previa global de conectividad rechaza matrices entre islas completas; sin ella,
+el algoritmo devuelve `null` únicamente en los pares sin conexión. Verificar las
+diagonales y los pares desconectados con una matriz entre Honolulu y Maui.
+No cambiar solamente la etiqueta de cobertura. El servicio mantiene
 2 hilos, 4 CPU y 8 GiB, con healthcheck privado y sin exposición de Valhalla.
 Los límites de distancia del motor se documentan en `docs/expansion.md`.
 

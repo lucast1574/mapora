@@ -6,7 +6,7 @@ services:
     entrypoint: ["valhalla_service"]
     command: ["/custom_files/valhalla.json", "2"]
     volumes:
-      - /var/lib/mapora-next/routing-v2:/custom_files:ro
+      - /var/lib/mapora-next/routing-americas:/custom_files:ro
     networks: [dokploy-network]
     healthcheck:
       test: ["CMD-SHELL", "curl --fail --silent --max-time 5 http://127.0.0.1:8002/status > /dev/null"]

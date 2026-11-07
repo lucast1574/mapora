@@ -82,8 +82,8 @@ export default function ExpansionDocs() {
       </p>
       <p>
         La búsqueda y el fondo cartográfico tienen cobertura mundial. Las rutas
-        comienzan en Latinoamérica (Sudamérica, México, Centroamérica y Caribe);
-        la ampliación a toda toda América se activa tras validar su índice. No
+        cubren América: Sudamérica, Centroamérica, Caribe, México, Estados Unidos
+        y Canadá, según las vías disponibles para cada perfil. No
         incluyen tráfico en tiempo real, transporte público, imágenes
         satelitales ni navegación sin conexión. Un trayecto fuera del índice,
         desconectado o inaccesible para el perfil devuelve route_not_found, sin
