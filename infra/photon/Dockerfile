@@ -1,5 +1,5 @@
 FROM eclipse-temurin:21-jre-jammy
-RUN apt-get update && apt-get install -y --no-install-recommends curl pbzip2 ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends curl lbzip2 ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /opt/photon /data \
  && curl --fail --location --retry 3 -o /opt/photon/photon.jar https://github.com/komoot/photon/releases/download/1.3.0/photon-1.3.0.jar \
