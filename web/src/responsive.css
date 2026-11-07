@@ -286,12 +286,14 @@
     z-index: 80;
     width: 270px;
     transform: translateX(-100%);
+    visibility: hidden;
     background: #f0f4f1;
     transition: transform 0.2s;
     overflow-y: auto;
   }
   .sidebar.is-open {
     transform: translateX(0);
+    visibility: visible;
   }
   .sidebar-brand {
     display: flex;

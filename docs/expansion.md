@@ -18,6 +18,8 @@ Se conservan `/v1/search`, `/v1/reverse`, `/v1/resolve` y `/v1/maps`, las claves
 
 Las vistas y sus mosaicos no añaden peticiones geográficas. Los límites del plan por minuto se conservan, también en Scale. Hay límites de concurrencia globales en consulta geográfica(64 peticiones), proveedores(4 Photon/4 rutas) y cartografía(32 transferencias); los motores tienen límites de CPU/RAM. Los fallos admitidos y caché mantienen la contabilización previa. No se guardan cuerpos, consultas ni coordenadas en los registros de consumo.
 
+El motor de rutas conserva límites de distancia para proteger el servicio: 5000 km en automóvil, 250 km a pie y 500 km en bicicleta; para matrices, 400 km en automóvil y 200 km a pie/bicicleta. Estos son límites de admisión del motor, no una promesa de que exista una conexión por carretera entre dos puntos. La cobertura mundial no conecta continentes separados por océanos.
+
 ## SDK y claves públicas
 
 `web/public/mapora-client.js`: cliente JavaScript; `sdk/`: componentes React19 distribuidos como `.tgz` en `/downloads/`. No se publican en un registro npm externo. El consumidor instala el archivo y el CSS. Mantener licencias de dependencias y atribución de cartografía.

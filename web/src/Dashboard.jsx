@@ -58,8 +58,16 @@ export default function Dashboard() {
     ...(user.role === "admin" ? [["admin", "Administración", Users]] : []),
   ];
   return (
-    <div className="app-frame">
-      <aside className={`sidebar ${menu ? "is-open" : ""}`}>
+    <div
+      className="app-frame"
+      onKeyDown={(e) => {
+        if (e.key === "Escape") setMenu(false);
+      }}
+    >
+      <aside
+        id="panel-navigation"
+        className={`sidebar ${menu ? "is-open" : ""}`}
+      >
         <div className="sidebar-brand">
           <Logo />
           <button
@@ -116,6 +124,8 @@ export default function Dashboard() {
             className="icon-button mobile-only"
             onClick={() => setMenu(true)}
             aria-label="Abrir navegación"
+            aria-expanded={menu}
+            aria-controls="panel-navigation"
           >
             <Menu size={20} />
           </button>

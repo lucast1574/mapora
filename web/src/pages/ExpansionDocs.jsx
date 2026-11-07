@@ -89,6 +89,12 @@ export default function ExpansionDocs() {
         desconectado o inaccesible para el perfil devuelve route_not_found, sin
         inventar una línea recta.
       </p>
+      <p>
+        El motor admite rutas de hasta 5000 km en automóvil, 250 km a pie y
+        500 km en bicicleta. Las matrices admiten hasta 400 km en automóvil y
+        200 km a pie o en bicicleta. La cobertura no garantiza una conexión
+        transitable entre dos puntos.
+      </p>
       <h3>Direcciones con información sobre su precisión</h3>
       <p>
         Los resultados mantienen los campos existentes y añaden{" "}

@@ -373,7 +373,9 @@ export default function Explore() {
                         onClick={() => setPoint(p)}
                       >
                         <span>
-                          {p.placeName || p.streetAddress || "Lugar sin nombre en la fuente"}
+                          {p.placeName ||
+                            p.streetAddress ||
+                            "Lugar sin nombre en la fuente"}
                           <small>{p.streetAddress}</small>
                         </span>
                         <strong>{Math.round(p.distanceMeters)} m</strong>
