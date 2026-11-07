@@ -24,6 +24,7 @@ type location struct {
 func (s *API) enrich(ctx context.Context, p pin, original string, address bool) location {
 	result := location{Place: Place{Latitude: p.Latitude, Longitude: p.Longitude, PlaceName: p.PlaceName,
 		GoogleMapsLink: original, Source: "google_maps", Attribution: attribution}, ResolvedURL: p.ResolvedURL, AddressStatus: "not_requested"}
+	result.Quality=quality(result.Place,"pin")
 	if address {
 		place, err := s.reversePlace(ctx, p.Latitude, p.Longitude)
 		if err == nil {

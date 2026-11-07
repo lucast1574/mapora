@@ -135,7 +135,7 @@ El servidor verifica RS256 con certificados públicos cacheados de Google, issue
 
 `npm --prefix web run build` compila el cliente y prerenderiza las siete páginas públicas con React en el proceso de construcción. El servidor Go sirve HTML completo y el cliente lo hidrata; el panel, acceso y visor compartido utilizan un shell separado con `noindex`. No hay un servidor Node en producción.
 
-Rutas canónicas: `/`, `/documentacion`, `/api-busqueda-direcciones`, `/resolver-enlaces-google-maps`, `/geocodificacion-inversa`, `/mapas-interactivos` y `/legal`. El proceso genera títulos y descripciones propios, canonical, Open Graph/Twitter, JSON-LD de Organization/WebSite/WebPage/Service y migas de navegación. No se añaden reseñas, métricas de clientes ni valoraciones ficticias. La API de mapas se documenta sin prometer disponibilidad de Photon o los mosaicos públicos de OpenStreetMap.
+Rutas canónicas: `/`, `/documentacion`, `/api-busqueda-direcciones`, `/resolver-enlaces-google-maps`, `/geocodificacion-inversa`, `/mapas-interactivos` y `/legal`. El proceso genera títulos y descripciones propios, canonical, Open Graph/Twitter, JSON-LD de Organization/WebSite/WebPage/Service y migas de navegación. No se añaden reseñas, métricas de clientes ni valoraciones ficticias. La API de mapas se documenta sin prometer disponibilidad de Photon de sus motores dedicados.
 
 `/sitemap.xml` solo contiene esas páginas. `robots.txt` referencia el sitemap; las páginas de cuenta y mapas compartidos permanecen rastreables para que se pueda leer su `noindex`, mientras las rutas de API y consola no se anuncian para el rastreo. Las rutas inexistentes devuelven HTTP 404 real. Las variantes con barra final y los duplicados públicos del host de API/panel redirigen a `https://mapora.nexode.app`; las rutas y métodos de la API conservan su comportamiento.
 
@@ -144,3 +144,22 @@ Rutas canónicas: `/`, `/documentacion`, `/api-busqueda-direcciones`, `/resolver
 Para un cambio futuro de dominio, actualizar juntos `web/src/public/content.js`, `web/src/client.js`, los hosts canónicos de `web/embed.go`, configuración de despliegue y proveedores de autenticación/pagos, redirecciones, verificación y sitemap de Search Console. No eliminar las URLs antiguas sin preparar las redirecciones correspondientes.
 
 Validación: ejecutar primero el build del frontend y después `go test ./...` y `go vet ./...`. Los tests del paquete `web` comprueban HTML prerenderizado, metadatos únicos, JSON-LD válido, sitemap, exclusión de páginas privadas, redirecciones, HEAD, escape de la etiqueta de verificación y 404 reales.
+
+## Capacidades ampliadas
+
+Ver `docs/expansion.md` y `/openapi.json`: autocompletado, búsqueda estructurada,
+calidad de dirección, lugares cercanos, lotes, zonas, rutas/matrices y SDK React/JS.
+Se conservan contratos y planes anteriores. Una llamada admitida cuenta como una
+petición; batch10, ruta10, matriz10×10. Claves públicas de navegador por origen.
+
+`TILE_BASE_URL` configura el gateway privado de cartografía (`infra/tiles`).
+`ROUTING_BASE_URL` configura Valhalla privado (`infra/routing`);
+`ROUTING_COVERAGE=latin_america` declara los datos iniciales. El objetivo mundial
+del motor de rutas requiere construir y verificar ese índice antes de cambiar a
+`world`. La búsqueda y el fondo cartográfico ya cubren el mundo.
+
+`/service-status` presenta la comprobación actual de motores; no es un historial
+de disponibilidad. CI comprueba respaldo/restauración en PostgreSQL aislado.
+
+El build genera también `/downloads/mapora-react-2.0.0.tgz` y el cliente JS.
+El paquete se instala desde el archivo descargado; no se publica en npm.

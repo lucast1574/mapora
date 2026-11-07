@@ -12,6 +12,16 @@ import (
 
 func geoEndpoint(path string) string {
 	switch path {
+	case "/v1/autocomplete", "/v1/geocode":
+		return "search"
+	case "/v1/nearby":
+		return "nearby"
+	case "/v1/batch":
+		return "batch"
+	case "/v1/coverage", "/v1/coverage/check":
+		return "coverage"
+	case "/v1/routes", "/v1/matrix":
+		return "routing"
 	case "/v1/maps":
 		return "maps"
 	case "/v1/search", "/search":
@@ -43,19 +53,35 @@ func period(u User, now time.Time) (time.Time, time.Time) {
 	start := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
 	return start, start.AddDate(0, 1, 0)
 }
-func (p *Platform) reserve(ctx context.Context, key, endpoint string) (a allowance, err error) {
+func (p *Platform) reserve(ctx context.Context, key, endpoint string, origin ...string) (a allowance, err error) {
 	tx, err := p.db.BeginTx(ctx, nil)
 	if err != nil {
 		return a, err
 	}
 	defer tx.Rollback()
 	var scopes []string
-	err = tx.QueryRowContext(ctx, "SELECT id,user_id,scopes FROM api_keys WHERE token_hash=$1 AND revoked_at IS NULL", digest(key)).Scan(&a.KeyID, &a.UserID, &scopes)
+	var kind string
+	var origins []string
+	err = tx.QueryRowContext(ctx, "SELECT id,user_id,scopes,kind,allowed_origins FROM api_keys WHERE token_hash=$1 AND revoked_at IS NULL", digest(key)).Scan(&a.KeyID, &a.UserID, &scopes, &kind, &origins)
 	if err == sql.ErrNoRows {
 		return a, quotaError{Code: "invalid_key"}
 	}
 	if err != nil {
 		return a, err
+	}
+	if kind == "browser" {
+		matched := false
+		for _, allowed := range origins {
+			if len(origin) > 0 && allowed == origin[0] {
+				matched = true
+			}
+		}
+		if !matched {
+			return a, quotaError{Code: "origin_denied"}
+		}
+		if endpoint != "search" && endpoint != "reverse" && endpoint != "nearby" {
+			return a, quotaError{Code: "scope_denied"}
+		}
 	}
 	allowed := false
 	for _, s := range scopes {
@@ -176,7 +202,7 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	endpoint := geoEndpoint(r.URL.Path)
-	a, err := p.reserve(r.Context(), raw, endpoint)
+	a, err := p.reserve(r.Context(), raw, endpoint, r.Header.Get("Origin"))
 	if err != nil {
 		var q quotaError
 		if errors.As(err, &q) {
@@ -184,14 +210,14 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 			if q.Code == "billing_pending" {
 				code = 503
 			}
-			if q.Code == "scope_denied" || q.Code == "account_disabled" {
+			if q.Code == "scope_denied" || q.Code == "account_disabled" || q.Code == "origin_denied" {
 				code = 403
 			}
 			if q.Code == "quota_exceeded" || q.Code == "rate_limited" {
 				code = 429
 				w.Header().Set("Retry-After", strconv.Itoa(max(1, int(time.Until(q.Reset).Seconds()))))
 			}
-			problem(w, code, q.Code, map[string]string{"billing_pending": "La renovación está pendiente de sincronización. Sincroniza tu facturación o reintenta en unos minutos.", "invalid_key": "API key inválida o revocada.", "scope_denied": "La clave no tiene permiso para esta operación.", "account_disabled": "La cuenta está suspendida.", "quota_exceeded": "Agotaste la cuota del período. Cambia de plan para continuar.", "rate_limited": "Superaste el límite por minuto. Reintenta después."}[q.Code])
+			problem(w, code, q.Code, map[string]string{"origin_denied": "El origen no está autorizado para esta clave de navegador.", "billing_pending": "La renovación está pendiente de sincronización. Sincroniza tu facturación o reintenta en unos minutos.", "invalid_key": "API key inválida o revocada.", "scope_denied": "La clave no tiene permiso para esta operación.", "account_disabled": "La cuenta está suspendida.", "quota_exceeded": "Agotaste la cuota del período. Cambia de plan para continuar.", "rate_limited": "Superaste el límite por minuto. Reintenta después."}[q.Code])
 		} else {
 			problem(w, 503, "quota_unavailable", "No se pudo comprobar la cuota. Reintenta.")
 		}
@@ -206,7 +232,9 @@ func (p *Platform) protectGeo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Quota-Reset", a.End.Format(time.RFC3339))
 	start := time.Now()
 	writer := &statusWriter{ResponseWriter: w}
-	if endpoint == "maps" {
+	if r.URL.Path == "/v1/coverage/check" {
+		p.checkCoverage(writer, r, a)
+	} else if endpoint == "maps" {
 		p.createMap(writer, r, a)
 	} else {
 		p.geo.ServeHTTP(writer, r)

@@ -18,6 +18,7 @@ import (
 var schema string
 
 type Config struct {
+	TileURL                                                                                                                          string
 	DatabaseURL, AdminEmail, AdminPassword, AppURL, SiteURL, StripeKey, StripeWebhookSecret, StripePortalConfig, ResendKey, MailFrom string
 	StripePrices                                                                                                                     map[string]string
 	FirebaseProjectID, FirebaseAPIKey, FirebaseAppID                                                                                 string
@@ -29,6 +30,7 @@ type Platform struct {
 	stripeHTTP httpClient
 	mailHTTP   httpClient
 	google     googleVerifier
+	tileSlots  chan struct{}
 }
 
 func token(prefix string) string {
@@ -70,7 +72,7 @@ func New(ctx context.Context, c Config, geo httpHandler) (*Platform, error) {
 		db.Close()
 		return nil, err
 	}
-	p := &Platform{db: db, config: c, geo: geo, stripeHTTP: defaultHTTP(), mailHTTP: defaultHTTP(), google: googleVerifier{client: defaultHTTP(), certURL: "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"}}
+	p := &Platform{db: db, config: c, geo: geo, stripeHTTP: defaultHTTP(), mailHTTP: defaultHTTP(), tileSlots: make(chan struct{}, 32), google: googleVerifier{client: defaultHTTP(), certURL: "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"}}
 	// The explicitly configured bootstrap owner is already trusted by deployment.
 	if c.AdminEmail != "" {
 		if _, err = db.ExecContext(ctx, "UPDATE users SET email_verified=true WHERE email=$1 AND role='admin'", c.AdminEmail); err != nil {

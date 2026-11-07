@@ -32,6 +32,9 @@ func newCache() *cache {
 
 // A caller disconnecting does not cancel the work shared by other callers.
 func (c *cache) get(ctx context.Context, key string, ttl time.Duration, load func(context.Context) ([]byte, error)) ([]byte, bool, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, false, err
+	}
 	c.mu.Lock()
 	if item := c.items[key]; item != nil {
 		value := item.Value.(cachedValue)

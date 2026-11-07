@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  engine:
+    # Use the immutable digest recorded after building/smoke-testing the dataset.
+    image: ghcr.io/valhalla/valhalla-scripted@sha256:6238809f9dc3057743d70a20efd3911ec38e458bfa13a0601909b58f68dfd956
+    entrypoint: ["valhalla_service"]
+    command: ["/custom_files/valhalla.json", "2"]
+    volumes:
+      - /var/lib/mapora-next/routing:/custom_files:ro
+    networks: [dokploy-network]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.hostname == rangelserver1]
+      resources:
+        limits: {cpus: "4", memory: 8G}
+        reservations: {memory: 512M}
+      restart_policy: {condition: any, delay: 10s}
+    stop_grace_period: 60s
+networks:
+  dokploy-network: {external: true}

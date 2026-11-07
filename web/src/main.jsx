@@ -4,11 +4,20 @@ import PublicApp from "./PublicApp";
 import "./style.css";
 const Dashboard = lazy(() => import("./Dashboard"));
 const Auth = lazy(() => import("./Auth"));
+const Status = lazy(() => import("./pages/Status"));
 const MapViewer = lazy(() => import("./maps/MapViewer"));
 const path = location.pathname.replace(/\/$/, "") || "/";
 const root = document.getElementById("root");
 let content;
-if (path.startsWith("/map/"))
+if (path === "/service-status")
+  content = (
+    <Suspense
+      fallback={<div className="page-loading">Consultando estado…</div>}
+    >
+      <Status />
+    </Suspense>
+  );
+else if (path.startsWith("/map/"))
   content = (
     <Suspense
       fallback={

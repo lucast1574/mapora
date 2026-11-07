@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  engine:
+    image: mapora-pmtiles:1.31.2
+    command: ["serve", "/data", "--port=8080", "--cache-size=64"]
+    volumes:
+      - /var/lib/mapora-next/tiles:/data:ro
+    networks: [dokploy-network]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.hostname == rangelserver1]
+      resources:
+        limits: {cpus: "2", memory: 512M}
+      restart_policy: {condition: any, delay: 10s}
+  gateway:
+    image: caddy@sha256:78bd35025c7ba85961dd149ae670315129954e77abe2383ac47c89106b35ade9
+    volumes:
+      - /var/lib/mapora-next/assets:/assets:ro
+      - /var/lib/mapora-next/tiles/Caddyfile:/etc/caddy/Caddyfile:ro
+    networks: [dokploy-network]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.hostname == rangelserver1]
+      resources:
+        limits: {cpus: "1", memory: 256M}
+      restart_policy: {condition: any, delay: 10s}
+networks:
+  dokploy-network: {external: true}

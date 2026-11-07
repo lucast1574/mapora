@@ -4,9 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/lucast1574/nexode-maps-api/internal/mapsapi"
 	"html"
+	"io"
 	"math"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -17,17 +20,53 @@ type mapPoint struct {
 	Label     string   `json:"label,omitempty"`
 }
 type mapSpec struct {
-	Title     string     `json:"title"`
-	Center    *mapPoint  `json:"center"`
-	Markers   []mapPoint `json:"markers"`
-	Zoom      int        `json:"zoom"`
-	ExpiresIn int64      `json:"expiresIn,omitempty"`
+	Theme     string            `json:"theme,omitempty"`
+	Accent    string            `json:"accent,omitempty"`
+	Shapes    []mapsapi.Polygon `json:"shapes,omitempty"`
+	Route     *mapLine          `json:"route,omitempty"`
+	Title     string            `json:"title"`
+	Center    *mapPoint         `json:"center"`
+	Markers   []mapPoint        `json:"markers"`
+	Zoom      int               `json:"zoom"`
+	ExpiresIn int64             `json:"expiresIn,omitempty"`
 }
+type mapLine struct {
+	Type        string      `json:"type"`
+	Coordinates [][]float64 `json:"coordinates"`
+}
+
+var hexColor = regexp.MustCompile(`^#[0-9a-fA-F]{6}$`)
 
 func (s *mapSpec) normalize() bool {
 	s.Title = strings.TrimSpace(s.Title)
-	if len(s.Title) > 160 || len(s.Markers) > 20 {
+	if len(s.Title) > 160 || len(s.Markers) > 200 || len(s.Shapes) > 10 {
 		return false
+	}
+	if s.Theme != "" && s.Theme != "light" && s.Theme != "dark" && s.Theme != "grayscale" {
+		return false
+	}
+	if s.Accent != "" && !hexColor.MatchString(s.Accent) {
+		return false
+	}
+	for _, shape := range s.Shapes {
+		z := mapsapi.Zone{Name: "Shape", Geometry: shape, Currency: "USD"}
+		if z.Validate() != nil {
+			return false
+		}
+	}
+	if s.Route != nil {
+		if s.Route.Type != "LineString" || len(s.Route.Coordinates) < 2 || len(s.Route.Coordinates) > 10000 {
+			return false
+		}
+		for _, point := range s.Route.Coordinates {
+			if len(point) != 2 {
+				return false
+			}
+			lat, lng := point[1], point[0]
+			if math.IsNaN(lat) || math.IsNaN(lng) || math.IsInf(lat, 0) || math.IsInf(lng, 0) || lat < -85.05112878 || lat > 85.05112878 || lng < -180 || lng > 180 {
+				return false
+			}
+		}
 	}
 	valid := func(p *mapPoint) bool {
 		if p == nil || p.Latitude == nil || p.Longitude == nil {
@@ -65,8 +104,10 @@ func (s *mapSpec) normalize() bool {
 // authorize geocoding. Revoking the issuing key invalidates its view tokens.
 func (p *Platform) createMap(w http.ResponseWriter, r *http.Request, a allowance) {
 	var spec mapSpec
-	if decode(w, r, &spec) != nil || !spec.normalize() {
-		problem(w, 400, "invalid_map", "Indica un centro válido, hasta 20 marcadores, zoom de 1 a 19 y duración de 60 segundos a 30 días. Latitud: ±85.05112878; longitud: ±180.")
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 512<<10))
+	decoder.DisallowUnknownFields()
+	if decoder.Decode(&spec) != nil || decoder.Decode(&struct{}{}) != io.EOF || !spec.normalize() {
+		problem(w, 400, "invalid_map", "Indica un centro válido, hasta 200 marcadores, zoom de 1 a 19 y duración de 60 segundos a 30 días. Latitud: ±85.05112878; longitud: ±180.")
 		return
 	}
 	expires := time.Now().UTC().Add(time.Duration(spec.ExpiresIn) * time.Second)

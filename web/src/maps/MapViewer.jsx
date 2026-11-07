@@ -42,7 +42,7 @@ export default function MapViewer() {
           <p>Solicita un enlace vigente a la persona que lo compartió.</p>
         </div>
       ) : data ? (
-        <MapCanvas spec={data.map} />
+        <MapCanvas spec={data.map} tileBase={"/v1/maps/view/"+encodeURIComponent(token)+"/tiles"} />
       ) : (
         <div className="viewer-message" role="status">
           Cargando tu mapa…

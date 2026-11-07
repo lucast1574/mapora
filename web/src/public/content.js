@@ -115,7 +115,7 @@ export const pages = {
     sections: [
       {
         title: "Qué incluye el visor",
-        text: "El visor de Mapora utiliza Leaflet y el fondo cartográfico estándar de OpenStreetMap. Permite acercar, alejar, desplazarse, volver a las ubicaciones y abrir pantalla completa cuando el navegador lo admite. Puedes enviar hasta 20 marcadores con latitude, longitude y label. Los controles funcionan con teclado y el movimiento reducido se respeta automáticamente.",
+        text: "El visor de Mapora utiliza MapLibre y cartografía vectorial mundial de OpenStreetMap/Protomaps alojada por Mapora. Permite acercar, alejar, desplazarse, volver a las ubicaciones y abrir pantalla completa cuando el navegador lo admite. Puedes enviar hasta 200 marcadores con latitude, longitude y label. Los controles funcionan con teclado y el movimiento reducido se respeta automáticamente.",
       },
       {
         title: "Cómo insertarlo en otra web",
@@ -127,7 +127,7 @@ export const pages = {
       },
       {
         title: "Peticiones y límites de la cartografía",
-        text: "Generar un mapa consume una petición autenticada admitida. Abrir el visor, moverlo y hacer zoom no añade peticiones al consumo de Mapora. Los mosaicos se solicitan directamente desde el navegador a OpenStreetMap y dependen de su política y disponibilidad pública, sin garantía de servicio. La integración no incluye imágenes satelitales, mapas sin conexión, descarga masiva ni rutas de navegación.",
+        text: "Generar un mapa consume una petición autenticada admitida. Abrir el visor, moverlo y hacer zoom no añade peticiones al consumo de Mapora. Los mosaicos, fuentes e iconos cartográficos se sirven mediante Mapora. La API admite estilos claro, oscuro y escala de grises, color de marca, agrupación de marcadores, polígonos y geometrías de rutas. No incluye imágenes satelitales, mapas sin conexión ni descarga masiva de la cartografía.",
       },
     ],
   },

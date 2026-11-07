@@ -1,0 +1,12 @@
+:8081 {
+ handle_path /assets/* {
+  root * /assets
+  file_server
+ }
+ handle /world/* {
+  reverse_proxy mapora-tiles_engine:8080
+ }
+ handle {
+  respond 404
+ }
+}

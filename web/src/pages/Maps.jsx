@@ -6,7 +6,9 @@ import "../maps/maps.css";
 export default function Maps() {
   const [key, setKey] = useState(""),
     [zoom, setZoom] = useState("14"),
-    [days, setDays] = useState("7");
+    [days, setDays] = useState("7"),
+    [theme, setTheme] = useState("light"),
+    [accent, setAccent] = useState("#123f3b");
   const [result, setResult] = useState(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
@@ -31,6 +33,8 @@ export default function Maps() {
           title: f.get("title"),
           center,
           zoom: Number(zoom),
+          theme,
+          accent,
           expiresIn: Number(days) * 86400,
         },
         { "X-API-Key": key },
@@ -142,6 +146,29 @@ export default function Maps() {
                   { value: "7", label: "7 días" },
                   { value: "30", label: "30 días" },
                 ]}
+              />
+            </label>
+            <label>
+              Estilo del mapa
+              <Select
+                label="Estilo del mapa"
+                value={theme}
+                onChange={setTheme}
+                options={[
+                  { value: "light", label: "Claro" },
+                  { value: "dark", label: "Oscuro" },
+                  { value: "grayscale", label: "Escala de grises" },
+                ]}
+              />
+            </label>
+            <label>
+              Color de marcadores
+              <input
+                value={accent}
+                onChange={(e) => setAccent(e.target.value)}
+                pattern="#[0-9a-fA-F]{6}"
+                maxLength={7}
+                required
               />
             </label>
             <Notice error>{error}</Notice>

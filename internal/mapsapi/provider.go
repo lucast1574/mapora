@@ -14,23 +14,25 @@ import (
 const attribution = "© OpenStreetMap contributors"
 
 type Place struct {
-	ID             string  `json:"id,omitempty"`
-	PlaceName      string  `json:"placeName"`
-	Address        string  `json:"address"`
-	StreetAddress  string  `json:"streetAddress"`
-	Latitude       float64 `json:"latitude"`
-	Longitude      float64 `json:"longitude"`
-	Street         string  `json:"street,omitempty"`
-	HouseNumber    string  `json:"houseNumber,omitempty"`
-	District       string  `json:"district,omitempty"`
-	City           string  `json:"city,omitempty"`
-	State          string  `json:"state,omitempty"`
-	Country        string  `json:"country,omitempty"`
-	CountryCode    string  `json:"countryCode,omitempty"`
-	Postcode       string  `json:"postcode,omitempty"`
-	GoogleMapsLink string  `json:"googleMapsLink"`
-	Source         string  `json:"source"`
-	Attribution    string  `json:"attribution"`
+	Quality        AddressQuality `json:"quality"`
+	DistanceMeters *float64       `json:"distanceMeters,omitempty"`
+	ID             string         `json:"id,omitempty"`
+	PlaceName      string         `json:"placeName"`
+	Address        string         `json:"address"`
+	StreetAddress  string         `json:"streetAddress"`
+	Latitude       float64        `json:"latitude"`
+	Longitude      float64        `json:"longitude"`
+	Street         string         `json:"street,omitempty"`
+	HouseNumber    string         `json:"houseNumber,omitempty"`
+	District       string         `json:"district,omitempty"`
+	City           string         `json:"city,omitempty"`
+	State          string         `json:"state,omitempty"`
+	Country        string         `json:"country,omitempty"`
+	CountryCode    string         `json:"countryCode,omitempty"`
+	Postcode       string         `json:"postcode,omitempty"`
+	GoogleMapsLink string         `json:"googleMapsLink"`
+	Source         string         `json:"source"`
+	Attribution    string         `json:"attribution"`
 }
 
 type feature struct {
@@ -73,11 +75,13 @@ func (f feature) place() (Place, bool) {
 	if address == "" {
 		address = p.Name
 	}
-	return Place{ID: fmt.Sprintf("osm:%s:%d", p.OSMType, p.OSMID), PlaceName: p.Name,
+	result := Place{ID: fmt.Sprintf("osm:%s:%d", p.OSMType, p.OSMID), PlaceName: p.Name,
 		Address: displayAddress(p.Name, address), StreetAddress: address, Latitude: lat, Longitude: lng,
 		Street: p.Street, HouseNumber: p.HouseNumber, District: p.District, City: p.City, State: p.State,
 		Country: p.Country, CountryCode: p.CountryCode, Postcode: p.Postcode,
-		GoogleMapsLink: fmt.Sprintf("https://www.google.com/maps?q=%.6f,%.6f", lat, lng), Source: "photon", Attribution: attribution}, true
+		GoogleMapsLink: fmt.Sprintf("https://www.google.com/maps?q=%.6f,%.6f", lat, lng), Source: "photon", Attribution: attribution}
+	result.Quality = quality(result, p.Type)
+	return result, true
 }
 
 func (s *API) photon(ctx context.Context, path string, query url.Values) ([]Place, error) {

@@ -99,7 +99,7 @@ func Handler() http.Handler {
 			}
 		}
 		w.Header().Set("X-Robots-Tag", "noindex, nofollow, noarchive")
-		if urlPath == "/app" || strings.HasPrefix(urlPath, "/app/") || strings.HasPrefix(urlPath, "/map/") || urlPath == "/login" || urlPath == "/signup" || urlPath == "/forgot" || urlPath == "/reset" {
+		if urlPath == "/service-status" || urlPath == "/app" || strings.HasPrefix(urlPath, "/app/") || strings.HasPrefix(urlPath, "/map/") || urlPath == "/login" || urlPath == "/signup" || urlPath == "/forgot" || urlPath == "/reset" {
 			serveHTML(w, r, "shell.html", 200)
 			return
 		}

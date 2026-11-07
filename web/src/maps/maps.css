@@ -333,3 +333,5 @@
     top: 14px;
   }
 }
+
+.map-canvas{position:relative}.map-canvas-message{position:absolute;left:12px;right:12px;bottom:40px;background:var(--surface,#fff);color:var(--ink,#172b27);padding:10px 14px;border-radius:6px;font-size:12px;z-index:2}.maplibregl-canvas:focus,.maplibregl-ctrl button:focus{outline:none!important;box-shadow:none!important}.maplibregl-ctrl button:focus-visible{background:var(--mint,#cdebe0)}.maplibregl-ctrl-attrib{font-size:10px!important}.maplibregl-popup-content{font-family:inherit;color:#172b27;padding:12px 16px}.maplibregl-popup-close-button{padding:4px 8px}.maplibregl-marker:focus-visible{filter:brightness(1.3)}

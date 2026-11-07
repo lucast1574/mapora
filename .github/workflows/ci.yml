@@ -36,3 +36,13 @@ jobs:
       - run: go test -race -count=1 ./...
       - run: go vet ./...
       - run: go build ./cmd/api
+      - name: Verify isolated backup recovery
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          docker exec "$PG_CONTAINER" pg_dump -U vitruko -d mapora_test --no-owner --no-acl -Fc -f /tmp/mapora.dump
+          docker exec "$PG_CONTAINER" createdb -U vitruko mapora_recovery_test
+          docker exec "$PG_CONTAINER" pg_restore -U vitruko -d mapora_recovery_test --no-owner --no-acl --exit-on-error /tmp/mapora.dump
+          original=$(docker exec "$PG_CONTAINER" psql -U vitruko -d mapora_test -Atc 'SELECT count(*) FROM users')
+          restored=$(docker exec "$PG_CONTAINER" psql -U vitruko -d mapora_recovery_test -Atc 'SELECT count(*) FROM users')
+          test "$original" = "$restored"

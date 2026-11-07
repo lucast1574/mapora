@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Play, ArrowUpRight } from "lucide-react";
 import { api, appURL } from "../client";
 import { Button, Notice, Select } from "../ui";
+import ExpansionDocs from "./ExpansionDocs";
 export default function Docs({ heading = "De la dirección al dato" }) {
   const [operation, setOperation] = useState("search"),
     [key, setKey] = useState(""),
@@ -178,7 +179,7 @@ export default function Docs({ heading = "De la dirección al dato" }) {
         </p>
         <pre>{`curl "https://maps-api.nexode.app/v1/maps" \\\n  -H "X-API-Key: TU_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"title":"Mi ubicación","center":{"latitude":-12.119906,"longitude":-77.028971},"zoom":14,"expiresIn":604800}'`}</pre>
         <p>
-          El visor permite zoom, desplazamiento, pantalla completa y hasta 20{" "}
+          El visor permite zoom, desplazamiento, pantalla completa y hasta 200{" "}
           <code>markers</code> con <code>latitude</code>, <code>longitude</code>{" "}
           y <code>label</code>. El centro conserva las coordenadas enviadas. El
           enlace caduca en 7 días por defecto; <code>expiresIn</code> acepta
@@ -221,6 +222,7 @@ export default function Docs({ heading = "De la dirección al dato" }) {
           no es Google Places.
         </p>
       </div>
+      <ExpansionDocs/>
     </>
   );
 }

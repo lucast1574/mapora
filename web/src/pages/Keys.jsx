@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Plus, Copy, Check, KeyRound, Trash2 } from "lucide-react";
 import { useData } from "../useData";
 import { api, date } from "../client";
-import { Button, Modal, Notice, Empty } from "../ui";
+import { Button, Modal, Notice, Empty, Select } from "../ui";
 export default function Keys() {
   const { data, error, reload } = useData("/console/keys");
   const [modal, setModal] = useState(""),
@@ -20,6 +20,13 @@ export default function Keys() {
       const v = await api("/console/keys", "POST", {
         name: f.get("name"),
         scopes: f.getAll("scopes"),
+        kind,
+        allowedOrigins:
+          kind === "browser"
+            ? String(f.get("origins") || "")
+                .split(/\s+/)
+                .filter(Boolean)
+            : [],
       });
       setSecret(v);
       setModal("secret");
@@ -44,6 +51,7 @@ export default function Keys() {
       setBusy(false);
     }
   }
+  const [kind, setKind] = useState("secret");
   const active = data?.keys.filter((k) => !k.revokedAt) || [];
   return (
     <>
@@ -93,6 +101,11 @@ export default function Keys() {
                   </td>
                   <td>
                     <code>{k.prefix}</code>
+                    <small>
+                      {k.kind === "browser"
+                        ? "Navegador · " + k.allowedOrigins.join(", ")
+                        : "Privada · servidor"}
+                    </small>
                   </td>
                   <td>
                     <span className="scope-list">{k.scopes.join(" · ")}</span>
@@ -159,24 +172,62 @@ export default function Keys() {
                 autoFocus
               />
             </label>
-            <fieldset>
+            <label>
+              Tipo de clave
+              <Select
+                label="Tipo de clave"
+                value={kind}
+                onChange={setKind}
+                options={[
+                  { value: "secret", label: "Privada · backend" },
+                  { value: "browser", label: "Pública · navegador" },
+                ]}
+              />
+            </label>
+            {kind === "browser" && (
+              <label>
+                Orígenes autorizados
+                <textarea
+                  name="origins"
+                  placeholder="https://mi-app.com"
+                  required
+                  rows={3}
+                />
+                <small>
+                  Uno por línea, sin rutas ni comodines; HTTP solo en localhost
+                  o loopback para desarrollo. Es visible a tus visitantes y solo
+                  permite búsqueda, inversa y lugares cercanos.
+                </small>
+              </label>
+            )}
+            <fieldset key={kind}>
               <legend>Permisos</legend>
               {[
                 ["search", "Buscar direcciones"],
                 ["resolve", "Resolver enlaces de Maps"],
                 ["reverse", "Obtener dirección desde coordenadas"],
                 ["maps", "Crear mapas interactivos"],
-              ].map(([v, label]) => (
-                <label className="check-row" key={v}>
-                  <input
-                    type="checkbox"
-                    name="scopes"
-                    value={v}
-                    defaultChecked
-                  />
-                  {label}
-                </label>
-              ))}
+                ["nearby", "Lugares cercanos"],
+                ["coverage", "Comprobar cobertura"],
+                ["routing", "Rutas y matrices"],
+                ["batch", "Procesar lotes"],
+              ]
+                .filter(
+                  ([v]) =>
+                    kind !== "browser" ||
+                    ["search", "reverse", "nearby"].includes(v),
+                )
+                .map(([v, label]) => (
+                  <label className="check-row" key={v}>
+                    <input
+                      type="checkbox"
+                      name="scopes"
+                      value={v}
+                      defaultChecked
+                    />
+                    {label}
+                  </label>
+                ))}
             </fieldset>
             <Notice error>{localError}</Notice>
             <Button busy={busy}>Crear clave</Button>

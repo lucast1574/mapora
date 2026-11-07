@@ -59,6 +59,7 @@ func (p *Platform) private(fn http.HandlerFunc, admin bool) http.HandlerFunc {
 }
 func (p *Platform) Handler() http.Handler {
 	mux := http.NewServeMux()
+	p.tileRoutes(mux)
 	mux.HandleFunc("POST /console/signup", p.signup)
 	mux.HandleFunc("POST /console/login", p.login)
 	mux.HandleFunc("GET /console/auth/providers", p.providers)
@@ -75,13 +76,16 @@ func (p *Platform) Handler() http.Handler {
 	}
 	mux.HandleFunc("POST /stripe/webhook", p.webhook)
 	mux.HandleFunc("GET /v1/maps/view/{token}", p.mapView)
+	mux.HandleFunc("GET /console/zones", p.private(p.zones, false))
+	mux.HandleFunc("POST /console/zones", p.private(p.saveZone, false))
+	mux.HandleFunc("DELETE /console/zones/{id}", p.private(p.deleteZone, false))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasPrefix(r.URL.Path, "/console/") || strings.HasPrefix(r.URL.Path, "/v1/") || strings.HasPrefix(r.URL.Path, "/map/") || r.URL.Path == "/stripe/webhook" || r.URL.Path == "/health" || r.URL.Path == "/openapi.json" || geoEndpoint(r.URL.Path) != "" {
+		if strings.HasPrefix(r.URL.Path, "/console/") || strings.HasPrefix(r.URL.Path, "/v1/") || strings.HasPrefix(r.URL.Path, "/map/") || r.URL.Path == "/stripe/webhook" || r.URL.Path == "/status" || r.URL.Path == "/health" || r.URL.Path == "/openapi.json" || geoEndpoint(r.URL.Path) != "" {
 			w.Header().Set("X-Robots-Tag", "noindex, nofollow, noarchive")
 		}
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "same-origin")
-		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.googleusercontent.com; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://checkout.stripe.com https://billing.stripe.com")
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.googleusercontent.com; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://checkout.stripe.com https://billing.stripe.com")
 		if r.URL.Path == "/login" || r.URL.Path == "/signup" {
 			w.Header().Set("Cross-Origin-Opener-Policy", "same-origin-allow-popups")
 			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self' https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.googleusercontent.com; font-src 'self'; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; frame-src https://"+p.config.FirebaseProjectID+".firebaseapp.com https://accounts.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'")
@@ -89,9 +93,9 @@ func (p *Platform) Handler() http.Handler {
 		if strings.HasPrefix(r.URL.Path, "/map/") {
 			// Only the capability-based viewer is embeddable; account pages stay protected.
 			w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
-			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'")
+			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'")
 		}
-		if strings.HasPrefix(r.URL.Path, "/v1/maps/view/") {
+		if strings.HasPrefix(r.URL.Path, "/v1/tiles/") || strings.HasPrefix(r.URL.Path, "/v1/maps/view/") {
 			mux.ServeHTTP(w, r)
 			return
 		}

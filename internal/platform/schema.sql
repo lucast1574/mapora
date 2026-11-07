@@ -68,3 +68,10 @@ CREATE TABLE IF NOT EXISTS map_views (
 CREATE INDEX IF NOT EXISTS map_views_expiry ON map_views(expires_at);
 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url text NOT NULL DEFAULT '';
+ALTER TABLE api_keys ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT 'secret';
+ALTER TABLE api_keys ADD COLUMN IF NOT EXISTS allowed_origins text[] NOT NULL DEFAULT '{}';
+CREATE TABLE IF NOT EXISTS coverage_zones (
+ id text PRIMARY KEY,user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ name text NOT NULL,payload jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS coverage_zones_owner ON coverage_zones(user_id);

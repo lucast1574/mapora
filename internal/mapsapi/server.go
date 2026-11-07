@@ -11,13 +11,17 @@ import (
 )
 
 type API struct {
-	provider      string
-	upstream      *http.Client
-	google        *http.Client
-	cache         *cache
-	providerSlots chan struct{}
-	providerPace  *time.Ticker
-	requests      chan struct{}
+	provider        string
+	upstream        *http.Client
+	google          *http.Client
+	cache           *cache
+	providerSlots   chan struct{}
+	providerPace    *time.Ticker
+	requests        chan struct{}
+	routingURL      string
+	routingSlots    chan struct{}
+	routingCoverage string
+	tileURL         string
 }
 
 func New(provider string) (*API, error) {
@@ -45,7 +49,7 @@ func (s *API) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, 200, map[string]any{
-			"service": "Nexode Maps API", "version": "1.0.0", "authentication": "none", "docs": "/openapi.json",
+			"service": "Mapora API", "version": "3.0.0", "authentication": "api_key", "docs": "/openapi.json",
 			"endpoints":   map[string]string{"search": "GET /v1/search?q=Miraflores&countrycodes=pe", "reverse": "GET /v1/reverse?lat=-12.12&lng=-77.03", "resolve": "POST /v1/resolve {\"url\":\"https://maps.app.goo.gl/...\"}"},
 			"attribution": attribution})
 	})
@@ -53,6 +57,14 @@ func (s *API) Handler() http.Handler {
 		writeJSON(w, 200, map[string]string{"status": "ok", "service": "nexode-maps-api"})
 	})
 	mux.HandleFunc("GET /openapi.json", serveOpenAPI)
+	mux.HandleFunc("GET /v1/autocomplete", s.search)
+	mux.HandleFunc("GET /v1/geocode", s.structured)
+	mux.HandleFunc("GET /v1/nearby", s.nearby)
+	mux.HandleFunc("POST /v1/batch", s.batch)
+	mux.HandleFunc("POST /v1/coverage", coverageHTTP)
+	mux.HandleFunc("POST /v1/routes", s.routes)
+	mux.HandleFunc("POST /v1/matrix", s.matrix)
+	mux.HandleFunc("GET /status", s.status)
 	for _, path := range []string{"/v1/search", "/search"} {
 		mux.HandleFunc("GET "+path, s.search)
 	}

@@ -1,0 +1,20 @@
+{
+  "name": "@mapora/react",
+  "version": "2.0.0",
+  "description": "Mapora address search and location picker for React",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "licenses"
+  ],
+  "exports": {
+    ".": "./dist/mapora-react.js",
+    "./style.css": "./dist/mapora.css"
+  },
+  "peerDependencies": {
+    "react": ">=19 <20",
+    "react-dom": ">=19 <20"
+  },
+  "license": "MIT"
+}
