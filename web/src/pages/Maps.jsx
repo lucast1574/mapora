@@ -15,6 +15,7 @@ export default function Maps() {
     e.preventDefault();
     setBusy(true);
     setError("");
+    setResult(null);
     setCopied("");
     const f = new FormData(e.currentTarget);
     try {
