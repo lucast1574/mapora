@@ -31,13 +31,34 @@
             "description": "Healthy"
           },
           "401": {
-            "description": "Missing, invalid or revoked API key"
+            "description": "Missing, invalid or revoked API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Account suspended or missing scope"
+            "description": "Account suspended or missing scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "security": [],
@@ -119,57 +140,90 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "query": {
-                      "type": "string"
-                    },
-                    "results": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Location"
-                      }
-                    },
-                    "count": {
-                      "type": "integer"
-                    },
-                    "cached": {
-                      "type": "boolean"
-                    },
-                    "tookMs": {
-                      "type": "integer"
-                    },
-                    "attribution": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/SearchResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Google Maps link could not be resolved"
+            "description": "Google Maps link could not be resolved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geocoding provider unavailable"
+            "description": "Geocoding provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy"
+            "description": "Service busy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "504": {
-            "description": "Timeout"
+            "description": "Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing, invalid or revoked API key"
+            "description": "Missing, invalid or revoked API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Account suspended or missing scope"
+            "description": "Account suspended or missing scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         }
       }
@@ -210,28 +264,84 @@
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Google Maps link could not be resolved"
+            "description": "Google Maps link could not be resolved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geocoding provider unavailable"
+            "description": "Geocoding provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy"
+            "description": "Service busy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "504": {
-            "description": "Timeout"
+            "description": "Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing, invalid or revoked API key"
+            "description": "Missing, invalid or revoked API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Account suspended or missing scope"
+            "description": "Account suspended or missing scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         }
       }
@@ -280,28 +390,84 @@
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Google Maps link could not be resolved"
+            "description": "Google Maps link could not be resolved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geocoding provider unavailable"
+            "description": "Geocoding provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy"
+            "description": "Service busy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "504": {
-            "description": "Timeout"
+            "description": "Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing, invalid or revoked API key"
+            "description": "Missing, invalid or revoked API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Account suspended or missing scope"
+            "description": "Account suspended or missing scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         }
       },
@@ -339,28 +505,84 @@
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Google Maps link could not be resolved"
+            "description": "Google Maps link could not be resolved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geocoding provider unavailable"
+            "description": "Geocoding provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy"
+            "description": "Service busy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "504": {
-            "description": "Timeout"
+            "description": "Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing, invalid or revoked API key"
+            "description": "Missing, invalid or revoked API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Account suspended or missing scope"
+            "description": "Account suspended or missing scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "description": ""
@@ -475,19 +697,54 @@
             }
           },
           "400": {
-            "description": "Invalid coordinates, markers, zoom or lifetime"
+            "description": "Invalid coordinates, markers, zoom or lifetime",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or invalid API key"
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "maps scope required or suspended account"
+            "description": "maps scope required or suspended account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota or rate exceeded"
+            "description": "Quota or rate exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Storage or quota unavailable"
+            "description": "Storage or quota unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         }
       }
@@ -512,10 +769,24 @@
             "description": "Map specification and expiry"
           },
           "404": {
-            "description": "Invalid, expired, revoked or suspended map"
+            "description": "Invalid, expired, revoked or suspended map",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Storage unavailable"
+            "description": "Storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         }
       }
@@ -595,57 +866,90 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "query": {
-                      "type": "string"
-                    },
-                    "results": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Location"
-                      }
-                    },
-                    "count": {
-                      "type": "integer"
-                    },
-                    "cached": {
-                      "type": "boolean"
-                    },
-                    "tookMs": {
-                      "type": "integer"
-                    },
-                    "attribution": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/SearchResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Google Maps link could not be resolved"
+            "description": "Google Maps link could not be resolved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geocoding provider unavailable"
+            "description": "Geocoding provider unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy"
+            "description": "Service busy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "504": {
-            "description": "Timeout"
+            "description": "Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing, invalid or revoked API key"
+            "description": "Missing, invalid or revoked API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Account suspended or missing scope"
+            "description": "Account suspended or missing scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Monthly quota or per-minute rate exceeded; see Retry-After"
+            "description": "Monthly quota or per-minute rate exceeded; see Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         }
       }
@@ -660,28 +964,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SearchResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or revoked key"
+            "description": "Missing or revoked key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Scope/origin/account denied"
+            "description": "Scope/origin/account denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota/rate limit; honor Retry-After"
+            "description": "Quota/rate limit; honor Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geographic engine unavailable"
+            "description": "Geographic engine unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy/unavailable"
+            "description": "Service busy/unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -788,28 +1134,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/NearbyResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or revoked key"
+            "description": "Missing or revoked key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Scope/origin/account denied"
+            "description": "Scope/origin/account denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota/rate limit; honor Retry-After"
+            "description": "Quota/rate limit; honor Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geographic engine unavailable"
+            "description": "Geographic engine unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy/unavailable"
+            "description": "Service busy/unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -886,28 +1274,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BatchResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or revoked key"
+            "description": "Missing or revoked key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Scope/origin/account denied"
+            "description": "Scope/origin/account denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota/rate limit; honor Retry-After"
+            "description": "Quota/rate limit; honor Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geographic engine unavailable"
+            "description": "Geographic engine unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy/unavailable"
+            "description": "Service busy/unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -965,28 +1395,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/CoverageResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or revoked key"
+            "description": "Missing or revoked key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Scope/origin/account denied"
+            "description": "Scope/origin/account denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota/rate limit; honor Retry-After"
+            "description": "Quota/rate limit; honor Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geographic engine unavailable"
+            "description": "Geographic engine unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy/unavailable"
+            "description": "Service busy/unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -1029,28 +1501,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/CoverageResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or revoked key"
+            "description": "Missing or revoked key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Scope/origin/account denied"
+            "description": "Scope/origin/account denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota/rate limit; honor Retry-After"
+            "description": "Quota/rate limit; honor Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geographic engine unavailable"
+            "description": "Geographic engine unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy/unavailable"
+            "description": "Service busy/unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -1093,31 +1607,80 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/RouteResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or revoked key"
+            "description": "Missing or revoked key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Scope/origin/account denied"
+            "description": "Scope/origin/account denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota/rate limit; honor Retry-After"
+            "description": "Quota/rate limit; honor Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geographic engine unavailable"
+            "description": "Geographic engine unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy/unavailable"
+            "description": "Service busy/unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "422": {
-            "description": "No accessible road/path connection in available routing data; no straight-line substitute."
+            "description": "No accessible road/path connection in available routing data; no straight-line substitute.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -1164,31 +1727,80 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/MatrixResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid input"
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "401": {
-            "description": "Missing or revoked key"
+            "description": "Missing or revoked key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Scope/origin/account denied"
+            "description": "Scope/origin/account denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "429": {
-            "description": "Quota/rate limit; honor Retry-After"
+            "description": "Quota/rate limit; honor Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "502": {
-            "description": "Geographic engine unavailable"
+            "description": "Geographic engine unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "503": {
-            "description": "Service busy/unavailable"
+            "description": "Service busy/unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           },
           "422": {
-            "description": "No accessible road/path connection in available routing data; no straight-line substitute."
+            "description": "No accessible road/path connection in available routing data; no straight-line substitute.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         },
         "requestBody": {
@@ -1243,7 +1855,14 @@
             "description": "Status, checkedAt, components and request limits"
           },
           "503": {
-            "description": "Unable to check status"
+            "description": "Unable to check status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIError"
+                }
+              }
+            }
           }
         }
       }
@@ -1494,6 +2113,451 @@
         "required": [
           "type",
           "coordinates"
+        ]
+      },
+      "APIError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "error"
+        ]
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Location"
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "cached": {
+            "type": "boolean"
+          },
+          "tookMs": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "results",
+          "count",
+          "attribution"
+        ]
+      },
+      "NearbyResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SearchResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "radiusMeters": {
+                "type": "number",
+                "minimum": 0
+              },
+              "distanceType": {
+                "const": "straight_line"
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "pharmacy",
+                  "restaurant",
+                  "hospital",
+                  "fuel",
+                  "supermarket",
+                  "hotel",
+                  "bank",
+                  "parking",
+                  "cafe"
+                ]
+              }
+            },
+            "required": [
+              "radiusMeters",
+              "distanceType",
+              "category"
+            ]
+          }
+        ]
+      },
+      "RouteGeometry": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "LineString"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minItems": 2,
+            "description": "GeoJSON positions in longitude, latitude order. Road geometry; original pins are returned separately."
+          }
+        },
+        "required": [
+          "type",
+          "coordinates"
+        ]
+      },
+      "RouteStep": {
+        "type": "object",
+        "properties": {
+          "instruction": {
+            "type": "string"
+          },
+          "distanceMeters": {
+            "type": "number",
+            "minimum": 0
+          },
+          "durationSeconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "type": {
+            "type": "integer"
+          },
+          "streetNames": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "beginShapeIndex": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "endShapeIndex": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "legIndex": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "instruction",
+          "distanceMeters",
+          "durationSeconds",
+          "type",
+          "streetNames",
+          "beginShapeIndex",
+          "endShapeIndex",
+          "legIndex"
+        ]
+      },
+      "RouteResponse": {
+        "type": "object",
+        "properties": {
+          "profile": {
+            "type": "string",
+            "enum": [
+              "driving",
+              "walking",
+              "cycling"
+            ]
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "minItems": 2,
+            "maxItems": 10,
+            "description": "Original requested coordinates, unchanged."
+          },
+          "snappedLocations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "minItems": 2,
+            "maxItems": 10,
+            "description": "Actual start/end coordinates of each road leg."
+          },
+          "distanceMeters": {
+            "type": "number",
+            "minimum": 0
+          },
+          "durationSeconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/RouteGeometry"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouteStep"
+            }
+          },
+          "traffic": {
+            "const": "not_included"
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "world",
+              "latin_america",
+              "unspecified"
+            ]
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "cached": {
+            "type": "boolean"
+          },
+          "tookMs": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "profile",
+          "locations",
+          "snappedLocations",
+          "distanceMeters",
+          "durationSeconds",
+          "geometry",
+          "steps",
+          "traffic",
+          "coverage",
+          "attribution"
+        ]
+      },
+      "MatrixResponse": {
+        "type": "object",
+        "properties": {
+          "durationSeconds": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Null when no reachable path exists for this pair."
+              },
+              "minItems": 1,
+              "maxItems": 10
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "distanceMeters": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "description": "Null when no reachable path exists for this pair."
+              },
+              "minItems": 1,
+              "maxItems": 10
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "traffic": {
+            "const": "not_included"
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "world",
+              "latin_america",
+              "unspecified"
+            ]
+          },
+          "attribution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "durationSeconds",
+          "distanceMeters",
+          "sources",
+          "targets",
+          "traffic",
+          "coverage",
+          "attribution"
+        ]
+      },
+      "BatchResult": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "status": {
+                "const": "ok"
+              },
+              "result": {
+                "$ref": "#/components/schemas/Location"
+              }
+            },
+            "required": [
+              "id",
+              "query",
+              "status",
+              "result"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "status": {
+                "const": "not_found"
+              }
+            },
+            "required": [
+              "id",
+              "query",
+              "status"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "status": {
+                "const": "error"
+              },
+              "code": {
+                "type": "string",
+                "enum": [
+                  "search_unavailable",
+                  "invalid_response"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "query",
+              "status",
+              "code"
+            ]
+          }
+        ]
+      },
+      "BatchResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BatchResult"
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "attribution": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "results",
+          "count",
+          "attribution"
+        ]
+      },
+      "CoverageResponse": {
+        "type": "object",
+        "properties": {
+          "covered": {
+            "type": "boolean"
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            },
+            "maxItems": 20
+          },
+          "point": {
+            "$ref": "#/components/schemas/Point"
+          },
+          "feePolicy": {
+            "const": "all_matching_zones"
+          }
+        },
+        "required": [
+          "covered",
+          "matches",
+          "point",
+          "feePolicy"
         ]
       }
     },
