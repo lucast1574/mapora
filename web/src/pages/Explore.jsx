@@ -131,7 +131,7 @@ export default function Explore() {
             disabled={busy}
             value={city}
             maxLength={100}
-            placeholder="Opcional: Trujillo"
+            placeholder="Escribe una ciudad"
             onChange={(e) => {
               setCity(e.target.value);
               setResult(null);
