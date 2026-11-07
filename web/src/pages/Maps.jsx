@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { ArrowUpRight, Copy, MapPin, Check } from "lucide-react";
 import { api, date } from "../client";
 import { Button, Notice, Select } from "../ui";
+import AddressSearch from "../location/AddressSearch";
+import MapCanvas from "../maps/MapCanvas";
 import "../maps/maps.css";
 export default function Maps() {
+  const [point, setPoint] = useState(null),
+    [title, setTitle] = useState("");
   const [key, setKey] = useState(""),
     [zoom, setZoom] = useState("14"),
     [days, setDays] = useState("7"),
@@ -19,18 +23,14 @@ export default function Maps() {
     setError("");
     setResult(null);
     setCopied("");
-    const f = new FormData(e.currentTarget);
     try {
-      const center = {
-        latitude: Number(f.get("lat")),
-        longitude: Number(f.get("lng")),
-        label: f.get("title"),
-      };
+      if (!point) throw new Error("Selecciona primero un punto en el mapa.");
+      const center = { ...point, label: title };
       const v = await api(
         "/v1/maps",
         "POST",
         {
-          title: f.get("title"),
+          title,
           center,
           zoom: Number(zoom),
           theme,
@@ -60,8 +60,11 @@ export default function Maps() {
     <>
       <div className="page-title">
         <div>
-          <h1>Un punto. Tu propio mapa.</h1>
-          <p>Genera una vista interactiva y llévala a tu aplicación.</p>
+          <h1>Crea un mapa para compartir</h1>
+          <p>
+            Elige un lugar, ajusta el pin y obtén un enlace o un mapa para tu
+            web.
+          </p>
         </div>
         <a className="text-link" href="/app/docs">
           Ver API <ArrowUpRight size={17} />
@@ -69,14 +72,14 @@ export default function Maps() {
       </div>
       <div className="maps-builder">
         <section className="map-settings">
-          <h2>Elige la ubicación</h2>
+          <h2>1. Elige el lugar</h2>
           <p>
-            Usa las coordenadas de una búsqueda o de un enlace resuelto. La
-            clave necesita el permiso «Crear mapas».
+            Haz clic en el mapa o busca una dirección. Después podrás ajustar el
+            pin con otro clic.
           </p>
           <form onSubmit={generate}>
             <label>
-              API key
+              API key con permiso Crear mapas
               <input
                 type="password"
                 autoComplete="off"
@@ -86,95 +89,137 @@ export default function Maps() {
                 required
               />
             </label>
+            <AddressSearch
+              apiKey={key}
+              label="Buscar el lugar (opcional)"
+              onSelect={(p) => {
+                setPoint({ latitude: p.latitude, longitude: p.longitude });
+                setTitle(p.placeName || p.street || p.address);
+                setResult(null);
+              }}
+            />
+            <p className="map-usage-note">
+              Para buscar direcciones, tu clave también necesita el permiso
+              Búsqueda.
+            </p>
+            <h2>2. Dale un nombre</h2>
             <label>
               Nombre del lugar
               <input
                 name="title"
-                defaultValue="Miraflores, Lima"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Nombre que verán tus visitantes"
                 maxLength={160}
                 required
               />
             </label>
-            <div className="map-coordinate-fields">
+            <details className="builder-details">
+              <summary>Coordenadas y apariencia</summary>
+              <div className="map-coordinate-fields">
+                <label>
+                  Latitud
+                  <input
+                    type="number"
+                    step="any"
+                    min="-85.05112878"
+                    max="85.05112878"
+                    name="lat"
+                    value={point?.latitude ?? ""}
+                    onChange={(e) => {
+                      setResult(null);
+                      setPoint({
+                        latitude:
+                          e.target.value === "" ? "" : Number(e.target.value),
+                        longitude: point?.longitude ?? "",
+                      });
+                    }}
+                    required
+                  />
+                </label>
+                <label>
+                  Longitud
+                  <input
+                    type="number"
+                    step="any"
+                    min="-180"
+                    max="180"
+                    name="lng"
+                    value={point?.longitude ?? ""}
+                    onChange={(e) => {
+                      setResult(null);
+                      setPoint({
+                        longitude:
+                          e.target.value === "" ? "" : Number(e.target.value),
+                        latitude: point?.latitude ?? "",
+                      });
+                    }}
+                    required
+                  />
+                </label>
+              </div>
               <label>
-                Latitud
-                <input
-                  type="number"
-                  step="any"
-                  min="-85.05112878"
-                  max="85.05112878"
-                  name="lat"
-                  defaultValue="-12.119906"
-                  required
+                Acercamiento
+                <Select
+                  value={zoom}
+                  onChange={setZoom}
+                  label="Acercamiento"
+                  options={[
+                    { value: "10", label: "Ciudad" },
+                    { value: "14", label: "Barrio" },
+                    { value: "17", label: "Calle" },
+                    { value: "19", label: "Detalle" },
+                  ]}
                 />
               </label>
               <label>
-                Longitud
+                Validez del enlace
+                <Select
+                  value={days}
+                  onChange={setDays}
+                  label="Validez del enlace"
+                  options={[
+                    { value: "1", label: "1 día" },
+                    { value: "7", label: "7 días" },
+                    { value: "30", label: "30 días" },
+                  ]}
+                />
+              </label>
+              <label>
+                Estilo del mapa
+                <Select
+                  label="Estilo del mapa"
+                  value={theme}
+                  onChange={setTheme}
+                  options={[
+                    { value: "light", label: "Claro" },
+                    { value: "dark", label: "Oscuro" },
+                    { value: "grayscale", label: "Escala de grises" },
+                  ]}
+                />
+              </label>
+              <label>
+                Color de marcadores
                 <input
-                  type="number"
-                  step="any"
-                  min="-180"
-                  max="180"
-                  name="lng"
-                  defaultValue="-77.028971"
+                  value={accent}
+                  onChange={(e) => setAccent(e.target.value)}
+                  pattern="#[0-9a-fA-F]{6}"
+                  maxLength={7}
                   required
                 />
               </label>
-            </div>
-            <label>
-              Acercamiento
-              <Select
-                value={zoom}
-                onChange={setZoom}
-                label="Acercamiento"
-                options={[
-                  { value: "10", label: "Ciudad" },
-                  { value: "14", label: "Barrio" },
-                  { value: "17", label: "Calle" },
-                  { value: "19", label: "Detalle" },
-                ]}
-              />
-            </label>
-            <label>
-              Validez del enlace
-              <Select
-                value={days}
-                onChange={setDays}
-                label="Validez del enlace"
-                options={[
-                  { value: "1", label: "1 día" },
-                  { value: "7", label: "7 días" },
-                  { value: "30", label: "30 días" },
-                ]}
-              />
-            </label>
-            <label>
-              Estilo del mapa
-              <Select
-                label="Estilo del mapa"
-                value={theme}
-                onChange={setTheme}
-                options={[
-                  { value: "light", label: "Claro" },
-                  { value: "dark", label: "Oscuro" },
-                  { value: "grayscale", label: "Escala de grises" },
-                ]}
-              />
-            </label>
-            <label>
-              Color de marcadores
-              <input
-                value={accent}
-                onChange={(e) => setAccent(e.target.value)}
-                pattern="#[0-9a-fA-F]{6}"
-                maxLength={7}
-                required
-              />
-            </label>
+            </details>
             <Notice error>{error}</Notice>
-            <Button busy={busy}>
+            <Button
+              busy={busy}
+              disabled={
+                !point ||
+                !Number.isFinite(point.latitude) ||
+                !Number.isFinite(point.longitude)
+              }
+            >
               <MapPin size={17} />
-              Generar mapa
+              Crear enlace del mapa
             </Button>
           </form>
           <p className="map-usage-note">
@@ -187,6 +232,9 @@ export default function Maps() {
             <>
               <div className="map-preview-title">
                 <strong>Listo para compartir</strong>
+                <Button variant="secondary" onClick={() => setResult(null)}>
+                  Ajustar ubicación
+                </Button>
                 <a href={result.url} target="_blank" rel="noopener noreferrer">
                   Abrir mapa <ArrowUpRight size={16} />
                 </a>
@@ -235,12 +283,42 @@ export default function Maps() {
               </div>
             </>
           ) : (
-            <div className="map-preview-empty">
-              <MapPin size={36} />
-              <h2>Aquí comienza el recorrido</h2>
-              <p>
-                Configura una ubicación y genera tu mapa. Después podrás
-                explorar, compartir o copiar el código para tu web.
+            <div className="map-draft">
+              <div className="map-preview-title">
+                <strong>
+                  {point
+                    ? "Ubicación seleccionada"
+                    : "Haz clic para colocar tu pin"}
+                </strong>
+                <span>Vista previa</span>
+              </div>
+              <MapCanvas
+                spec={{
+                  center:
+                    point &&
+                    Number.isFinite(point.latitude) &&
+                    Number.isFinite(point.longitude)
+                      ? point
+                      : { latitude: -12.119906, longitude: -77.028971 },
+                  markers:
+                    point &&
+                    Number.isFinite(point.latitude) &&
+                    Number.isFinite(point.longitude)
+                      ? [point]
+                      : [],
+                  zoom: Number(zoom),
+                  theme,
+                  accent,
+                }}
+                onSelect={(p) => {
+                  setPoint(p);
+                  setResult(null);
+                }}
+              />
+              <p className="builder-caption">
+                {point
+                  ? "¿Está bien ubicado? Ponle un nombre y crea el enlace."
+                  : "Todavía no has elegido una ubicación. Puedes mover y acercar el mapa."}
               </p>
             </div>
           )}

@@ -2,6 +2,7 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { Search, MapPin } from "lucide-react";
 
 import { useSuggestions } from "./useSuggestions";
+import "./location.css";
 export { geoRequest } from "./geoClient";
 export default function AddressSearch({
   apiKey,
