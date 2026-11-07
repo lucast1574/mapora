@@ -41,8 +41,8 @@ func (s *API) SetRoutingCoverage(coverage string) error {
 	if coverage == "" {
 		coverage = "unspecified"
 	}
-	if coverage != "world" && coverage != "americas_europe" && coverage != "latin_america" && coverage != "unspecified" {
-		return errors.New("ROUTING_COVERAGE must be world, americas_europe or latin_america")
+	if coverage != "world" && coverage != "americas" && coverage != "latin_america" && coverage != "unspecified" {
+		return errors.New("ROUTING_COVERAGE must be world, americas or latin_america")
 	}
 	s.routingCoverage = coverage
 	return nil

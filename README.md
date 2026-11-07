@@ -155,8 +155,8 @@ petición; batch10, ruta10, matriz10×10. Claves públicas de navegador por orig
 `TILE_BASE_URL` configura el gateway privado de cartografía (`infra/tiles`).
 `ROUTING_BASE_URL` configura Valhalla privado (`infra/routing`);
 `ROUTING_COVERAGE=latin_america` declara los datos iniciales. La ampliación
-seleccionada es América y Europa: construir y verificar ese índice antes de
-declarar `americas_europe`. La búsqueda y el fondo cartográfico cubren el mundo.
+seleccionada es toda América: construir y verificar ese índice antes de
+declarar `americas`. La búsqueda y el fondo cartográfico cubren el mundo.
 
 `/service-status` presenta la comprobación actual de motores; no es un historial
 de disponibilidad. CI comprueba respaldo/restauración en PostgreSQL aislado.

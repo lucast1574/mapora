@@ -14,25 +14,22 @@ un objeto OSM: normalizar el resultado con `osmium time-filter` sin timestamp y
 comprobar `osmium fileinfo -e -j` (`objects_ordered=true`,
 `multiple_versions=false`) antes de iniciar Valhalla.
 
-La ampliación seleccionada es América y Europa, preparada por separado en
-`/var/lib/mapora-next/routing-americas-europe`. El origen es la instantánea OSMF
-`planet-261102.osm.pbf` del 2 de noviembre de 2026, 95 715 394 709 bytes,
-MD5 `1792712d6ca6e275d1c832229a858fca`, distribuida desde el bucket público
-`osm-planet-eu-central-1`. Comprobar tamaño y checksum contra su archivo `.md5`.
-La descarga se conserva en `routing-world`; su construcción mundial se detuvo por
-decisión del propietario. Reutilizar el archivo y la base administrativa que
-terminó, sin repetir esa preparación. Una descarga correcta no equivale a un
-grafo terminado ni a cobertura activa.
+La ampliación seleccionada es toda América, preparada por separado en
+`/var/lib/mapora-next/routing-americas`. Combinar el extracto Geofabrik
+`north-america-261105.osm.pbf` (19 543 728 071 bytes) con el PBF normalizado de
+Latinoamérica ya preparado. Usar el archivo fechado y verificar su `.md5`; el
+alias `latest` no publica un `.md5` en este caso.
 
-Recortar con `osmium extract`, estrategia `complete_ways`, usando la unión de los
-polígonos oficiales de Norteamérica, Centroamérica, Sudamérica y Europa. Guardar
-sus hashes y el polígono utilizado. Comprobar `osmium fileinfo -e -j` antes de
-construir. Reutilizar `admins.sqlite` y `default_speeds.json` ya preparados; el
+Unir con `osmium merge` y normalizar con `osmium time-filter` para evitar versiones
+duplicadas en México. Comprobar `osmium fileinfo -e -j` antes de construir.
+Reutilizar `admins.sqlite` y `default_speeds.json` ya preparados; el
 constructor usa `build_admins=False` porque la base existe, no porque se eliminen
-las reglas administrativas.
+las reglas administrativas. La base administrativa proviene de la instantánea
+OSMF del 2 de noviembre de 2026. Los constructores mundial y América/Europa
+anteriores se detuvieron por decisión del propietario y no deben reanudarse.
 
 La imagen se fija al mismo digest del compose. La construcción regional usa
-4 hilos, 6 CPU y hasta 24 GiB; América/Europa, 16 hilos, 16 CPU y hasta 36 GiB sin
+4 hilos, 6 CPU y hasta 24 GiB; toda América, 16 hilos, 16 CPU y hasta 36 GiB sin
 swap adicional. Se ejecutan secuencialmente para reservar recursos al resto de las
 aplicaciones. Los datos de elevación y zonas horarias están desactivados: no se
 ofrece planificación con hora de salida ni cálculos basados en elevación.
@@ -51,16 +48,16 @@ espacio y el rendimiento reales antes de decidir si generar el extracto tar.
    `/status`, rutas por calles, perfiles auto/pedestrian/bicycle y matrices.
 3. Para Latinoamérica probar países de Sudamérica, México, Centroamérica y
    Caribe, además de un cruce fronterizo. Para ampliar, añadir ciudades de
-   EE. UU., Canadá y Europa. Conservar un reporte con
+   EE. UU., Canadá y un cruce entre ambos. Conservar un reporte con
    distancias, duraciones y latencias. Comprobar también puntos sin conexión.
 4. Solo después activar `ROUTING_BASE_URL` en la API y declarar
-   `ROUTING_COVERAGE=latin_america` o `americas_europe` según los datos efectivamente
+   `ROUTING_COVERAGE=latin_america` o `americas` según los datos efectivamente
    validados. Conservar los mismos endpoints y las claves existentes.
 5. Verificar desde la API pública coordenadas originales, geometría GeoJSON,
    instrucciones, cuotas y el panel real. Conservar el índice anterior para
    revertir el volumen sin restaurar bases de clientes.
 
-América y Europa se activan cambiando el volumen del compose a su directorio una
+toda América se activan cambiando el volumen del compose a su directorio una
 vez validado; no cambiar solamente la etiqueta de cobertura. El servicio mantiene
 2 hilos, 4 CPU y 8 GiB, con healthcheck privado y sin exposición de Valhalla.
 Los límites de distancia del motor se documentan en `docs/expansion.md`.

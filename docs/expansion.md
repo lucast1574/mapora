@@ -1,6 +1,6 @@
 # Mapora: expansión geográfica
 
-La búsqueda sigue siendo mundial. La cartografía vectorial propia también cubre el mundo. El motor de rutas empieza con Sudamérica, México, Centroamérica y Caribe y se amplía a América y Europa sin cambiar el contrato HTTP ni los SDK. La construcción mundial fue cancelada por decisión del propietario; no confundir la cobertura mundial de búsqueda/cartografía con la de rutas.
+La búsqueda sigue siendo mundial. La cartografía vectorial propia también cubre el mundo. El motor de rutas empieza con Sudamérica, México, Centroamérica y Caribe y se amplía a toda América sin cambiar el contrato HTTP ni los SDK. La construcción mundial fue cancelada por decisión del propietario; no confundir la cobertura mundial de búsqueda/cartografía con la de rutas.
 
 ## Contratos y consumo
 
@@ -18,7 +18,7 @@ Se conservan `/v1/search`, `/v1/reverse`, `/v1/resolve` y `/v1/maps`, las claves
 
 Las vistas y sus mosaicos no añaden peticiones geográficas. Los límites del plan por minuto se conservan, también en Scale. Hay límites de concurrencia globales en consulta geográfica(64 peticiones), proveedores(4 Photon/4 rutas) y cartografía(32 transferencias); los motores tienen límites de CPU/RAM. Los fallos admitidos y caché mantienen la contabilización previa. No se guardan cuerpos, consultas ni coordenadas en los registros de consumo.
 
-El motor de rutas conserva límites de distancia para proteger el servicio: 5000 km en automóvil, 250 km a pie y 500 km en bicicleta; para matrices, 400 km en automóvil y 200 km a pie/bicicleta. Estos son límites de admisión del motor, no una promesa de que exista una conexión por carretera entre dos puntos. La cobertura mundial no conecta continentes separados por océanos.
+El motor de rutas conserva límites de distancia para proteger el servicio: 5000 km en automóvil, 250 km a pie y 500 km en bicicleta; para matrices, 400 km en automóvil y 200 km a pie/bicicleta. Estos son límites de admisión del motor, no una promesa de que exista una conexión por carretera entre dos puntos. La cobertura de un continente no garantiza una conexión entre países o islas.
 
 ## SDK y claves públicas
 
@@ -40,4 +40,4 @@ Las actualizaciones de datos son explícitas: descargar en staging, verificar ch
 
 Al combinar extractos regionales, comprobar que el PBF esté ordenado y no tenga múltiples versiones de un objeto. Un merge de instantáneas con fechas distintas puede conservar versiones duplicadas: normalizar con `osmium time-filter` sin fecha y comprobar `osmium fileinfo -e -j` antes de construir. Los datos regionales corregidos se preparan en `/var/lib/mapora-next/routing-v2`, separados del primer intento descartado. El volumen de producción es de solo lectura y el proceso arranca directamente con `valhalla_service`, sin ejecutar el constructor.
 
-Para América y Europa: recortar la instantánea OSMF verificada con la unión de los polígonos regionales de Geofabrik en un área nueva, conservar referencias completas de vías, verificar orden y versiones, construir y probar Norteamérica/Europa además de los trayectos existentes. Reutilizar la base administrativa preparada y conservar exactamente los mismos endpoints. La cobertura se declara como `americas_europe` solo después de validar el motor. No sustituirlo por una demo pública ni anunciar países no cargados.
+Para toda América: unir el extracto fechado y verificado de Norteamérica con el PBF normalizado de Latinoamérica en un área nueva, verificar orden y versiones, construir y probar EE. UU./Canadá además de los trayectos existentes. Reutilizar la base administrativa preparada y conservar exactamente los mismos endpoints. La cobertura se declara como `americas` solo después de validar el motor. No sustituirlo por una demo pública ni anunciar países no cargados.
