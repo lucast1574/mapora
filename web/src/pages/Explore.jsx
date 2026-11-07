@@ -349,6 +349,8 @@ export default function Explore() {
                   <p className="geo-hint">
                     Cobertura de rutas: {serviceStatus.coverage?.routing === "world"
                       ? "mundial"
+                      : serviceStatus.coverage?.routing === "americas_europe"
+                        ? "América y Europa"
                       : serviceStatus.coverage?.routing === "latin_america"
                         ? "Latinoamérica"
                         : "por confirmar"}.

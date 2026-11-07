@@ -59,6 +59,8 @@ export default function Status() {
               mundial; rutas:{" "}
               {data.coverage?.routing === "world"
                 ? "mundiales"
+                : data.coverage?.routing === "americas_europe"
+                  ? "América y Europa"
                 : data.coverage?.routing === "latin_america"
                   ? "Latinoamérica"
                   : "cobertura por confirmar"}

@@ -2326,6 +2326,7 @@
             "type": "string",
             "enum": [
               "world",
+              "americas_europe",
               "latin_america",
               "unspecified"
             ]
@@ -2416,6 +2417,7 @@
             "type": "string",
             "enum": [
               "world",
+              "americas_europe",
               "latin_america",
               "unspecified"
             ]

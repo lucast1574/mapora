@@ -83,7 +83,7 @@ export default function ExpansionDocs() {
       <p>
         La búsqueda y el fondo cartográfico tienen cobertura mundial. Las rutas
         comienzan en Latinoamérica (Sudamérica, México, Centroamérica y Caribe);
-        la ampliación mundial del motor de rutas es una etapa independiente. No
+        la ampliación a toda América y Europa se activa tras validar su índice. No
         incluyen tráfico en tiempo real, transporte público, imágenes
         satelitales ni navegación sin conexión. Un trayecto fuera del índice,
         desconectado o inaccesible para el perfil devuelve route_not_found, sin

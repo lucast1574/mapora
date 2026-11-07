@@ -1,6 +1,6 @@
 # Mapora: expansión geográfica
 
-La búsqueda sigue siendo mundial. La cartografía vectorial propia también cubre el mundo. El motor de rutas empieza con Sudamérica, México, Centroamérica y Caribe y debe ampliarse al mundo sin cambiar el contrato HTTP ni los SDK. No presentar la cobertura mundial de búsqueda/cartografía como cobertura mundial de rutas.
+La búsqueda sigue siendo mundial. La cartografía vectorial propia también cubre el mundo. El motor de rutas empieza con Sudamérica, México, Centroamérica y Caribe y se amplía a América y Europa sin cambiar el contrato HTTP ni los SDK. La construcción mundial fue cancelada por decisión del propietario; no confundir la cobertura mundial de búsqueda/cartografía con la de rutas.
 
 ## Contratos y consumo
 
@@ -40,4 +40,4 @@ Las actualizaciones de datos son explícitas: descargar en staging, verificar ch
 
 Al combinar extractos regionales, comprobar que el PBF esté ordenado y no tenga múltiples versiones de un objeto. Un merge de instantáneas con fechas distintas puede conservar versiones duplicadas: normalizar con `osmium time-filter` sin fecha y comprobar `osmium fileinfo -e -j` antes de construir. Los datos regionales corregidos se preparan en `/var/lib/mapora-next/routing-v2`, separados del primer intento descartado. El volumen de producción es de solo lectura y el proceso arranca directamente con `valhalla_service`, sin ejecutar el constructor.
 
-Para rutas mundiales: preparar datos OSM mundiales o una estrategia de mosaicos compatibles en un área nueva, medir disco/memoria/tiempo de construcción antes de activar, comprobar países de todos los continentes y trayectos fronterizos, actualizar la cobertura declarada y conservar exactamente los mismos endpoints. No sustituir el motor por una demo pública ni anunciar países no cargados.
+Para América y Europa: recortar la instantánea OSMF verificada con la unión de los polígonos regionales de Geofabrik en un área nueva, conservar referencias completas de vías, verificar orden y versiones, construir y probar Norteamérica/Europa además de los trayectos existentes. Reutilizar la base administrativa preparada y conservar exactamente los mismos endpoints. La cobertura se declara como `americas_europe` solo después de validar el motor. No sustituirlo por una demo pública ni anunciar países no cargados.
