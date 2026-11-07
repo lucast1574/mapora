@@ -1,4 +1,4 @@
-:where(.location-picker) {
+:where(.location-picker, .address-search) {
   --raised: #eef3ef;
   --surface: #fff;
   --border: #e1e9e3;
@@ -13,11 +13,16 @@
 .location-picker * {
   box-sizing: border-box;
 }
-.location-picker input {
+.location-picker input,
+.address-search input {
   font: inherit;
   color: inherit;
   outline: none;
   box-shadow: none;
+}
+.location-picker button,
+.location-picker a {
+  outline: none;
 }
 .location-picker button:focus-visible {
   background: #cdebe0;
