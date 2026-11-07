@@ -544,7 +544,7 @@ export default function Landing() {
               ],
               [
                 "¿Puedo limitar la búsqueda a un país o una ciudad?",
-                "Sí. countrycodes limita por país. Para campos separados, /v1/geocode admite city, street y otros componentes. En búsqueda libre y autocompletado, lat/lng prioriza una zona y bbox acota un área; no tienen un filtro city independiente.",
+                "Sí. countrycodes limita por país y la búsqueda admite city, district y state. Para campos separados usa /v1/geocode. lat/lng prioriza una zona y bbox acota un área. Perú tiene además un índice propio de calles: puede devolver una referencia de calle cuando el número no está registrado, sin presentarla como una casa exacta.",
               ],
               [
                 "¿Tengo que mostrar un mapa?",

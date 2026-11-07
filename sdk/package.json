@@ -1,6 +1,6 @@
 {
   "name": "@mapora/react",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Mapora address search and location picker for React",
   "type": "module",
   "files": [

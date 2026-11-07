@@ -68,7 +68,7 @@
     "/v1/search": {
       "get": {
         "summary": "Search addresses, streets, districts and places",
-        "description": "Global OSM search with autocomplete, optional country filters, bounding box and location bias. Names use the local OSM language by default. Requires an API key.",
+        "description": "Worldwide place search plus an offline Peru street index when Peru or local context is selected. Street references do not verify a requested house number; inspect quality and match.",
         "parameters": [
           {
             "name": "q",
@@ -132,6 +132,33 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized administrative-name filter. Use countrycodes=PE for the supplementary offline Peru street index; bbox remains a rectangular geographic constraint."
+          },
+          {
+            "name": "district",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized administrative-name filter. Use countrycodes=PE for the supplementary offline Peru street index; bbox remains a rectangular geographic constraint."
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized administrative-name filter. Use countrycodes=PE for the supplementary offline Peru street index; bbox remains a rectangular geographic constraint."
           }
         ],
         "responses": {
@@ -794,7 +821,7 @@
     "/v1/autocomplete": {
       "get": {
         "summary": "Address autocomplete (search scope)",
-        "description": "Global OSM search with autocomplete, optional country filters, bounding box and location bias. Names use the local OSM language by default. Requires an API key.",
+        "description": "Worldwide place search plus an offline Peru street index when Peru or local context is selected. Street references do not verify a requested house number; inspect quality and match.",
         "parameters": [
           {
             "name": "q",
@@ -858,6 +885,33 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized administrative-name filter. Use countrycodes=PE for the supplementary offline Peru street index; bbox remains a rectangular geographic constraint."
+          },
+          {
+            "name": "district",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized administrative-name filter. Use countrycodes=PE for the supplementary offline Peru street index; bbox remains a rectangular geographic constraint."
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized administrative-name filter. Use countrycodes=PE for the supplementary offline Peru street index; bbox remains a rectangular geographic constraint."
           }
         ],
         "responses": {
@@ -1951,6 +2005,12 @@
           "distanceMeters": {
             "type": "number",
             "description": "Straight-line meters from nearby query center."
+          },
+          "county": {
+            "type": "string"
+          },
+          "match": {
+            "$ref": "#/components/schemas/StreetMatch"
           }
         }
       },
@@ -2560,6 +2620,35 @@
           "matches",
           "point",
           "feePolicy"
+        ]
+      },
+      "StreetMatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "coordinateType": {
+            "const": "street_reference",
+            "description": "A reference to a street, not an exact doorway. Municipal references are label positions in the published working map."
+          },
+          "requestedHouseNumber": {
+            "type": "string"
+          },
+          "houseNumberMatched": {
+            "const": false
+          },
+          "sourceURL": {
+            "type": "string"
+          },
+          "sourceDate": {
+            "type": "string",
+            "description": "Source snapshot/document date, not the request date."
+          }
+        },
+        "required": [
+          "coordinateType",
+          "houseNumberMatched",
+          "sourceURL",
+          "sourceDate"
         ]
       }
     },

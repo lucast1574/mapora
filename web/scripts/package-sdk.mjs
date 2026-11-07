@@ -17,3 +17,7 @@ execFileSync(
   { stdio: "inherit" },
 );
 copyFileSync("public/mapora-client.js", "dist/downloads/mapora-client.js");
+// Keep the original archive available at its versioned URL.
+copyFileSync("../sdk/releases/mapora-react-2.0.0.tgz", "dist/downloads/mapora-react-2.0.0.tgz");
+copyFileSync("../internal/mapsapi/data/peru-streets.json.gz", "dist/downloads/peru-streets.json.gz");
+copyFileSync("../internal/mapsapi/data/peru-streets.json.manifest.json", "dist/downloads/peru-streets.manifest.json");

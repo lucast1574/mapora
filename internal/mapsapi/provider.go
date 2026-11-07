@@ -14,6 +14,8 @@ import (
 const attribution = "© OpenStreetMap contributors"
 
 type Place struct {
+	Match          *StreetMatch   `json:"match,omitempty"`
+	County         string         `json:"county,omitempty"`
 	Quality        AddressQuality `json:"quality"`
 	DistanceMeters *float64       `json:"distanceMeters,omitempty"`
 	ID             string         `json:"id,omitempty"`
@@ -81,6 +83,7 @@ func (f feature) place() (Place, bool) {
 		Country: p.Country, CountryCode: p.CountryCode, Postcode: p.Postcode,
 		GoogleMapsLink: fmt.Sprintf("https://www.google.com/maps?q=%.6f,%.6f", lat, lng), Source: "photon", Attribution: attribution}
 	result.Quality = quality(result, p.Type)
+	result.County = p.County
 	return result, true
 }
 

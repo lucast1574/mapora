@@ -32,6 +32,13 @@ Respect the attribution displayed by the map.
 a previously selected address when the user edits the text, before submitting
 a route, coverage check or another operation that requires a confirmed selection.
 
+Both components accept optional `city`, `district` and `state` filters. Combine
+them with `country="PE"` to use the offline Peru street index. A result with
+`match.coordinateType === "street_reference"` identifies a street reference,
+not a doorway. `match.houseNumberMatched` is false; never replace a requested
+house number with an invented coordinate. Municipal references are derived from
+published map labels. `match.sourceURL` and `match.sourceDate` provide provenance.
+
 TypeScript declarations are included. `baseURL` defaults to the production API;
 `className` and `style` let your app compose the picker. With a strict CSP, allow
 your API base in `connect-src`, the bundled same-origin worker in `worker-src`,

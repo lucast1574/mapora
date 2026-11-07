@@ -1,0 +1,57 @@
+{
+  "records": 190651,
+  "osmRecords": 190298,
+  "municipalRecords": 353,
+  "departments": 25,
+  "sources": [
+    {
+      "url": "https://download.geofabrik.de/south-america/peru-261105.osm.pbf",
+      "md5": "0000a5e658777d61fdc853fa0751588c",
+      "date": "2026-11-05",
+      "license": "ODbL-1.0"
+    },
+    {
+      "url": "https://munitrujillo.gob.pe/Archivosvirtual/plandet/AREA%20URBANA%20SECTOR%2022.pdf",
+      "sha256": "8901f99b60aa01927ed55b6bbf9aef77c3fd88e8b008355fe2074493546b7179",
+      "date": "2021-06-04",
+      "reference": "WGS84 / UTM 17S; municipal working map; approximate street-label reference"
+    },
+    {
+      "url": "https://munitrujillo.gob.pe/Archivosvirtual/plandet/AREA_URBANA_SECTOR_20.pdf",
+      "sha256": "89a79f0ced5f43bd925c5df23a8ea3c3fd0e5ab968e35910f88cb33dbd041792",
+      "date": "2020-12-14",
+      "reference": "WGS84 / UTM 17S; municipal working map; approximate street-label reference"
+    },
+    {
+      "url": "https://munitrujillo.gob.pe/Archivosvirtual/plandet/AREA%20URBANA%20SECTOR%2008.pdf",
+      "sha256": "9c2728b634c13ad771c8c1eb72cdf4eab01f13b6584b525b1f828e381db80a62",
+      "date": "2021-06-04",
+      "reference": "WGS84 / UTM 17S; municipal working map; approximate street-label reference"
+    },
+    {
+      "url": "https://munitrujillo.gob.pe/Archivosvirtual/plandet/AREA%20URBANA%20SECTOR%2006.pdf",
+      "sha256": "0e87f1ec77f6d964122dc37d942a298dd850c52a36a6d4e87c4de9ef6776e027",
+      "date": "2021-04-12",
+      "reference": "WGS84 / UTM 17S; municipal working map; approximate street-label reference"
+    }
+  ],
+  "outputSHA256": "d35fdb1802ceb78016370102750dc520870708ffcbb31a1eefee0dffcd36e580",
+  "districtNames": 1302,
+  "administrativeSources": [
+    {
+      "url": "https://geoespacial.inei.gob.pe/geoserver/Interoperabilidad/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Interoperabilidad:ig_distrito&outputFormat=application/json&srsName=EPSG:4326",
+      "sha256": "3ca065b90a7dcd00fa66d967c7ea751dc824117f773116dbfe3212e5adc5abfe",
+      "referenceDate": "2022"
+    },
+    {
+      "url": "https://geoespacial.inei.gob.pe/geoserver/Interoperabilidad/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Interoperabilidad:ig_provincia&outputFormat=application/json&srsName=EPSG:4326",
+      "sha256": "26722897bfaaba29bad6cecc1f3c62e4037633601659b35422d9fe5b9342e6fe",
+      "referenceDate": "2022"
+    },
+    {
+      "url": "https://geoespacial.inei.gob.pe/geoserver/Interoperabilidad/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Interoperabilidad:ig_departamento&outputFormat=application/json&srsName=EPSG:4326",
+      "sha256": "b7af4093738d50a0f2e8bc816734640aa67064ee51134ff5745ad668a8e147f4",
+      "referenceDate": "2022"
+    }
+  ]
+}

@@ -74,12 +74,12 @@ func (s *API) structured(w http.ResponseWriter, r *http.Request) {
 }
 func (s *API) discover(w http.ResponseWriter, r *http.Request, path string, query url.Values) {
 	start := time.Now()
-	body, cached, err := s.cache.get(r.Context(), path+":"+query.Encode(), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
-		results, err := s.photon(ctx, path, query)
+	body, cached, err := s.cache.get(r.Context(), "street-search-v1:"+path+":"+query.Encode(), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
+		results, err := s.searchPlaces(ctx, path, query, r.URL.Query())
 		if err != nil {
 			return nil, err
 		}
-		return json.Marshal(map[string]any{"results": results, "count": len(results), "attribution": attribution})
+		return json.Marshal(map[string]any{"results": results, "count": len(results), "attribution": searchAttribution(results)})
 	})
 	if err != nil {
 		fail(w, 502, "search_unavailable", "No se pudo consultar el motor de búsqueda. Reintenta.")
@@ -185,8 +185,8 @@ func (s *API) batch(w http.ResponseWriter, r *http.Request) {
 				item := in.Items[i]
 				q, _ := providerQuery(url.Values{"countrycodes": {item.CountryCodes}, "limit": {"1"}})
 				q.Set("q", item.Query)
-				body, _, err := s.cache.get(r.Context(), "batch:"+q.Encode(), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
-					places, e := s.photon(ctx, "/api/", q)
+				body, _, err := s.cache.get(r.Context(), "batch-street-v1:"+q.Encode(), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
+					places, e := s.searchPlaces(ctx, "/api/", q, url.Values{})
 					if e != nil {
 						return nil, e
 					}
@@ -214,5 +214,11 @@ func (s *API) batch(w http.ResponseWriter, r *http.Request) {
 	}
 	close(jobs)
 	wg.Wait()
-	writeJSON(w, 200, map[string]any{"results": results, "count": len(results), "attribution": attribution})
+	places := []Place{}
+	for _, result := range results {
+		if p, ok := result["result"].(Place); ok {
+			places = append(places, p)
+		}
+	}
+	writeJSON(w, 200, map[string]any{"results": results, "count": len(results), "attribution": searchAttribution(places)})
 }

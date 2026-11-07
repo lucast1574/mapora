@@ -12,14 +12,14 @@ export const operations = [
     id: "search", title: "Buscar direcciones y lugares", method: "GET", path: "/v1/search", scope: "search", group: "buscar",
     description: "Búsqueda mundial de calles, direcciones, distritos y lugares. Devuelve candidatos para que la persona confirme su ubicación.",
     query: "q=Miraflores&countrycodes=PE&limit=5",
-    parameters: ["q: texto de 2–200 caracteres, obligatorio.", "limit: 1–20, por defecto 8. countrycodes: hasta 10 códigos ISO de dos letras separados por comas.", "lat y lng (o lon): priorizan resultados cercanos; no sustituyen un filtro de área.", "bbox: minLng,minLat,maxLng,maxLat. lang: es, local, en, de o fr; es/local conservan el nombre local disponible."],
-    response: "results contiene ubicaciones; count indica cuántas. Cada ubicación puede incluir placeName, address, streetAddress, latitude, longitude, street, houseNumber, district, city, state, country, countryCode, postcode, source, attribution y quality. Los campos descriptivos dependen de la fuente.",
+    parameters: ["q: texto de 2–200 caracteres, obligatorio.", "limit: 1–20, por defecto 8. countrycodes: hasta 10 códigos ISO de dos letras separados por comas.", "city, district y state: filtros por nombre administrativo normalizado (hasta 200 bytes). Usa countrycodes=PE para el índice propio de calles peruanas.", "lat y lng (o lon): priorizan resultados cercanos; no sustituyen un filtro de área.", "bbox: minLng,minLat,maxLng,maxLat. lang: es, local, en, de o fr; es/local conservan el nombre local disponible."],
+    response: "results contiene ubicaciones; count indica cuántas. Cada ubicación puede incluir placeName, address, streetAddress, latitude, longitude, street, houseNumber, district, city, state, country, countryCode, postcode, source, attribution y quality. Los campos descriptivos dependen de la fuente. Las referencias del índice propio añaden match.coordinateType:street_reference, sourceURL y sourceDate; houseNumberMatched:false indica que el número solicitado no fue confirmado.",
   },
   {
     id: "autocomplete", title: "Sugerir mientras se escribe", method: "GET", path: "/v1/autocomplete", scope: "search", group: "buscar",
     description: "Sugerencias de dirección con los filtros y el formato de respuesta de búsqueda.",
     query: "q=Avenida+Larco&countrycodes=PE&limit=5",
-    parameters: ["q: 2–200 caracteres. Admite limit, countrycodes, lat/lng, bbox y lang como /v1/search.", "El componente React consulta desde 3 caracteres, espera 350 ms y cancela resultados anteriores. Cada consulta admitida cuenta por separado."],
+    parameters: ["q: 2–200 caracteres. Admite limit, countrycodes, city, district, state, lat/lng, bbox y lang como /v1/search.", "El componente React consulta desde 3 caracteres, espera 350 ms y cancela resultados anteriores. Cada consulta admitida cuenta por separado."],
     response: "results, count y attribution, más los metadatos de caché y tiempo cuando están disponibles. Una lista vacía es una búsqueda válida sin coincidencias.",
   },
   {

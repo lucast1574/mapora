@@ -42,7 +42,11 @@ func (s *API) status(w http.ResponseWriter, r *http.Request) {
 				state = "degraded"
 			}
 		}
-		return json.Marshal(map[string]any{"status": state, "checkedAt": time.Now().UTC(), "components": components, "coverage": map[string]string{"search": "world", "routing": s.routingCoverage}, "limits": map[string]int{"batchItems": 10, "routeLocations": 10, "matrixSources": 10, "matrixTargets": 10, "coverageZones": 20}, "billing": "one_admitted_http_request", "traffic": "not_included"})
+		value := map[string]any{"status": state, "checkedAt": time.Now().UTC(), "components": components, "coverage": map[string]string{"search": "world", "routing": s.routingCoverage}, "limits": map[string]int{"batchItems": 10, "routeLocations": 10, "matrixSources": 10, "matrixTargets": 10, "coverageZones": 20}, "billing": "one_admitted_http_request", "traffic": "not_included"}
+		if s.streets != nil {
+			value["streetIndex"] = map[string]any{"country": "PE", "records": len(s.streets.records), "coordinateType": "street_reference", "downloadURL": "/downloads/peru-streets.json.gz"}
+		}
+		return json.Marshal(value)
 	})
 	if err != nil {
 		fail(w, 503, "status_unavailable", "No se pudo comprobar el estado.")

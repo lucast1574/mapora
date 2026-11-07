@@ -161,5 +161,10 @@ el mundo. Los trayectos dependen de las vías disponibles para cada perfil.
 `/service-status` presenta la comprobación actual de motores; no es un historial
 de disponibilidad. CI comprueba respaldo/restauración en PostgreSQL aislado.
 
-El build genera también `/downloads/mapora-react-2.0.0.tgz` y el cliente JS.
+El build genera también `/downloads/mapora-react-2.1.0.tgz` y el cliente JS.
 El paquete se instala desde el archivo descargado; no se publica en npm.
+
+La búsqueda de Perú incorpora un índice propio de vías OSM y referencias
+municipales, descrito en `infra/streets/README.md`. Usa país y ciudad para acotar
+la consulta. Las referencias de calle llevan `match.houseNumberMatched:false`;
+confirma el pin antes de guardar una entrega. No garantizan una casa exacta.

@@ -13,6 +13,9 @@ export default function LocationPicker({
   apiKey,
   baseURL = "",
   country = "",
+  city = "",
+  district = "",
+  state = "",
   onSelect,
   theme = "light",
   accent = "#123f3b",
@@ -52,7 +55,9 @@ export default function LocationPicker({
       setDraftLat(String(p.latitude));
       setDraftLng(String(p.longitude));
       if (p.address) {
-        setMessage("Dirección seleccionada. Puedes ajustar el pin.");
+        setMessage(p.match?.coordinateType === "street_reference"
+          ? "Calle seleccionada. Ajusta el pin para indicar el punto exacto."
+          : "Dirección seleccionada. Puedes ajustar el pin.");
         notify.current?.(p);
         setBusy(false);
         return;
@@ -122,6 +127,9 @@ export default function LocationPicker({
         apiKey={apiKey}
         baseURL={baseURL}
         country={country}
+        city={city}
+        district={district}
+        state={state}
         onSelect={select}
       />
       {baseURL && !apiKey ? (

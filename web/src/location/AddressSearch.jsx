@@ -6,6 +6,9 @@ export { geoRequest } from "./geoClient";
 export default function AddressSearch({
   apiKey,
   country = "",
+  city = "",
+  district = "",
+  state = "",
   baseURL = "",
   onSelect,
   onQueryChange,
@@ -23,6 +26,9 @@ export default function AddressSearch({
     query,
     apiKey,
     country,
+    city,
+    district,
+    state,
     baseURL,
     bias,
     enabled: query !== chosen.current,
@@ -34,7 +40,7 @@ export default function AddressSearch({
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
   }, []);
-  useEffect(() => setActive(-1), [query, apiKey, country]);
+  useEffect(() => setActive(-1), [query, apiKey, country, city, district, state]);
   function choose(place) {
     chosen.current = place.address;
     setQuery(place.address);
@@ -115,6 +121,9 @@ export default function AddressSearch({
               <span>
                 <strong>{p.placeName || p.street}</strong>
                 <small>{p.streetAddress}</small>
+                {p.match?.requestedHouseNumber && !p.match.houseNumberMatched && (
+                  <small>Referencia de calle; número sin confirmar.</small>
+                )}
               </span>
             </li>
           ))}

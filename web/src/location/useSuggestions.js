@@ -5,6 +5,9 @@ export function useSuggestions({
   query,
   apiKey,
   country = "",
+  city = "",
+  district = "",
+  state: region = "",
   baseURL = "",
   bias,
   enabled = true,
@@ -19,6 +22,9 @@ export function useSuggestions({
       setState({ ...empty, busy: true });
       const params = new URLSearchParams({ q: query, limit: "6" });
       if (country) params.set("countrycodes", country);
+      if (city) params.set("city", city);
+      if (district) params.set("district", district);
+      if (region) params.set("state", region);
       if (bias) {
         params.set("lat", bias.latitude);
         params.set("lng", bias.longitude);
@@ -46,6 +52,9 @@ export function useSuggestions({
     query,
     apiKey,
     country,
+    city,
+    district,
+    region,
     baseURL,
     bias?.latitude,
     bias?.longitude,

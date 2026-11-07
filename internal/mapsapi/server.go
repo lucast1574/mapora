@@ -11,6 +11,7 @@ import (
 )
 
 type API struct {
+	streets         *streetIndex
 	provider        string
 	upstream        *http.Client
 	google          *http.Client

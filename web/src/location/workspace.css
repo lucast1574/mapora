@@ -11,6 +11,7 @@
   font-size: 13px;
   font-weight: 500;
 }
+.geo-search-toolbar { grid-template-columns: minmax(180px, 1.4fr) minmax(100px, .6fr) minmax(140px, 1fr) minmax(140px, .8fr); }
 .geo-toolbar input,
 .geo-form input,
 .geo-form textarea {
@@ -242,6 +243,7 @@
   background: var(--mint);
 }
 @media (max-width: 1000px) {
+  .geo-search-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .geo-workbench,
   .geo-workbench.geo-routing-workbench {
     grid-template-columns: minmax(0, 1fr);
@@ -254,6 +256,7 @@
   }
 }
 @media (max-width: 650px) {
+  .geo-search-toolbar > label:last-child { grid-column: 1/-1; }
   .geo-toolbar {
     grid-template-columns: 1fr 1fr;
     gap: 12px;

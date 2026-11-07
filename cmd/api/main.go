@@ -43,6 +43,10 @@ func main() {
 		slog.Error("DATABASE_URL is required; refusing unauthenticated startup")
 		os.Exit(1)
 	}
+	if err := api.ConfigurePeruStreets(); err != nil {
+		slog.Error("Peru street index configuration failed", "error", err)
+		os.Exit(1)
+	}
 	if err := api.ConfigureRouting(os.Getenv("ROUTING_BASE_URL")); err != nil {
 		slog.Error("routing configuration failed", "error", err)
 		os.Exit(1)

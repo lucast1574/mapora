@@ -37,7 +37,7 @@ export const pages = {
       },
       {
         title: "País, ciudad y área de búsqueda",
-        text: "countrycodes=PE restringe a Perú; puedes enviar hasta diez países separados por comas. Para buscar por componentes separados usa GET /v1/geocode con street, housenumber, city, district, state, county o postcode. En búsqueda libre y autocompletado, lat/lng prioriza cercanía y bbox acota un rectángulo minLng,minLat,maxLng,maxLat; no existe un filtro city independiente en esos endpoints. El campo city de geocode forma parte de la consulta y no garantiza un límite administrativo.",
+        text: "countrycodes=PE restringe a Perú; puedes enviar hasta diez países separados por comas. Para buscar por componentes separados usa GET /v1/geocode con street, housenumber, city, district, state, county o postcode. La búsqueda libre y el autocompletado también admiten city, district y state como filtros administrativos por nombre. lat/lng prioriza cercanía y bbox acota un rectángulo minLng,minLat,maxLng,maxLat. Perú cuenta además con un índice propio de calles que devuelve referencias de vía cuando el número no está registrado, sin afirmar una coincidencia con la casa. El campo city de geocode forma parte de la consulta y no garantiza un límite administrativo.",
       },
       {
         title: "Del resultado al mapa",

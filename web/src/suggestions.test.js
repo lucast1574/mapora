@@ -4,3 +4,18 @@ function harness(t){const dom=new JSDOM('<div id="root"></div>');globalThis.wind
 const tick=()=>act(()=>new Promise(r=>setTimeout(r,380)));
 test("Suggestions debounce input, then discard late responses after a new search",async t=>{const h=harness(t);let release;let calls=[];t.mock.method(globalThis,"fetch",async(path,options)=>{calls.push({path,signal:options.signal});if(path.includes("Lima"))return new Promise(resolve=>release=()=>resolve(Response.json({results:["old"]})));return Response.json({results:["new"]});});await h.render({apiKey:"public-test",query:"Li"});await h.render({apiKey:"public-test",query:"Lima"});assert.equal(calls.length,0);await tick();assert.equal(calls.length,1);await h.render({apiKey:"public-test",query:"Bogota",country:"CO"});assert.deepEqual(h.state.results,[]);assert.equal(calls[0].signal.aborted,true);await tick();assert.deepEqual(h.state.results,["new"]);assert.ok(calls[1].path.includes("countrycodes=CO"));await act(async()=>release());assert.deepEqual(h.state.results,["new"]);});
 test("Suggestions surface errors and stop when the key is cleared",async t=>{const h=harness(t);let count=0;t.mock.method(globalThis,"fetch",async()=>{count++;return Response.json({error:"Origen no autorizado"},{status:403});});await h.render({apiKey:"public-test",query:"Miraflores"});await tick();assert.equal(h.state.error,"Origen no autorizado");assert.equal(h.state.busy,false);await h.render({apiKey:"",query:"Miraflores"});await tick();assert.equal(count,1);assert.deepEqual(h.state.results,[]);assert.equal(h.state.error,"");});
+
+test("Changing city cancels stale suggestions and sends geographic filters",async t=>{
+ const h=harness(t);const calls=[];let release;
+ t.mock.method(globalThis,"fetch",async(path,options)=>{
+  calls.push({path,signal:options.signal});
+  if(path.includes("city=Lima"))return new Promise(resolve=>release=()=>resolve(Response.json({results:["old city"]})));
+  return Response.json({results:["new city"]});
+ });
+ await h.render({apiKey:"public-test",query:"Tomas Jefferson",country:"PE",city:"Lima"});await tick();
+ await h.render({apiKey:"public-test",query:"Tomas Jefferson",country:"PE",city:"Trujillo",district:"Trujillo",state:"La Libertad"});
+ assert.equal(calls[0].signal.aborted,true);assert.deepEqual(h.state.results,[]);await tick();
+ const query=new URL(calls[1].path,"https://example.invalid").searchParams;
+ assert.equal(query.get("city"),"Trujillo");assert.equal(query.get("district"),"Trujillo");assert.equal(query.get("state"),"La Libertad");
+ await act(async()=>release());assert.deepEqual(h.state.results,["new city"]);
+});

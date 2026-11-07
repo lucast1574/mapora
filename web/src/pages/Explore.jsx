@@ -17,6 +17,7 @@ export default function Explore() {
   const [mode, setMode] = useState("location"),
     [key, setKey] = useState(""),
     [country, setCountry] = useState(""),
+    [city, setCity] = useState(""),
     [theme, setTheme] = useState("light"),
     [point, setPoint] = useState(null),
     [result, setResult] = useState(null),
@@ -93,7 +94,7 @@ export default function Explore() {
           Ver integración <ArrowUpRight size={16} />
         </a>
       </div>
-      <div className="geo-toolbar">
+      <div className="geo-toolbar geo-search-toolbar">
         <label>
           API key
           <input
@@ -114,10 +115,30 @@ export default function Explore() {
             disabled={busy}
             value={country}
             maxLength={2}
-            onChange={(e) =>
-              setCountry(e.target.value.toUpperCase().replace(/[^A-Z]/g, ""))
-            }
+            onChange={(e) => {
+              setCountry(e.target.value.toUpperCase().replace(/[^A-Z]/g, ""));
+              setResult(null);
+              setPoint(null);
+              setStart(null);
+              setEnd(null);
+            }}
             placeholder="Todos (PE, CO…)"
+          />
+        </label>
+        <label>
+          Ciudad de búsqueda
+          <input
+            disabled={busy}
+            value={city}
+            maxLength={100}
+            placeholder="Opcional: Trujillo"
+            onChange={(e) => {
+              setCity(e.target.value);
+              setResult(null);
+              setPoint(null);
+              setStart(null);
+              setEnd(null);
+            }}
           />
         </label>
         <label>
@@ -156,8 +177,10 @@ export default function Explore() {
       {mode === "location" ? (
         <div className="geo-workbench">
           <LocationPicker
+              key={`${country}:${city}`}
             apiKey={key}
             country={country}
+              city={city}
             onSelect={setPoint}
             theme={theme}
           />
@@ -229,6 +252,8 @@ export default function Explore() {
                     disabled={busy}
                     apiKey={key}
                     country={country}
+                    city={city}
+                    key={`${country}:${city}:origin`}
                     label="Origen"
                     onQueryChange={() => {
                       setStart(null);
@@ -243,6 +268,8 @@ export default function Explore() {
                     disabled={busy}
                     apiKey={key}
                     country={country}
+                    city={city}
+                    key={`${country}:${city}:destination`}
                     label="Destino"
                     onQueryChange={() => {
                       setEnd(null);
@@ -277,6 +304,8 @@ export default function Explore() {
                     disabled={busy}
                     apiKey={key}
                     country={country}
+                    city={city}
+                    key={`${country}:${city}:nearby`}
                     label="Buscar alrededor de"
                     onSelect={(p) => {
                       setPoint(p);

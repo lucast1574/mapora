@@ -9,6 +9,14 @@ export interface AddressQuality {
   verified: false;
 }
 export interface Location extends Point {
+  county?: string;
+  match?: {
+    coordinateType: "street_reference";
+    requestedHouseNumber?: string;
+    houseNumberMatched: false;
+    sourceURL: string;
+    sourceDate: string;
+  };
   placeName: string;
   source: string;
   id?: string;
@@ -33,6 +41,9 @@ export interface LocationPickerProps {
   apiKey: string;
   baseURL?: string;
   country?: string;
+  city?: string;
+  district?: string;
+  state?: string;
   onSelect?: (location: Location) => void;
   theme?: "light" | "dark" | "grayscale";
   accent?: string;
@@ -44,6 +55,9 @@ export interface AddressSearchProps {
   apiKey: string;
   baseURL?: string;
   country?: string;
+  city?: string;
+  district?: string;
+  state?: string;
   onSelect?: (location: Location) => void;
   onQueryChange?: (query: string) => void;
   label?: string;

@@ -46,8 +46,8 @@ const map = await postMapora('/v1/maps', {
       </section>
       <section className="docs-section" id="docs-sdk">
         <h2>React y JavaScript</h2>
-        <p><a href="/downloads/mapora-react-2.0.0.tgz" download>Descargar React 2.0.0</a> · <a href="/downloads/mapora-client.js" download>Descargar cliente JavaScript</a>. El paquete React se instala desde el archivo; no está publicado en el registro público de npm. Requiere React 19 y un bundler compatible; el mapa necesita WebGL.</p>
-        <pre>{`npm install ./mapora-react-2.0.0.tgz`}</pre>
+        <p><a href="/downloads/mapora-react-2.1.0.tgz" download>Descargar React 2.1.0</a> · <a href="/downloads/mapora-client.js" download>Descargar cliente JavaScript</a>. El paquete React se instala desde el archivo; no está publicado en el registro público de npm. Requiere React 19 y un bundler compatible; el mapa necesita WebGL.</p>
+        <pre>{`npm install ./mapora-react-2.1.0.tgz`}</pre>
         <h3>Solo buscador, sin mapa</h3>
         <pre>{`import { MaporaAddressSearch } from '@mapora/react';
 import '@mapora/react/style.css';
@@ -55,11 +55,13 @@ import '@mapora/react/style.css';
 <MaporaAddressSearch
   apiKey="mp_pub_TU_CLAVE_DE_NAVEGADOR"
   country="PE"
+  city="Lima"
+  district="Miraflores"
   bias={{ latitude: -12.12, longitude: -77.03 }}
   onQueryChange={() => invalidarSeleccionAnterior()}
   onSelect={(location) => guardarDireccion(location)}
 />`}</pre>
-        <p><code>country</code> es opcional y limita el país; <code>bias</code> prioriza una zona. El componente gestiona sugerencias, espera de 350 ms desde tres caracteres, cancelación y navegación por teclado. Invalida la selección anterior al editar el texto antes de enviar una ruta o comprobar cobertura.</p>
+        <p><code>country</code> limita el país; <code>city</code>, <code>district</code> y <code>state</code> filtran por contexto administrativo, y <code>bias</code> prioriza una zona. Todos son opcionales. El componente gestiona sugerencias, espera de 350 ms desde tres caracteres, cancelación y navegación por teclado. Invalida la selección anterior al editar el texto antes de enviar una ruta o comprobar cobertura. Si seleccionas una referencia de calle, el número sigue sin confirmar.</p>
         <h3>Buscador con pin ajustable</h3>
         <pre>{`import { MaporaLocationPicker } from '@mapora/react';
 import '@mapora/react/style.css';

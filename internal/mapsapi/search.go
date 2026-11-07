@@ -95,6 +95,11 @@ func (s *API) search(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	query.Set("q", text)
+	contextValues, valid := searchContext(values)
+	if !valid {
+		fail(w, 400, "invalid_query", "city, district y state admiten hasta 200 bytes cada uno.")
+		return
+	}
 	if values.Get("lat") != "" || values.Get("lng") != "" || values.Get("lon") != "" {
 		lat, lng, err := coordinateQuery(values)
 		if err != nil {
@@ -104,12 +109,12 @@ func (s *API) search(w http.ResponseWriter, r *http.Request) {
 		query.Set("lat", strconv.FormatFloat(lat, 'f', 5, 64))
 		query.Set("lon", strconv.FormatFloat(lng, 'f', 5, 64))
 	}
-	body, cached, err := s.cache.get(r.Context(), "search:"+query.Encode(), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
-		results, err := s.photon(ctx, "/api/", query)
+	body, cached, err := s.cache.get(r.Context(), "street-search-v1:"+query.Encode()+"|"+contextValues.Encode(), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
+		results, err := s.searchPlaces(ctx, "/api/", query, contextValues)
 		if err != nil {
 			return nil, err
 		}
-		return json.Marshal(map[string]any{"query": text, "results": results, "count": len(results), "attribution": attribution})
+		return json.Marshal(map[string]any{"query": text, "results": results, "count": len(results), "attribution": searchAttribution(results)})
 	})
 	if err != nil {
 		fail(w, 502, "search_unavailable", "No se pudo consultar el motor de búsqueda. Reintenta.")
