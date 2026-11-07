@@ -46,13 +46,17 @@ export function Empty({ title, children, action }) {
     </div>
   );
 }
-export function Select({ value, onChange, options, label }) {
+export function Select({ value, onChange, options, label, disabled = false }) {
   const [trigger, setTrigger] = React.useState(null);
   // Native modal dialogs make body-level portals inert and paint above them.
   // Keep the options in the same dialog as their trigger.
   const portalContainer = trigger?.closest("dialog") || undefined;
   return (
-    <SelectPrimitive.Root value={value} onValueChange={onChange}>
+    <SelectPrimitive.Root
+      value={value}
+      onValueChange={onChange}
+      disabled={disabled}
+    >
       <SelectPrimitive.Trigger
         ref={setTrigger}
         className="select-trigger"

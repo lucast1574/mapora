@@ -215,3 +215,16 @@
 .location-picker button[type="submit"]:focus-visible {
   background: var(--mint);
 }
+
+.picker-map-empty {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+  border-radius: 10px;
+  background: var(--raised);
+  color: var(--muted);
+  font-size: 14px;
+}

@@ -36,7 +36,11 @@ export default function Status() {
             {Object.entries(data.components).map(([name, status]) => (
               <div key={name}>
                 <strong>
-                  {name === "search" ? "Búsqueda y direcciones" : name === "cartography" ? "Fondo cartográfico mundial" : "Rutas y matrices"}
+                  {name === "search"
+                    ? "Búsqueda y direcciones"
+                    : name === "cartography"
+                      ? "Fondo cartográfico mundial"
+                      : "Rutas y matrices"}
                 </strong>
                 <span>
                   {status === "operational"
@@ -49,8 +53,14 @@ export default function Status() {
             ))}
             <p>
               El estado se comprueba como máximo una vez por minuto. No
-              representa un historial de disponibilidad ni un SLA.{" "}
-              Búsqueda mundial; rutas: {data.coverage?.routing==="world"?"mundiales":data.coverage?.routing==="latin_america"?"Latinoamérica":"cobertura por confirmar"}. <a href="/app">Ir al panel</a>
+              representa un historial de disponibilidad ni un SLA. Búsqueda
+              mundial; rutas:{" "}
+              {data.coverage?.routing === "world"
+                ? "mundiales"
+                : data.coverage?.routing === "latin_america"
+                  ? "Latinoamérica"
+                  : "cobertura por confirmar"}
+              . <a href="/app">Ir al panel</a>
             </p>
           </>
         )}

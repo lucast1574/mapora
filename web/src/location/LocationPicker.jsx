@@ -116,12 +116,18 @@ export default function LocationPicker({
         country={country}
         onSelect={select}
       />
-      <MapCanvas
-        spec={spec}
-        onSelect={select}
-        tileBase={baseURL ? baseURL + "/v1/tiles" : "/console/tiles"}
-        apiKey={apiKey}
-      />
+      {baseURL && !apiKey ? (
+        <div className="picker-map-empty" role="status">
+          Introduce una clave pública de navegador para cargar el mapa.
+        </div>
+      ) : (
+        <MapCanvas
+          spec={spec}
+          onSelect={select}
+          tileBase={baseURL ? baseURL + "/v1/tiles" : "/console/tiles"}
+          apiKey={apiKey}
+        />
+      )}
       <div className="picker-footer">
         <div>
           <strong>{point.placeName || "Ubicación seleccionada"}</strong>

@@ -87,6 +87,10 @@ func (s *API) Handler() http.Handler {
 			w.WriteHeader(204)
 			return
 		}
+		if r.URL.Path == "/health" || r.URL.Path == "/openapi.json" {
+			mux.ServeHTTP(w, r)
+			return
+		}
 		select {
 		case s.requests <- struct{}{}:
 			defer func() { <-s.requests }()

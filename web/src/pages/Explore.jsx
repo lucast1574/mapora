@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { MapPin, Route, Navigation, ArrowUpRight } from "lucide-react";
 import { Button, Notice, Select } from "../ui";
+import { useData } from "../useData";
 import LocationPicker from "../location/LocationPicker";
 import AddressSearch, { geoRequest } from "../location/AddressSearch";
 import MapCanvas from "../maps/MapCanvas";
@@ -12,6 +13,7 @@ const modes = [
 ];
 const center = { latitude: -12.119906, longitude: -77.028971 };
 export default function Explore() {
+  const { data: serviceStatus } = useData("/status");
   const [mode, setMode] = useState("location"),
     [key, setKey] = useState(""),
     [country, setCountry] = useState(""),
@@ -97,6 +99,7 @@ export default function Explore() {
           <input
             type="password"
             autoComplete="off"
+            disabled={busy}
             value={key}
             onChange={(e) => {
               setKey(e.target.value);
@@ -108,6 +111,7 @@ export default function Explore() {
         <label>
           País de búsqueda
           <input
+            disabled={busy}
             value={country}
             maxLength={2}
             onChange={(e) =>
@@ -203,12 +207,13 @@ export default function Explore() {
           </aside>
         </div>
       ) : (
-        <div className="geo-workbench">
+        <div className="geo-workbench geo-routing-workbench">
           <section>
             <form className="geo-form" onSubmit={run}>
               {mode === "routes" ? (
                 <>
                   <AddressSearch
+                    disabled={busy}
                     apiKey={key}
                     country={country}
                     label="Origen"
@@ -218,6 +223,7 @@ export default function Explore() {
                     }}
                   />
                   <AddressSearch
+                    disabled={busy}
                     apiKey={key}
                     country={country}
                     label="Destino"
@@ -229,6 +235,7 @@ export default function Explore() {
                   <label>
                     Cómo te mueves
                     <Select
+                      disabled={busy}
                       label="Perfil de ruta"
                       value={profile}
                       onChange={(v) => {
@@ -246,6 +253,7 @@ export default function Explore() {
               ) : (
                 <>
                   <AddressSearch
+                    disabled={busy}
                     apiKey={key}
                     country={country}
                     label="Buscar alrededor de"
@@ -261,6 +269,7 @@ export default function Explore() {
                   <label>
                     Categoría
                     <Select
+                      disabled={busy}
                       label="Categoría de lugar"
                       value={category}
                       onChange={(v) => {
@@ -293,11 +302,27 @@ export default function Explore() {
                   </label>
                 </>
               )}
-              <Button busy={busy} disabled={!key}>
+              <Button
+                busy={busy}
+                disabled={
+                  !key ||
+                  (mode === "routes" &&
+                    serviceStatus?.components.routing !== "operational")
+                }
+              >
                 {mode === "routes"
                   ? "Calcular ruta por calles"
                   : "Buscar lugares"}
               </Button>
+              {mode === "routes" &&
+                serviceStatus?.components.routing !== "operational" && (
+                  <p className="geo-hint" role="status">
+                    El motor de rutas se está preparando o no está disponible.
+                    Consulta el{" "}
+                    <a href="/service-status">estado del servicio</a> antes de
+                    calcular.
+                  </p>
+                )}
             </form>
             <p className="geo-hint">
               Cada ejecución consume una petición. Las sugerencias de búsqueda

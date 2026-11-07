@@ -1,3 +1,10 @@
-export { default as MaporaLocationPicker } from "./src/location/LocationPicker";
-export { default as MaporaAddressSearch } from "./src/location/AddressSearch";
-export { geoRequest } from "./src/location/AddressSearch";
+import React from "react";
+import LocationPicker from "./src/location/LocationPicker";
+import AddressSearch from "./src/location/AddressSearch";
+export function MaporaLocationPicker(props) {
+  return <LocationPicker baseURL="https://maps-api.nexode.app" {...props} />;
+}
+export function MaporaAddressSearch(props) {
+  return <AddressSearch baseURL="https://maps-api.nexode.app" {...props} />;
+}
+export { geoRequest } from "./src/location/geoClient";

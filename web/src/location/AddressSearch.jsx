@@ -10,6 +10,7 @@ export default function AddressSearch({
   onSelect,
   label = "Buscar dirección",
   bias,
+  disabled = false,
 }) {
   const id = useId(),
     root = useRef(null),
@@ -61,7 +62,7 @@ export default function AddressSearch({
               ? "Escribe calle, ciudad o lugar…"
               : "Introduce una clave para buscar"
           }
-          disabled={!apiKey}
+          disabled={!apiKey || disabled}
           value={query}
           onFocus={() => results.length && setOpen(true)}
           onChange={(e) => {

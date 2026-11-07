@@ -164,7 +164,8 @@ export default function Dashboard() {
             rel="noreferrer"
           >
             OpenStreetMap
-          </a> · <a href="/service-status">Estado del servicio</a>
+          </a>{" "}
+          · <a href="/service-status">Estado del servicio</a>
         </div>
       </div>
     </div>

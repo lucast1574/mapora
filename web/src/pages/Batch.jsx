@@ -11,7 +11,15 @@ export default function Batch() {
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [filename, setFilename] = useState("");
-  const stop = useRef(false);
+  const stop = useRef(false),
+    task = useRef(null);
+  useEffect(
+    () => () => {
+      stop.current = true;
+      task.current?.abort();
+    },
+    [],
+  );
   const [waitUntil, setWaitUntil] = useState(0),
     [clock, setClock] = useState(Date.now());
   useEffect(() => {
@@ -41,19 +49,27 @@ export default function Batch() {
   async function run() {
     if (busy) return;
     stop.current = false;
+    task.current = new AbortController();
     setBusy(true);
     setError("");
     let done = results.slice();
     try {
       for (let i = done.length; i < items.length; i += 10) {
         if (stop.current) break;
-        const value = await geoRequest("", key, "/v1/batch", {
-          items: items.slice(i, i + 10),
-        });
+        const value = await geoRequest(
+          "",
+          key,
+          "/v1/batch",
+          {
+            items: items.slice(i, i + 10),
+          },
+          task.current.signal,
+        );
         done = [...done, ...value.results];
         setResults(done);
       }
     } catch (e) {
+      if (e.name === "AbortError") return;
       if (e.code === "rate_limited") {
         setWaitUntil(Date.now() + Math.max(1, e.retryAfter) * 1000);
         setClock(Date.now());

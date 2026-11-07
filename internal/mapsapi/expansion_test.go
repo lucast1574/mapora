@@ -9,6 +9,16 @@ import (
 )
 
 func ptr(v float64) *float64 { return &v }
+func TestHealthDoesNotCompeteWithGeoSlots(t *testing.T) {
+	api := testAPI(t, func(http.ResponseWriter, *http.Request) {})
+	for i := 0; i < cap(api.requests); i++ {
+		api.requests <- struct{}{}
+	}
+	w, _ := request(t, api, "GET", "/health", "")
+	if w.Code != 200 {
+		t.Fatal(w.Code)
+	}
+}
 func testZone() Zone {
 	return Zone{Name: "Centro", Currency: "PEN", FeeCents: 500, Geometry: Polygon{Type: "Polygon", Coordinates: [][][]float64{{{0, 0}, {10, 0}, {10, 10}, {0, 10}, {0, 0}}, {{3, 3}, {4, 3}, {4, 4}, {3, 4}, {3, 3}}}}}
 }

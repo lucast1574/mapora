@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
+import workerURL from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { layers, namedFlavor } from "@protomaps/basemaps";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./maps.css";
+maplibregl.setWorkerUrl(workerURL);
+maplibregl.setWorkerCount(2);
 
 export default function MapCanvas({
   spec,
@@ -36,6 +39,13 @@ export default function MapCanvas({
         maxZoom: 19,
         attributionControl: false,
         respectPrefersReducedMotion: true,
+        locale: {
+          "NavigationControl.ZoomIn": "Acercar mapa",
+          "NavigationControl.ZoomOut": "Alejar mapa",
+          "FullscreenControl.Enter": "Abrir pantalla completa",
+          "FullscreenControl.Exit": "Salir de pantalla completa",
+          "AttributionControl.ToggleAttribution": "Ver atribución",
+        },
         transformRequest: (url) =>
           apiKey && url.startsWith(new URL(tileBase, location.href).href)
             ? { url, headers: { "X-API-Key": apiKey } }
