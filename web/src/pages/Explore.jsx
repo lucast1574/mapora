@@ -344,6 +344,16 @@ export default function Explore() {
                     calcular.
                   </p>
                 )}
+              {mode === "routes" &&
+                serviceStatus?.components.routing === "operational" && (
+                  <p className="geo-hint">
+                    Cobertura de rutas: {serviceStatus.coverage?.routing === "world"
+                      ? "mundial"
+                      : serviceStatus.coverage?.routing === "latin_america"
+                        ? "Latinoamérica"
+                        : "por confirmar"}.
+                  </p>
+                )}
             </form>
             <p className="geo-hint">
               Cada ejecución consume una petición. Las sugerencias de búsqueda
