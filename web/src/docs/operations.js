@@ -66,9 +66,9 @@ export const operations = [
   },
   {
     id: "coverage-check", title: "Consultar zonas guardadas", method: "POST", path: "/v1/coverage/check", scope: "coverage", group: "cobertura",
-    description: "Usa las zonas que has creado en la sección Zonas de cobertura del panel. Solo consulta zonas de la cuenta propietaria de la clave.",
+    description: "Consulta zonas previamente guardadas de la cuenta propietaria de la clave. Para comprobar polígonos administrados por tu integración, envíalos directamente a POST /v1/coverage.",
     body: { point: lima, zoneIds: ["REEMPLAZA_POR_ID_DE_TU_ZONA"] },
-    parameters: ["point: latitude y longitude. zoneIds: de 1 a 20 identificadores de tus zonas guardadas.", "La cuenta puede guardar hasta 50 zonas. Sustituye el identificador del ejemplo por uno real de tu panel antes de enviar."],
+    parameters: ["point: latitude y longitude. zoneIds: de 1 a 20 identificadores de tus zonas guardadas.", "La cuenta puede guardar hasta 50 zonas. Sustituye el identificador del ejemplo por uno real de tu cuenta antes de enviar."],
     response: "El mismo formato de cobertura: covered, matches, point y feePolicy. Las zonas de otras cuentas no son accesibles con tu API key.",
   },
   {

@@ -11,9 +11,7 @@ import {
   Menu,
   X,
   ArrowUpRight,
-  MapPinned,
   Compass,
-  Fence,
   FileSpreadsheet,
 } from "lucide-react";
 import { Logo, Notice } from "./ui";
@@ -25,17 +23,13 @@ import Billing from "./pages/Billing";
 import Profile from "./pages/Profile";
 import Docs from "./pages/Docs";
 import Admin from "./pages/Admin";
-import Maps from "./pages/Maps";
 const Explore = lazy(() => import("./pages/Explore"));
-const Coverage = lazy(() => import("./pages/Coverage"));
 const Batch = lazy(() => import("./pages/Batch"));
 import { siteURL } from "./client";
 const links = [
   ["", "Resumen", LayoutDashboard],
   ["keys", "API keys", KeyRound],
   ["explore", "Explorar", Compass],
-  ["maps", "Mapas", MapPinned],
-  ["coverage", "Zonas de cobertura", Fence],
   ["batch", "Importar direcciones", FileSpreadsheet],
   ["usage", "Consumo", ChartNoAxesCombined],
   ["billing", "Plan y facturación", CreditCard],
@@ -143,14 +137,12 @@ export default function Dashboard() {
           <Suspense fallback={<div role="status">Cargando herramienta…</div>}>
             {page === "explore" ? (
               <Explore />
-            ) : page === "coverage" ? (
-              <Coverage />
+
             ) : page === "batch" ? (
               <Batch />
             ) : page === "keys" ? (
               <Keys />
-            ) : page === "maps" ? (
-              <Maps />
+
             ) : page === "usage" ? (
               <Usage />
             ) : page === "billing" ? (

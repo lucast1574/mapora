@@ -29,6 +29,10 @@ else if (path.startsWith("/map/"))
       <MapViewer />
     </Suspense>
   );
+else if (["/app/maps", "/app/coverage"].includes(path)) {
+  location.replace("/app/docs");
+  content = <div className="page-loading" role="status">Abriendo documentación…</div>;
+}
 else if (path === "/app" || path.startsWith("/app/"))
   content = (
     <Suspense

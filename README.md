@@ -122,7 +122,7 @@ General Sans de Fontshare, autoalojada. GSAP/ScrollTrigger con prefers-reduced-m
 
 La respuesta devuelve `url`, `embedHtml`, `expiresAt` y el mapa normalizado. La URL usa un token aleatorio de lectura de un solo mapa; en PostgreSQL se guarda su hash. Nunca incluye la API key. El visor `/map/{token}` puede incrustarse en otras páginas; las páginas de cuenta mantienen su protección contra iframes. La vista se consulta con `GET /v1/maps/view/{token}` y revisa caducidad, revocación de clave y suspensión del usuario en cada carga. Crear el mapa consume una petición. Las cargas y las interacciones del visor no suman peticiones a Mapora.
 
-El panel `/app/maps` permite generar, previsualizar y copiar el enlace/iframe. MapLibre GL muestra cartografía vectorial mundial propia con datos OpenStreetMap/Protomaps, fuentes y sprites locales, atribución visible y caché HTTP normal. El visor admite temas, agrupación de marcadores, polígonos y geometría de ruta. No hay modo sin conexión, satélite ni geolocalización del dispositivo.
+La API `POST /v1/maps` permite generar el enlace/iframe para integrarlo directamente en aplicaciones. MapLibre GL muestra cartografía vectorial mundial propia con datos OpenStreetMap/Protomaps, fuentes y sprites locales, atribución visible y caché HTTP normal. El visor admite temas, agrupación de marcadores, polígonos y geometría de ruta. No hay modo sin conexión, satélite ni geolocalización del dispositivo.
 
 ## Google mediante Firebase
 
