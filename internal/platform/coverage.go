@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"github.com/lucast1574/nexode-maps-api/internal/mapsapi"
+	"github.com/lucast1574/mapora/internal/mapsapi"
 	"net/http"
 )
 

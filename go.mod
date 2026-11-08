@@ -1,4 +1,4 @@
-module github.com/lucast1574/nexode-maps-api
+module github.com/lucast1574/mapora
 
 go 1.27.0
 

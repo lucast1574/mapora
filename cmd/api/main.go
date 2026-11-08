@@ -11,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/lucast1574/nexode-maps-api/internal/mapsapi"
-	"github.com/lucast1574/nexode-maps-api/internal/platform"
-	"github.com/lucast1574/nexode-maps-api/web"
+	"github.com/lucast1574/mapora/internal/mapsapi"
+	"github.com/lucast1574/mapora/internal/platform"
+	"github.com/lucast1574/mapora/web"
 )
 
 func main() {
