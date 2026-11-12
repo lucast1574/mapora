@@ -2,7 +2,7 @@ import subprocess,json,urllib.parse,pathlib
 base='http://mapora-photon_photon:2322'
 def query(path,params=None):
  url=base+path+('?' + urllib.parse.urlencode(params) if params else '')
- result=subprocess.run(['docker','run','--rm','--network','dokploy-network','--entrypoint','curl','mapora-photon:1.3.0','--fail','--silent','--show-error','--max-time','20',url],capture_output=True,text=True,check=True)
+ result=subprocess.run(['docker','run','--rm','--network','dokploy-network','--entrypoint','curl','192.168.15.8:5005/dokploy/mapora-photon@sha256:2ea34a8702f5c6752d14a856c73e4eb825ad8185c93d127d7a996b246a9ea957','--fail','--silent','--show-error','--max-time','20',url],capture_output=True,text=True,check=True)
  return json.loads(result.stdout)
 status=query('/status');print('status',json.dumps(status,ensure_ascii=False),flush=True)
 checks=[]

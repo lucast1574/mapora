@@ -8,7 +8,11 @@ Photon 1.3.0 oficial, Java 21 y un índice global 1.x de GraphHopper. El servici
 - JAR: versión fija y SHA-256 comprobado durante la construcción de la imagen.
 - Límites: 4 CPU, 16 GiB de RAM, heap de 12 GiB. El host debe tener `vm.max_map_count >= 262144` (verificar, no modificar otros servicios).
 
-Preparar `runtime` vacío con propietario 10001:10001, extraer el archivo verificado sin conservar propietarios en esa carpeta, y construir la imagen con este Dockerfile. No arrancar sobre un índice incompleto. Después desplegar con `docker stack deploy --resolve-image never -c compose.yml mapora-photon`. Verificar `/status`, búsqueda, búsqueda filtrada por país e inversa desde la red interna antes de cambiar `PHOTON_BASE_URL` de Mapora y desplegarla.
+Para una instalación nueva, preparar `runtime` vacío con propietario 10001:10001, extraer el archivo verificado sin conservar propietarios en esa carpeta, y construir la imagen con este Dockerfile. No arrancar sobre un índice incompleto. Después desplegar con `docker stack deploy --resolve-image always -c compose.yml mapora-photon`. Verificar `/status`, búsqueda, búsqueda filtrada por país e inversa desde la red interna antes de cambiar `PHOTON_BASE_URL` de Mapora y desplegarla.
+
+Las imágenes de Photon y PMTiles están publicadas en el registro privado `192.168.15.8:5005/dokploy/` y fijadas por digest en sus archivos Compose. Publicar una imagen reconstruida antes de actualizar ese digest; una etiqueta solo local no permite recuperarla después de una limpieza de imágenes. El registro debe estar accesible desde el nodo de producción.
+
+En producción, `/var/lib/mapora-photon` enlaza a `/srv/hdd1/mapora-photon` y `/var/lib/mapora-next` a `/srv/hdd1/mapora-next`. Antes de desplegar cualquiera de los motores, comprobar `mountpoint -q /srv/hdd1` y que los datos existentes estén presentes. Para recuperar una imagen ausente, descargarla del registro y redesplegar conservando los volúmenes; no volver a extraer el índice ni reemplazar `world.pmtiles`.
 
 Configurar `PHOTON_MIN_INTERVAL_MS=50` únicamente con el motor privado (el valor por defecto para proveedores públicos es 500).
 
