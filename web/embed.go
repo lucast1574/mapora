@@ -61,14 +61,14 @@ func Handler() http.Handler {
 		if strings.HasSuffix(urlPath, "/index.html") {
 			urlPath = strings.TrimSuffix(urlPath, "/index.html")
 		}
-		if r.URL.Path == "/" && host == "app-mapora.nexode.app" {
+		if r.URL.Path == "/" && host == "app.mapora.dev" {
 			w.Header().Set("X-Robots-Tag", "noindex, nofollow")
 			http.Redirect(w, r, "/app", http.StatusTemporaryRedirect)
 			return
 		}
 		if file, ok := pages[urlPath]; ok {
-			if host == "maps-api.nexode.app" || host == "app-mapora.nexode.app" {
-				http.Redirect(w, r, "https://mapora.nexode.app"+urlPath, http.StatusPermanentRedirect)
+			if host == "api.mapora.dev" || host == "app.mapora.dev" {
+				http.Redirect(w, r, "https://mapora.dev"+urlPath, http.StatusPermanentRedirect)
 				return
 			}
 			if r.URL.Path != urlPath {
@@ -82,8 +82,8 @@ func Handler() http.Handler {
 			serveHTML(w, r, file, 200)
 			return
 		}
-		if urlPath == "/sitemap.xml" && (host == "maps-api.nexode.app" || host == "app-mapora.nexode.app") {
-			http.Redirect(w, r, "https://mapora.nexode.app/sitemap.xml", http.StatusPermanentRedirect)
+		if urlPath == "/sitemap.xml" && (host == "api.mapora.dev" || host == "app.mapora.dev") {
+			http.Redirect(w, r, "https://mapora.dev/sitemap.xml", http.StatusPermanentRedirect)
 			return
 		}
 		clean := strings.TrimPrefix(urlPath, "/")

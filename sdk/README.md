@@ -8,7 +8,7 @@ import '@mapora/react/style.css';
 
 <MaporaLocationPicker
  apiKey="mp_pub_YOUR_BROWSER_KEY"
- baseURL="https://maps-api.nexode.app"
+ baseURL="https://api.mapora.dev"
  country="PE"
  onSelect={(location) => saveAddress(location)}
 />

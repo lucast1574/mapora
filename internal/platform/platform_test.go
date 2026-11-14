@@ -52,7 +52,7 @@ func databasePlatform(t *testing.T) *Platform {
 	if !strings.Contains(dsn, "mapora_test") {
 		t.Fatal("refusing a database without the mapora_test name")
 	}
-	p, err := New(context.Background(), Config{DatabaseURL: dsn, AppURL: "https://app-mapora.nexode.app", StripeKey: "sk_test_placeholder"}, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { reply(w, 200, map[string]bool{"ok": true}) }))
+	p, err := New(context.Background(), Config{DatabaseURL: dsn, AppURL: "https://app.mapora.dev", StripeKey: "sk_test_placeholder"}, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { reply(w, 200, map[string]bool{"ok": true}) }))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -60,7 +60,7 @@ func databasePlatform(t *testing.T) *Platform {
 	return p
 }
 func callHTTP(p *Platform, method, path, body string, cookie *http.Cookie, key string) (*httptest.ResponseRecorder, map[string]any) {
-	r := httptest.NewRequest(method, "https://app-mapora.nexode.app"+path, strings.NewReader(body))
+	r := httptest.NewRequest(method, "https://app.mapora.dev"+path, strings.NewReader(body))
 	if cookie != nil {
 		r.AddCookie(cookie)
 	}

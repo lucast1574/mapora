@@ -1,6 +1,6 @@
 /** Mapora JavaScript client. Keep secret API keys on your server. */
 export class Mapora {
- constructor({apiKey,baseURL="https://maps-api.nexode.app"}){this.apiKey=apiKey;this.baseURL=baseURL.replace(/\/$/,"");}
+ constructor({apiKey,baseURL="https://api.mapora.dev"}){this.apiKey=apiKey;this.baseURL=baseURL.replace(/\/$/,"");}
  async request(path,{method="GET",body,signal}={}){const response=await fetch(this.baseURL+path,{method,signal,credentials:"omit",headers:{"X-API-Key":this.apiKey,...(body?{"Content-Type":"application/json"}:{})},body:body?JSON.stringify(body):undefined});let data;try{data=await response.json();}catch{throw new Error("Invalid Mapora response");}if(!response.ok){const error=new Error(data.error||"Mapora request failed");error.status=response.status;error.code=data.code;error.retryAfter=Number(response.headers.get("Retry-After"))||0;throw error;}return data;}
  search(q,params={},signal){return this.request("/v1/search?"+new URLSearchParams({...params,q}),{signal});}
  autocomplete(q,params={},signal){return this.request("/v1/autocomplete?"+new URLSearchParams({...params,q}),{signal});}

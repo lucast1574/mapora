@@ -104,7 +104,7 @@ func (s *API) photon(ctx context.Context, path string, query url.Values) ([]Plac
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "NexodeMaps/1.0 (+https://maps-api.nexode.app)")
+	req.Header.Set("User-Agent", "NexodeMaps/1.0 (+https://api.mapora.dev)")
 	response, err := s.upstream.Do(req)
 	if err != nil {
 		return nil, err

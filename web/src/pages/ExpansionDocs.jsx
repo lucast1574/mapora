@@ -20,7 +20,7 @@ export default function ExpansionDocs() {
         <p>Desde tu backend, conserva la geometría de rutas y pásala al campo <code>route</code> del mapa. Son dos operaciones admitidas y consumen dos peticiones. Una geometría de más de 10000 puntos debe simplificarse antes de enviarla al visor.</p>
         <pre>{`// Backend: API_KEY es privada; no la incluyas en el frontend.
 async function postMapora(path, body) {
-  const response = await fetch('https://maps-api.nexode.app' + path, {
+  const response = await fetch('https://api.mapora.dev' + path, {
     method: 'POST',
     headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -68,7 +68,7 @@ import '@mapora/react/style.css';
 
 <MaporaLocationPicker
   apiKey="mp_pub_TU_CLAVE_DE_NAVEGADOR"
-  baseURL="https://maps-api.nexode.app"
+  baseURL="https://api.mapora.dev"
   country="PE"
   theme="light"
   accent="#174c43"

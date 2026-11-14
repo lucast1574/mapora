@@ -152,7 +152,7 @@ export default function Keys() {
       )}
       <div className="code-guide">
         <h2>Así se conecta</h2>
-        <pre>{`curl "https://maps-api.nexode.app/v1/search?q=Lima" \\\n  -H "X-API-Key: TU_API_KEY"`}</pre>
+        <pre>{`curl "https://api.mapora.dev/v1/search?q=Lima" \\\n  -H "X-API-Key: TU_API_KEY"`}</pre>
         <p>
           También puedes enviar <code>Authorization: Bearer TU_API_KEY</code>.
           Las claves revocadas dejan de aceptar nuevas peticiones.

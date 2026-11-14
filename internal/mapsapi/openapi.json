@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://maps-api.nexode.app"
+      "url": "https://api.mapora.dev"
     }
   ],
   "security": [

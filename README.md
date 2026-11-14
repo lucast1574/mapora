@@ -3,10 +3,10 @@
 Plataforma geográfica independiente en Go y React: búsqueda, enlaces de Google Maps,
 consulta inversa, cuentas, API keys, consumo por petición y suscripciones Stripe.
 
-- Landing: https://mapora.nexode.app
-- Panel: https://app-mapora.nexode.app
-- API: https://maps-api.nexode.app
-- Contrato: https://maps-api.nexode.app/openapi.json
+- Landing: https://mapora.dev
+- Panel: https://app.mapora.dev
+- API: https://api.mapora.dev
+- Contrato: https://api.mapora.dev/openapi.json
 
 ## Planes y consumo
 
@@ -137,7 +137,7 @@ El servidor verifica RS256 con certificados públicos cacheados de Google, issue
 
 Rutas canónicas: `/`, `/documentacion`, `/api-busqueda-direcciones`, `/resolver-enlaces-google-maps`, `/geocodificacion-inversa`, `/mapas-interactivos` y `/legal`. El proceso genera títulos y descripciones propios, canonical, Open Graph/Twitter, JSON-LD de Organization/WebSite/WebPage/Service y migas de navegación. No se añaden reseñas, métricas de clientes ni valoraciones ficticias. La API de mapas se documenta sin prometer disponibilidad de Photon de sus motores dedicados.
 
-`/sitemap.xml` solo contiene esas páginas. `robots.txt` referencia el sitemap; las páginas de cuenta y mapas compartidos permanecen rastreables para que se pueda leer su `noindex`, mientras las rutas de API y consola no se anuncian para el rastreo. Las rutas inexistentes devuelven HTTP 404 real. Las variantes con barra final y los duplicados públicos del host de API/panel redirigen a `https://mapora.nexode.app`; las rutas y métodos de la API conservan su comportamiento.
+`/sitemap.xml` solo contiene esas páginas. `robots.txt` referencia el sitemap; las páginas de cuenta y mapas compartidos permanecen rastreables para que se pueda leer su `noindex`, mientras las rutas de API y consola no se anuncian para el rastreo. Las rutas inexistentes devuelven HTTP 404 real. Las variantes con barra final y los duplicados públicos del host de API/panel redirigen a `https://mapora.dev`; las rutas y métodos de la API conservan su comportamiento.
 
 `GOOGLE_SITE_VERIFICATION` añade la etiqueta de verificación de Search Console al HTML público. Su valor es un token público de verificación, no una credencial de inicio de sesión. Las imágenes sociales PNG 1200×630 y los iconos se generan con Resvg a partir de los SVG de marca; la tarjeta conserva los trazados de General Sans sin depender de fuentes externas. Las fuentes de interfaz están alojadas localmente.
 

@@ -31,12 +31,12 @@ func TestPublicPagesContainHTMLAndUniqueMetadata(t *testing.T) {
 	titles := map[string]bool{}
 	for _, path := range []string{"/", "/documentacion", "/api-busqueda-direcciones", "/resolver-enlaces-google-maps", "/geocodificacion-inversa", "/mapas-interactivos", "/legal"} {
 		w := httptest.NewRecorder()
-		h.ServeHTTP(w, httptest.NewRequest("GET", "https://mapora.nexode.app"+path, nil))
+		h.ServeHTTP(w, httptest.NewRequest("GET", "https://mapora.dev"+path, nil))
 		body := w.Body.String()
 		if w.Code != 200 || strings.Count(body, "<h1") != 1 || !strings.Contains(body, `data-prerendered="true"`) || len(body) < 5000 {
 			t.Fatalf("%s: missing complete HTML (%d, %d bytes)", path, w.Code, len(body))
 		}
-		if !strings.Contains(body, `rel="canonical" href="https://mapora.nexode.app`+path+`"`) || !strings.Contains(body, `content="index,follow,max-image-preview:large"`) {
+		if !strings.Contains(body, `rel="canonical" href="https://mapora.dev`+path+`"`) || !strings.Contains(body, `content="index,follow,max-image-preview:large"`) {
 			t.Fatal("invalid canonical/indexability", path)
 		}
 		title := regexp.MustCompile(`<title>([^<]+)</title>`).FindString(body)
@@ -60,7 +60,7 @@ func TestPrivatePagesNoindexWithoutMarketingCanonical(t *testing.T) {
 	h := Handler()
 	for _, path := range []string{"/app", "/app/keys", "/app/maps", "/login", "/signup", "/forgot", "/reset?token=private", "/map/mv_test"} {
 		w := httptest.NewRecorder()
-		h.ServeHTTP(w, httptest.NewRequest("GET", "https://app-mapora.nexode.app"+path, nil))
+		h.ServeHTTP(w, httptest.NewRequest("GET", "https://app.mapora.dev"+path, nil))
 		body := w.Body.String()
 		if w.Code != 200 || !strings.Contains(w.Header().Get("X-Robots-Tag"), "noindex") || !strings.Contains(body, `content="noindex,nofollow"`) || strings.Contains(body, `rel="canonical"`) || strings.Contains(body, `data-prerendered="true"`) {
 			t.Fatal("private route became a marketing page", path, w.Code)
@@ -83,12 +83,12 @@ func TestCanonicalHostAndRouteRedirects(t *testing.T) {
 		url, target string
 		code        int
 	}{
-		{"https://maps-api.nexode.app/", "https://mapora.nexode.app/", 308},
-		{"https://app-mapora.nexode.app/documentacion", "https://mapora.nexode.app/documentacion", 308},
-		{"https://app-mapora.nexode.app/", "/app", 307},
-		{"https://mapora.nexode.app/documentacion/", "/documentacion", 308},
-		{"https://mapora.nexode.app/index.html", "/", 308},
-		{"https://mapora.nexode.app/mapas-interactivos/index.html", "/mapas-interactivos", 308},
+		{"https://api.mapora.dev/", "https://mapora.dev/", 308},
+		{"https://app.mapora.dev/documentacion", "https://mapora.dev/documentacion", 308},
+		{"https://app.mapora.dev/", "/app", 307},
+		{"https://mapora.dev/documentacion/", "/documentacion", 308},
+		{"https://mapora.dev/index.html", "/", 308},
+		{"https://mapora.dev/mapas-interactivos/index.html", "/mapas-interactivos", 308},
 	} {
 		w := httptest.NewRecorder()
 		h.ServeHTTP(w, httptest.NewRequest("GET", test.url, nil))
@@ -100,7 +100,7 @@ func TestCanonicalHostAndRouteRedirects(t *testing.T) {
 func TestSitemapContainsOnlyIndexablePublicPages(t *testing.T) {
 	h := Handler()
 	w := httptest.NewRecorder()
-	h.ServeHTTP(w, httptest.NewRequest("GET", "https://mapora.nexode.app/sitemap.xml", nil))
+	h.ServeHTTP(w, httptest.NewRequest("GET", "https://mapora.dev/sitemap.xml", nil))
 	var sitemap struct {
 		URLs []struct {
 			Location string `xml:"loc"`
@@ -118,7 +118,7 @@ func TestSitemapContainsOnlyIndexablePublicPages(t *testing.T) {
 	}
 	w = httptest.NewRecorder()
 	h.ServeHTTP(w, httptest.NewRequest("GET", "/robots.txt", nil))
-	if w.Code != 200 || !strings.Contains(w.Body.String(), "Sitemap: https://mapora.nexode.app/sitemap.xml") {
+	if w.Code != 200 || !strings.Contains(w.Body.String(), "Sitemap: https://mapora.dev/sitemap.xml") {
 		t.Fatal("robots", w.Code)
 	}
 }

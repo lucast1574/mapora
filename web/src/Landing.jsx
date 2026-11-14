@@ -450,7 +450,7 @@ export default function Landing() {
           </div>
           <div className="integration-code reveal" data-ui>
             <span>Desde tu backend, con tu clave privada.</span>
-            <pre>{`const response = await fetch(\n  "https://maps-api.nexode.app/v1/search?q=Lima",\n  { headers: { "X-API-Key": process.env.MAPORA_API_KEY } }\n);\nif (!response.ok) throw new Error("No se pudo buscar");\nconst locations = await response.json();`}</pre>
+            <pre>{`const response = await fetch(\n  "https://api.mapora.dev/v1/search?q=Lima",\n  { headers: { "X-API-Key": process.env.MAPORA_API_KEY } }\n);\nif (!response.ok) throw new Error("No se pudo buscar");\nconst locations = await response.json();`}</pre>
             <a href="/documentacion">
               Ver documentación <ArrowUpRight size={18} />
             </a>

@@ -1,4 +1,4 @@
-export const apiBase = "https://maps-api.nexode.app";
+export const apiBase = "https://api.mapora.dev";
 const lima = { latitude: -12.1199, longitude: -77.029 };
 const destination = { latitude: -12.122, longitude: -77.034 };
 const polygon = {

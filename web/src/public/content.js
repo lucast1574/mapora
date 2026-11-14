@@ -1,4 +1,4 @@
-export const siteOrigin = "https://mapora.nexode.app";
+export const siteOrigin = "https://mapora.dev";
 export const pages = {
   "/": {
     title: "Mapora | API de mapas, direcciones y geocodificación",
@@ -21,7 +21,7 @@ export const pages = {
     navTitle: "Búsqueda de direcciones",
     operation: "GET /v1/search",
     scope: "search",
-    code: `curl "https://maps-api.nexode.app/v1/search?q=Miraflores&countrycodes=pe&limit=5" \\\n  -H "X-API-Key: TU_API_KEY"`,
+    code: `curl "https://api.mapora.dev/v1/search?q=Miraflores&countrycodes=pe&limit=5" \\\n  -H "X-API-Key: TU_API_KEY"`,
     sections: [
       {
         title: "Qué devuelve una búsqueda",
@@ -55,7 +55,7 @@ export const pages = {
     navTitle: "Enlaces de Google Maps",
     operation: "POST /v1/resolve",
     scope: "resolve",
-    code: `curl "https://maps-api.nexode.app/v1/resolve" \\\n  -H "X-API-Key: TU_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"url":"https://www.google.com/maps?q=-12.0453,-77.0309","includeAddress":false}'`,
+    code: `curl "https://api.mapora.dev/v1/resolve" \\\n  -H "X-API-Key: TU_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"url":"https://www.google.com/maps?q=-12.0453,-77.0309","includeAddress":false}'`,
     sections: [
       {
         title: "Conserva la ubicación que compartieron",
@@ -85,7 +85,7 @@ export const pages = {
     navTitle: "Geocodificación inversa",
     operation: "GET /v1/reverse",
     scope: "reverse",
-    code: `curl "https://maps-api.nexode.app/v1/reverse?lat=-12.119906&lng=-77.028971" \\\n  -H "X-API-Key: TU_API_KEY"`,
+    code: `curl "https://api.mapora.dev/v1/reverse?lat=-12.119906&lng=-77.028971" \\\n  -H "X-API-Key: TU_API_KEY"`,
     sections: [
       {
         title: "Qué es la geocodificación inversa",
@@ -115,7 +115,7 @@ export const pages = {
     navTitle: "Mapas interactivos",
     operation: "POST /v1/maps",
     scope: "maps",
-    code: `curl "https://maps-api.nexode.app/v1/maps" \\\n  -H "X-API-Key: TU_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"title":"Mi ubicación","center":{"latitude":-12.119906,"longitude":-77.028971},"zoom":14}'`,
+    code: `curl "https://api.mapora.dev/v1/maps" \\\n  -H "X-API-Key: TU_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{"title":"Mi ubicación","center":{"latitude":-12.119906,"longitude":-77.028971},"zoom":14}'`,
     sections: [
       {
         title: "Qué incluye el visor",
