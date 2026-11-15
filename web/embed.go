@@ -67,7 +67,7 @@ func Handler() http.Handler {
 			return
 		}
 		if file, ok := pages[urlPath]; ok {
-			if host == "api.mapora.dev" || host == "app.mapora.dev" {
+			if host == "api.mapora.dev" || host == "app.mapora.dev" || host == "www.mapora.dev" {
 				http.Redirect(w, r, "https://mapora.dev"+urlPath, http.StatusPermanentRedirect)
 				return
 			}
@@ -82,7 +82,7 @@ func Handler() http.Handler {
 			serveHTML(w, r, file, 200)
 			return
 		}
-		if urlPath == "/sitemap.xml" && (host == "api.mapora.dev" || host == "app.mapora.dev") {
+		if urlPath == "/sitemap.xml" && (host == "api.mapora.dev" || host == "app.mapora.dev" || host == "www.mapora.dev") {
 			http.Redirect(w, r, "https://mapora.dev/sitemap.xml", http.StatusPermanentRedirect)
 			return
 		}

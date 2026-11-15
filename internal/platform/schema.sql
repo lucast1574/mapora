@@ -75,3 +75,10 @@ CREATE TABLE IF NOT EXISTS coverage_zones (
  name text NOT NULL,payload jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS coverage_zones_owner ON coverage_zones(user_id);
+
+-- Dedicated MCP credentials: encrypted with a deployment key, revocable as API keys.
+CREATE TABLE IF NOT EXISTS mcp_connections (
+ user_id text PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+ key_id text NOT NULL UNIQUE REFERENCES api_keys(id) ON DELETE CASCADE,
+ encrypted_secret text NOT NULL
+);

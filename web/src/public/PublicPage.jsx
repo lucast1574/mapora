@@ -13,6 +13,7 @@ export function PublicHeader() {
       <nav aria-label="Navegación de Mapora">
         <a href="/">Producto</a>
         <a href="/documentacion">Documentación</a>
+        <a href="/mcp">MCP para IA</a>
       </nav>
       <a className="public-account" href={`${appURL}/signup`}>
         Crea tu API key <ArrowUpRight size={17} />
@@ -26,6 +27,7 @@ export function PublicFooter() {
       <Logo />
       <div>
         <a href="/documentacion">Documentación</a>
+        <a href="/mcp">MCP para IA</a>
         <a href={`${appURL}/login`}>Mi cuenta</a>
         <a href="/legal">Condiciones y privacidad</a>
       </div>
@@ -83,6 +85,7 @@ export default function PublicPage({ path }) {
             <a href="/">Mapora</a>
             <span>/</span>
             <a href="/documentacion">Documentación</a>
+            <a href="/mcp">MCP para IA</a>
             <span>/</span>
             <span>{page.navTitle}</span>
           </nav>

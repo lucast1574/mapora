@@ -1,3 +1,4 @@
+import { McpPromo } from "./public/McpPage";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -305,6 +306,7 @@ export default function Landing() {
           <a href="#integracion">Integración</a>
           <a href="#planes">Planes</a>
           <a href="/documentacion">Documentación</a>
+          <a href="/mcp">Conectar IA</a>
         </nav>
         <a className="nav-login" href={`${appURL}/login`}>
           Iniciar sesión
@@ -456,6 +458,7 @@ export default function Landing() {
             </a>
           </div>
         </section>
+        <McpPromo />
         <section className="pricing-section reveal-group" id="planes">
           <div className="section-intro reveal">
             <h2>
@@ -595,6 +598,7 @@ export default function Landing() {
         <div className="footer-links">
           <Logo />
           <a href="/documentacion">Documentación</a>
+          <a href="/mcp">Conectar IA</a>
           <a href={`${appURL}/login`}>Mi cuenta</a>
           <a href="/legal">Condiciones y privacidad</a>
           <a

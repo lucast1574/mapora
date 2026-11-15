@@ -1,3 +1,4 @@
+import { appURL } from "../client";
 import React, { useState } from "react";
 import { Play, ArrowUpRight, ChevronDown } from "lucide-react";
 import { api } from "../client";
@@ -43,11 +44,16 @@ export default function Docs({ heading = "Documentación de Mapora" }) {
     <div className="api-docs">
       <div className="page-title">
         <div><h1>{heading}</h1><p>Direcciones, lugares, cobertura, rutas y mapas. Referencia y ejemplos para cada operación.</p></div>
-        <a href="/openapi.json" className="text-link" target="_blank" rel="noreferrer">OpenAPI 3.1 <ArrowUpRight size={17} /></a>
+        <a href="https://api.mapora.dev/openapi.json" className="text-link" target="_blank" rel="noreferrer">OpenAPI 3.1 <ArrowUpRight size={17} /></a>
       </div>
       <nav className="docs-index" aria-label="Contenido de la documentación">
         {[["inicio", "Primeros pasos"], ["referencia", "Endpoints"], ["filtros", "País y ciudad"], ["datos", "Datos y coordenadas"], ["probar", "Probar API"], ["guias-rutas", "Rutas"], ["guias-mapas", "Mapas"], ["sdk", "React y JavaScript"], ["cuotas", "Cuotas y errores"], ["panel", "Usar el panel"]].map(([id, title]) => <a href={`#docs-${id}`} key={id}>{title}</a>)}
       </nav>
+      <section className="docs-auth">
+        <h2>Conecta tu asistente con MCP</h2>
+        <p>Abre <a href={`${appURL}/app/mcp`}>Conectar IA en tu panel</a>, copia las instrucciones para Claude Code o Codex y pégalas en tu asistente. Tu clave ya está incluida. El MCP consulta la documentación actual y utiliza los permisos y la cuota de tu cuenta.</p>
+        <p>Endpoint: <code>https://api.mapora.dev/mcp</code>. <a href="https://mapora.dev/mcp">Guía de conexión MCP</a>.</p>
+      </section>
       <section className="docs-section" id="docs-inicio">
         <h2>Empieza con una petición</h2>
         <p>Base URL: <code>{apiBase}</code>. Crea una clave en API keys con los permisos que vayas a usar. Envía <code>X-API-Key</code> o <code>Authorization: Bearer TU_API_KEY</code>; nunca la clave en la URL.</p>

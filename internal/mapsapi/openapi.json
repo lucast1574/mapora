@@ -3,11 +3,16 @@
   "info": {
     "title": "Mapora API",
     "version": "3.0.0",
-    "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap. Autocompletado, búsqueda estructurada mundial, lugares cercanos, lotes (10 direcciones), cobertura GeoJSON y rutas/matrices (Latinoamérica inicialmente, ampliación mundial pendiente). Cada llamada HTTP admitida consume una petición; no hay tráfico en tiempo real.",
+    "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap. Autocompletado, búsqueda estructurada mundial, lugares cercanos, lotes (10 direcciones), cobertura GeoJSON y rutas y matrices por calles en América, según cobertura disponible. Cada llamada HTTP admitida consume una petición; no hay tráfico en tiempo real.",
     "license": {
       "name": "Private application; geographic data © OpenStreetMap contributors (ODbL)",
       "url": "https://www.openstreetmap.org/copyright"
-    }
+    },
+    "contact": {
+      "name": "Mapora",
+      "url": "https://mapora.dev"
+    },
+    "termsOfService": "https://mapora.dev/legal"
   },
   "servers": [
     {
@@ -2664,5 +2669,16 @@
         "bearerFormat": "Mapora API key"
       }
     }
+  },
+  "externalDocs": {
+    "description": "Documentación e integración MCP",
+    "url": "https://mapora.dev/documentacion"
+  },
+  "x-mcp": {
+    "url": "https://api.mapora.dev/mcp",
+    "documentation": "https://mapora.dev/mcp",
+    "authentication": "Authorization: Bearer <private API key>",
+    "accountTool": "mapora_me",
+    "documentationTool": "mapora_documentation"
   }
 }

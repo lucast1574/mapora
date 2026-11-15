@@ -65,6 +65,9 @@ func (p *Platform) private(fn http.HandlerFunc, admin bool) http.HandlerFunc {
 func (p *Platform) Handler() http.Handler {
 	mux := http.NewServeMux()
 	authProxy := newFirebaseAuthProxy(p.config.FirebaseProjectID)
+	mcpHTTP := p.mcpHandler()
+	mux.HandleFunc("GET /console/mcp", p.private(p.mcpStatus, false))
+	mux.HandleFunc("POST /console/mcp/prepare", p.private(p.prepareMCP, false))
 	p.tileRoutes(mux)
 	mux.HandleFunc("POST /console/signup", p.signup)
 	mux.HandleFunc("POST /console/login", p.login)
@@ -87,6 +90,10 @@ func (p *Platform) Handler() http.Handler {
 	mux.HandleFunc("POST /console/zones", p.private(p.saveZone, false))
 	mux.HandleFunc("DELETE /console/zones/{id}", p.private(p.deleteZone, false))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/mcp" && strings.Split(r.Host, ":")[0] == "api.mapora.dev" {
+			mcpHTTP.ServeHTTP(w, r)
+			return
+		}
 		// Firebase helpers must retain their upstream headers and execute on our auth domain.
 		if strings.HasPrefix(r.URL.Path, "/__/auth/") {
 			authProxy.ServeHTTP(w, r)

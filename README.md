@@ -170,3 +170,33 @@ La búsqueda de Perú incorpora un índice propio de vías OSM y referencias
 municipales, descrito en `infra/streets/README.md`. Usa país y ciudad para acotar
 la consulta. Las referencias de calle llevan `match.houseNumberMatched:false`;
 confirma el pin antes de guardar una entrega. No garantizan una casa exacta.
+
+## MCP para Claude Code y Codex
+
+Producción: [sitio](https://mapora.dev), [panel](https://app.mapora.dev),
+[API](https://api.mapora.dev), [documentación](https://mapora.dev/documentacion),
+[guía MCP](https://mapora.dev/mcp) y [OpenAPI](https://api.mapora.dev/openapi.json).
+
+Abre **Conectar IA** en el panel y copia las instrucciones para tu asistente.
+La API key privada se prepara automáticamente y se reutiliza entre asistentes.
+Se guarda cifrada con AES-256-GCM y AAD por usuario; el hash se valida como el
+resto de API keys. Se puede revocar desde API keys; copiar no revive claves revocadas
+sin la acción explícita de renovar. La conexión cuenta en el límite de 10 claves.
+
+Endpoint Streamable HTTP: `https://api.mapora.dev/mcp`, con
+`Authorization: Bearer TU_API_KEY`. El SDK oficial implementa el protocolo.
+`mapora_me` consulta cuenta, permisos y cuota sin gastar peticiones.
+`mapora_documentation` devuelve el OpenAPI actual. Las herramientas de datos
+reutilizan las validaciones, permisos, protección de proveedores y cuotas REST.
+No hay herramientas para modificar suscripciones ni efectuar pagos.
+
+Configurar `MCP_KEY_ENCRYPTION_KEY` como 32 bytes hexadecimales aleatorios por
+entorno. Mantenerla estable entre despliegues y protegerla como secreto de producción.
+No reemplazarla sin migrar los secretos existentes. Una conexión MCP sin esta
+variable falla de forma cerrada; el resto de la plataforma continúa funcionando.
+
+SEO: páginas públicas prerenderizadas, canonical al dominio principal, metadatos
+sociales, JSON-LD, sitemap y `llms.txt`. El panel, autenticación y operaciones
+de API permanecen fuera del índice. El subdominio API dirige la portada y
+documentación al sitio canónico. Las URLs de OAuth son
+`https://mapora.dev/__/auth/handler`, con helpers servidos bajo el mismo dominio.

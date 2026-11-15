@@ -1,5 +1,11 @@
 export const siteOrigin = "https://mapora.dev";
 export const pages = {
+  "/mcp": {
+    title: "MCP de Mapora para Claude Code y Codex",
+    description:
+      "Conecta Mapora a Claude Code y Codex desde tu panel. Copia la configuración con tu API key incluida y usa tu asistente con el contrato y los permisos de tu cuenta.",
+    navTitle: "MCP para IA",
+  },
   "/": {
     title: "Mapora | API de mapas, direcciones y geocodificación",
     description:

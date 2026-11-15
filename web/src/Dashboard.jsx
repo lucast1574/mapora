@@ -1,6 +1,7 @@
 import React, { useState, lazy, Suspense } from "react";
 import {
   LayoutDashboard,
+  Cable,
   KeyRound,
   ChartNoAxesCombined,
   CreditCard,
@@ -19,6 +20,7 @@ import Avatar from "./Avatar";
 import { useData } from "./useData";
 import { Overview, Usage } from "./pages/Usage";
 import Keys from "./pages/Keys";
+import Mcp from "./pages/Mcp";
 import Billing from "./pages/Billing";
 import Profile from "./pages/Profile";
 import Docs from "./pages/Docs";
@@ -29,6 +31,7 @@ import { siteURL } from "./client";
 const links = [
   ["", "Resumen", LayoutDashboard],
   ["keys", "API keys", KeyRound],
+  ["mcp", "Conectar IA", Cable],
   ["explore", "Explorar", Compass],
   ["batch", "Importar direcciones", FileSpreadsheet],
   ["usage", "Consumo", ChartNoAxesCombined],
@@ -140,6 +143,8 @@ export default function Dashboard() {
 
             ) : page === "batch" ? (
               <Batch />
+            ) : page === "mcp" ? (
+              <Mcp />
             ) : page === "keys" ? (
               <Keys />
 
