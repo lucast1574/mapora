@@ -1,4 +1,4 @@
-import { McpPromo } from "./public/McpPage";
+import { McpPromo, AssistantLinks } from "./public/McpPage";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -334,6 +334,7 @@ export default function Landing() {
                 Sin tarjeta para empezar.
               </span>
             </div>
+            <AssistantLinks />
           </div>
           <div className="map-stage">
             <MapArtwork />
