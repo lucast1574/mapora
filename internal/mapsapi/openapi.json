@@ -3,7 +3,7 @@
   "info": {
     "title": "Mapora API",
     "version": "4.0.0",
-    "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap. Autocompletado, búsqueda estructurada mundial, lugares cercanos, lotes (10 direcciones), cobertura GeoJSON y rutas y matrices por calles en América, según cobertura disponible. Cada llamada HTTP admitida consume una petición; no hay tráfico en tiempo real. Independent OSM place catalog, CSV and polygon search, route corridor discovery, travel-time ranking, isochrones, stop optimization and GPS map matching. Place contacts/hours exist only when recorded in OSM; no Google review data.",
+    "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap. Autocompletado, búsqueda estructurada en América, lugares cercanos, lotes (10 direcciones), cobertura GeoJSON y rutas y matrices por calles en América, según cobertura disponible. Cada llamada HTTP admitida consume una petición; no hay tráfico en tiempo real. Independent OSM place catalog, CSV and polygon search, route corridor discovery, travel-time ranking, isochrones, stop optimization and GPS map matching. Place contacts/hours exist only when recorded in OSM; no Google review data.",
     "license": {
       "name": "Private application; geographic data © OpenStreetMap contributors (ODbL)",
       "url": "https://www.openstreetmap.org/copyright"
@@ -73,7 +73,7 @@
     "/v1/search": {
       "get": {
         "summary": "Search addresses, streets, districts and places",
-        "description": "Worldwide place search plus an offline Peru street index when Peru or local context is selected. Street references do not verify a requested house number; inspect quality and match.",
+        "description": "Americas place search plus an offline Peru street index when Peru or local context is selected. Street references do not verify a requested house number; inspect quality and match.",
         "parameters": [
           {
             "name": "q",
@@ -826,7 +826,7 @@
     "/v1/autocomplete": {
       "get": {
         "summary": "Address autocomplete (search scope)",
-        "description": "Worldwide place search plus an offline Peru street index when Peru or local context is selected. Street references do not verify a requested house number; inspect quality and match.",
+        "description": "Americas place search plus an offline Peru street index when Peru or local context is selected. Street references do not verify a requested house number; inspect quality and match.",
         "parameters": [
           {
             "name": "q",

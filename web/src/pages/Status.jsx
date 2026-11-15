@@ -37,7 +37,7 @@ export default function Status() {
                   {name === "search"
                     ? "Búsqueda y direcciones"
                     : name === "cartography"
-                      ? "Fondo cartográfico mundial"
+                      ? "Fondo cartográfico de América"
                       : name === "places"
                         ? "Catálogo de lugares"
                     : name === "database"
@@ -58,7 +58,7 @@ export default function Status() {
             <p>
               El estado se comprueba como máximo una vez por minuto. No
               representa un historial de disponibilidad ni un SLA. Búsqueda
-              mundial; rutas:{" "}
+              en América; rutas:{" "}
               {data.coverage?.routing === "world"
                 ? "mundiales"
                 : data.coverage?.routing === "americas"

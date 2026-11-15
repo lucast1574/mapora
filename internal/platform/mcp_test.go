@@ -115,6 +115,10 @@ func TestMCPProvisioningIsolationRevocationAndQuota(t *testing.T) {
 	if statusResult.Code != 200 || statusData["connected"] != true {
 		t.Fatal("authenticated use was not reflected in connection status", statusData)
 	}
+	statusTool := rpc(key, `{"jsonrpc":"2.0","id":31,"method":"tools/call","params":{"name":"mapora_status","arguments":{}}}`)
+	if statusTool.Code != 200 || strings.Contains(statusTool.Body.String(), `"isError":true`) {
+		t.Fatal("status tool", statusTool.Code, statusTool.Body)
+	}
 	var used int
 	p.db.QueryRow("SELECT COALESCE(sum(used),0) FROM usage_buckets WHERE user_id=$1", user.ID).Scan(&used)
 	if used != 0 {

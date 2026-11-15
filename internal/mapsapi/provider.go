@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -89,6 +90,15 @@ func (f feature) place() (Place, bool) {
 }
 
 func (s *API) photon(ctx context.Context, path string, query url.Values) ([]Place, error) {
+	if s.regional && path != "/reverse" {
+		query = americasQuery(query)
+		if query.Get("bbox") == "" {
+			query.Set("bbox", "-180,-60,-10,85")
+			if lon, e := strconv.ParseFloat(query.Get("lon"), 64); e == nil && lon >= 170 {
+				query.Set("bbox", "170,45,180,75")
+			}
+		}
+	}
 	select {
 	case s.providerSlots <- struct{}{}:
 		defer func() { <-s.providerSlots }()
@@ -124,7 +134,7 @@ func (s *API) photon(ctx context.Context, path string, query url.Values) ([]Plac
 	seen := map[string]bool{}
 	for _, f := range collection.Features {
 		p, ok := f.place()
-		if ok && !seen[p.ID] {
+		if ok && (!s.regional || americasPlace(p)) && !seen[p.ID] {
 			results = append(results, p)
 			seen[p.ID] = true
 		}

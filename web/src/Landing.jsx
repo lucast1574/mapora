@@ -18,8 +18,36 @@ import { ResourceLinks } from "./public/PublicPage";
 import BrandArrival, { createBrandArrival } from "./BrandArrival";
 gsap.registerPlugin(ScrollTrigger);
 const samples = {
-  places: {title:"Descubre lo que está cerca.", description:"Busca negocios y servicios por categoría, radio o área. Consulta datos de contacto y horarios cuando estén disponibles en OpenStreetMap.", route:"GET /v1/places?category=amenity:pharmacy&lat=-12.12&lng=-77.03&radius=3000", result:{results:[{placeName:"Farmacia de ejemplo",category:"amenity:pharmacy",distanceMeters:320,source:"openstreetmap",verified:false}]}},
-  isochrones: {title:"Mide hasta dónde llegas.", description:"Áreas alcanzables en 5, 10 o 15 minutos. Ordena paradas y encuentra lugares durante tu ruta según su tiempo adicional de desvío, sin tráfico en vivo.", route:"POST /v1/isochrones", result:{profile:"walking",minutes:[5,10,15],coverage:"americas",traffic:"not_included"}},
+  places: {
+    title: "Descubre lo que está cerca.",
+    description:
+      "Busca negocios y servicios por categoría, radio o área. Consulta datos de contacto y horarios cuando estén disponibles en OpenStreetMap.",
+    route:
+      "GET /v1/places?category=amenity:pharmacy&lat=-12.12&lng=-77.03&radius=3000",
+    result: {
+      results: [
+        {
+          placeName: "Farmacia de ejemplo",
+          category: "amenity:pharmacy",
+          distanceMeters: 320,
+          source: "openstreetmap",
+          verified: false,
+        },
+      ],
+    },
+  },
+  isochrones: {
+    title: "Mide hasta dónde llegas.",
+    description:
+      "Áreas alcanzables en 5, 10 o 15 minutos. Ordena paradas y encuentra lugares durante tu ruta según su tiempo adicional de desvío, sin tráfico en vivo.",
+    route: "POST /v1/isochrones",
+    result: {
+      profile: "walking",
+      minutes: [5, 10, 15],
+      coverage: "americas",
+      traffic: "not_included",
+    },
+  },
   search: {
     title: "Encuentra una dirección.",
     description:
@@ -59,7 +87,8 @@ const samples = {
   },
   routes: {
     title: "Recorre las calles.",
-    description: "Rutas en América para auto, bicicleta y a pie. Geometría GeoJSON, instrucciones y matrices de tiempos, conservando tus puntos originales.",
+    description:
+      "Rutas en América para auto, bicicleta y a pie. Geometría GeoJSON, instrucciones y matrices de tiempos, conservando tus puntos originales.",
     route: "POST /v1/routes",
     result: {
       profile: "driving",
@@ -71,7 +100,8 @@ const samples = {
   maps: {
     status: "201 Created",
     title: "Muéstralo a tu manera.",
-    description: "Mapas con marcadores agrupados, polígonos y rutas. Elige estilo y color, y comparte un enlace o iframe sin exponer tu clave.",
+    description:
+      "Mapas con marcadores agrupados, polígonos y rutas. Elige estilo y color, y comparte un enlace o iframe sin exponer tu clave.",
     route: "POST /v1/maps",
     result: {
       map: {
@@ -319,12 +349,13 @@ export default function Landing() {
         <section className="hero">
           <div className="hero-copy">
             <h1>
-              El mundo,
+              América,
               <br />
               en tu código.
             </h1>
             <p>
-              Lugares, direcciones y mapas del mundo. Calcula rutas, desvíos y áreas alcanzables en América, y conecta los datos a tu aplicación.
+              Lugares, direcciones y mapas de América. Calcula rutas, desvíos y
+              áreas alcanzables en América, y conecta los datos a tu aplicación.
             </p>
             <div className="hero-actions">
               <a className="button" href={`${appURL}/signup`}>
@@ -383,13 +414,78 @@ export default function Landing() {
           </div>
         </section>
         <section className="route-discovery">
-          <div><h2>El trayecto también tiene lugares.</h2><p>Encuentra una gasolinera durante el viaje, compara farmacias por tiempo a pie o calcula el alcance de una tienda. Combina lugares y rutas con datos de Mapora.</p><a className="text-link" href="/documentacion#docs-lugares">Explorar lugares y recorridos <ArrowUpRight size={18}/></a></div>
-          <div className="discovery-diagram" aria-label="Ejemplo ilustrativo de una parada durante una ruta"><svg viewBox="0 0 440 210" role="img" aria-label="Una ruta conecta el origen, una parada y el destino"><path d="M35 150 C110 150 80 50 180 65 S280 170 405 50" fill="none" stroke="currentColor" strokeWidth="5"/><path d="M180 65 Q220 10 260 60 Q270 100 300 115" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5 7"/>{[[35,150],[260,60],[405,50]].map(([x,y])=><g key={x}><circle cx={x} cy={y} r="12" fill="var(--mint)" stroke="currentColor" strokeWidth="3"/><circle cx={x} cy={y} r="3" fill="currentColor"/></g>)}</svg><div><span>Origen</span><span>Parada en el camino</span><span>Destino</span></div><small>Esquema ilustrativo. Los desvíos se calculan por calles.</small></div>
+          <div>
+            <h2>El trayecto también tiene lugares.</h2>
+            <p>
+              Encuentra una gasolinera durante el viaje, compara farmacias por
+              tiempo a pie o calcula el alcance de una tienda. Combina lugares y
+              rutas con datos de Mapora.
+            </p>
+            <a className="text-link" href="/documentacion#docs-lugares">
+              Explorar lugares y recorridos <ArrowUpRight size={18} />
+            </a>
+          </div>
+          <div
+            className="discovery-diagram"
+            aria-label="Ejemplo ilustrativo de una parada durante una ruta"
+          >
+            <svg
+              viewBox="0 0 440 210"
+              role="img"
+              aria-label="Una ruta conecta el origen, una parada y el destino"
+            >
+              <path
+                d="M35 150 C110 150 80 50 180 65 S280 170 405 50"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="5"
+              />
+              <path
+                d="M180 65 Q220 10 260 60 Q270 100 300 115"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeDasharray="5 7"
+              />
+              {[
+                [35, 150],
+                [260, 60],
+                [405, 50],
+              ].map(([x, y]) => (
+                <g key={x}>
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r="12"
+                    fill="var(--mint)"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                  />
+                  <circle cx={x} cy={y} r="3" fill="currentColor" />
+                </g>
+              ))}
+            </svg>
+            <div>
+              <span>Origen</span>
+              <span>Parada en el camino</span>
+              <span>Destino</span>
+            </div>
+            <small>
+              Esquema ilustrativo. Los desvíos se calculan por calles.
+            </small>
+          </div>
         </section>
         <section className="landing-resources">
           <h2>De la consulta a tu integración.</h2>
-          <p>Catálogo de lugares con fichas y CSV, búsqueda durante rutas, áreas alcanzables y optimización de paradas. También direcciones, lotes, zonas y ajuste de recorridos GPS. Integra con JSON, el SDK React o tu asistente mediante MCP.</p>
-          <a className="text-link" href="/documentacion#docs-referencia">Consultar todos los endpoints <ArrowUpRight size={18} /></a>
+          <p>
+            Catálogo de lugares con fichas y CSV, búsqueda durante rutas, áreas
+            alcanzables y optimización de paradas. También direcciones, lotes,
+            zonas y ajuste de recorridos GPS. Integra con JSON, el SDK React o
+            tu asistente mediante MCP.
+          </p>
+          <a className="text-link" href="/documentacion#docs-referencia">
+            Consultar todos los endpoints <ArrowUpRight size={18} />
+          </a>
           <ResourceLinks />
         </section>
         <section className="journey reveal-group" id="integracion">
@@ -561,7 +657,7 @@ export default function Landing() {
               ],
               [
                 "¿Dónde puedo calcular rutas?",
-                "En América, incluidos Estados Unidos y Canadá, según las vías del perfil driving, walking o cycling. La búsqueda y la cartografía son mundiales. Las duraciones no incluyen tráfico en tiempo real y un trayecto sin conexión no se reemplaza por una línea recta.",
+                "En América, incluidos Estados Unidos y Canadá, según las vías del perfil driving, walking o cycling. La búsqueda y la cartografía cubren América. Las duraciones no incluyen tráfico en tiempo real y un trayecto sin conexión no se reemplaza por una línea recta.",
               ],
               [
                 "¿Qué sucede al agotar mi cuota?",

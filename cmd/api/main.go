@@ -63,6 +63,7 @@ func main() {
 		slog.Error("invalid places configuration", "error", err)
 		os.Exit(1)
 	}
+	api.RestrictToAmericas()
 	geo := api.Handler()
 	site := web.Handler()
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

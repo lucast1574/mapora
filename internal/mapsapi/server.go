@@ -11,6 +11,7 @@ import (
 )
 
 type API struct {
+	regional        bool
 	streets         *streetIndex
 	provider        string
 	upstream        *http.Client
@@ -51,7 +52,7 @@ func (s *API) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, 200, map[string]any{
-			"service": "Mapora API", "version": "3.0.0", "authentication": "api_key", "docs": "/openapi.json",
+			"service": "Mapora API", "version": "4.0.0", "authentication": "api_key", "docs": "/openapi.json",
 			"endpoints":   map[string]string{"search": "GET /v1/search?q=Miraflores&countrycodes=pe", "reverse": "GET /v1/reverse?lat=-12.12&lng=-77.03", "resolve": "POST /v1/resolve {\"url\":\"https://maps.app.goo.gl/...\"}"},
 			"attribution": attribution})
 	})

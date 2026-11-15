@@ -91,7 +91,7 @@ export default function Docs({ heading = "Documentación de Mapora" }) {
       </section>
       <section className="docs-section" id="docs-filtros">
         <h2>Busca por país, ciudad o área</h2>
-        <p><code>countrycodes=PE</code> restringe a Perú; <code>countrycodes=PE,CO</code> permite Perú y Colombia. Omite el parámetro para búsqueda mundial.</p>
+        <p><code>countrycodes=PE</code> restringe a Perú; <code>countrycodes=PE,CO</code> permite Perú y Colombia. Omite el parámetro para búsqueda en América.</p>
         <p>Si tienes la dirección separada en campos, usa <code>/v1/geocode</code> con <code>city</code>, <code>street</code>, <code>housenumber</code> u otros componentes. <code>city</code> es un componente de la consulta estructurada, no un límite administrativo garantizado.</p>
         <pre>{`GET /v1/geocode?street=Avenida+Larco&city=Lima&countrycodes=PE
 
@@ -102,7 +102,7 @@ GET /v1/search?q=Avenida+Larco&countrycodes=PE&bbox=-77.10,-12.20,-76.90,-12.00`
         <pre>{`GET /v1/search?q=Avenida+Larco+289&countrycodes=PE&city=Lima
 GET /v1/autocomplete?q=Avenida+Larco&countrycodes=PE&city=Lima&district=Miraflores`}</pre>
         <h3>Índice propio de calles de Perú</h3>
-        <p>La búsqueda combina el índice mundial con un índice local de más de 190000 registros de vías de Perú y referencias de planos municipales de Trujillo. Tolera acentos y abreviaturas de tipo de vía; si no encuentra el número, puede devolver la calle con <code>quality.precision:street</code>.</p>
+        <p>La búsqueda combina el índice de América con un índice local de más de 190000 registros de vías de Perú y referencias de planos municipales de Trujillo. Tolera acentos y abreviaturas de tipo de vía; si no encuentra el número, puede devolver la calle con <code>quality.precision:street</code>.</p>
         <p>Una referencia de calle devuelve <code>match.coordinateType:street_reference</code>, <code>match.houseNumberMatched:false</code> y, cuando corresponde, <code>match.requestedHouseNumber</code>. Su punto es una referencia de la vía, no la ubicación de la casa. Los puntos municipales provienen de las etiquetas georreferenciadas del plano de trabajo; confirma y ajusta el pin para una entrega. <code>sourceURL</code> y <code>sourceDate</code> dentro de <code>match</code> identifican la fuente y su fecha.</p>
         <p>La cobertura depende de los datos disponibles; no garantiza todas las calles ni numeraciones de Perú. El <a href="/downloads/peru-streets.json.gz" download>índice derivado descargable</a> contiene nombres y referencias de calles, con atribución de OpenStreetMap, INEI y la municipalidad según la fuente. La base de OpenStreetMap se distribuye bajo <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noreferrer">ODbL 1.0</a>.</p>
       </section>

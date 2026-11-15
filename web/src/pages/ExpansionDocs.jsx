@@ -8,14 +8,14 @@ export default function ExpansionDocs() {
         <h2>Un catálogo propio para decidir dónde ir</h2>
         <p>Busca lugares por nombre, categoría, radio o polígono con <code>/v1/places</code>, consulta fichas, descarga páginas CSV y encuentra paradas durante una ruta. El catálogo se prepara desde OpenStreetMap y publica su versión en <code>dataset</code>. Su cobertura depende de la información de la fuente; no es un directorio exhaustivo de negocios.</p>
         <p>Teléfono, web, correo, horario, cocina y accesibilidad aparecen solo cuando están registrados. No se incorporan reseñas, valoraciones ni fotos de Google. El horario conserva la sintaxis OSM y no confirma que el lugar esté abierto ahora. Los filtros de ciudad y país de este catálogo requieren etiquetas explícitas; usa centro o bbox para delimitar una zona.</p>
-        <p>El permiso <code>places</code> se usa desde backend. Las claves normales existentes no adquieren permisos nuevos; crea una clave con Catálogo de lugares. Las conexiones MCP activas se actualizan para incluir estas herramientas. Cada petición admitida consume una unidad, incluidas las páginas CSV y las operaciones que combinan motores.</p>
+        <p>El permiso <code>places</code> se usa desde backend. Las claves normales existentes no adquieren permisos nuevos; crea una clave con Catálogo de lugares. Las conexiones MCP activas se actualizan para incluir estas herramientas. mapora_status permite al asistente comprobar motores, cobertura y versión del catálogo sin consumir cuota. Cada petición admitida consume una unidad, incluidas las páginas CSV y las operaciones que combinan motores.</p>
         <h3>Viaja por tiempo, no solo por distancia</h3>
         <p><code>/v1/nearby?sort=travel_time</code> ordena candidatos por tiempo de viaje. <code>/v1/isochrones</code> devuelve áreas alcanzables; <code>/v1/routes/optimize</code> ordena paradas manteniendo origen y destino. <code>/v1/match</code> ajusta observaciones GPS a la red vial, conservando los puntos originales. Rutas también devuelve una polyline codificada con precisión seis.</p>
         <p>Las estimaciones no incluyen tráfico en vivo. El buscador durante una ruta limita candidatos y lo informa con <code>candidateSearchTruncated</code>; no promete encontrar todos los lugares. Las isócronas pueden ser MultiPolygon y no se convierten automáticamente en zonas guardadas.</p>
       </section>
       <section className="docs-section" id="docs-guias-rutas">
         <h2>Rutas por calles en América</h2>
-        <p>La búsqueda y la cartografía cubren el mundo. El motor de rutas y matrices cubre América: Sudamérica, Centroamérica, Caribe, México, Estados Unidos y Canadá, según las vías disponibles para el perfil. Europa queda fuera de la cobertura de rutas actual.</p>
+        <p>La búsqueda y la cartografía cubren América. El motor de rutas y matrices cubre América: Sudamérica, Centroamérica, Caribe, México, Estados Unidos y Canadá, según las vías disponibles para el perfil. Europa queda fuera de la cobertura de rutas actual.</p>
         <p>Envía las paradas en orden a <code>POST /v1/routes</code>. La respuesta incluye geometría GeoJSON, distancia en metros, duración estimada en segundos e instrucciones en español. <code>locations</code> conserva tus coordenadas; <code>snappedLocations</code> identifica los puntos sobre la vía. Los índices <code>beginShapeIndex</code> y <code>endShapeIndex</code> de cada instrucción apuntan a la geometría completa; <code>legIndex</code> identifica el tramo.</p>
         <p>Para comparar destinos usa <code>POST /v1/matrix</code>: cada fila corresponde a un origen y cada columna a un destino. <code>null</code> significa que no hay conexión para ese par. La cobertura de un país no implica que exista un trayecto entre países o islas.</p>
         <div className="table-scroll"><table><caption>Límites de distancia del motor</caption><thead><tr><th>Perfil</th><th>Ruta: 2–10 puntos</th><th>Matriz: hasta 10 × 10 pares</th></tr></thead><tbody><tr><td>driving</td><td>5000 km</td><td>400 km</td></tr><tr><td>walking</td><td>250 km</td><td>200 km</td></tr><tr><td>cycling</td><td>500 km</td><td>200 km</td></tr></tbody></table></div>
@@ -51,7 +51,7 @@ const map = await postMapora('/v1/maps', {
 });
 // Devuelve map.url o map.embedHtml a tu aplicación.`}</pre>
         <p>Quien recibe el enlace puede ver ese mapa, sin conocer tu API key. El token solo autoriza la lectura de esa vista y su cartografía. El enlace caduca en 7 días por defecto, configurable de 60 segundos a 30 días. La caducidad, revocar la clave creadora o suspender la cuenta impide nuevas lecturas; no borra una vista ya cargada en otro navegador.</p>
-        <p>Crear el mapa consume una petición. Abrirlo, moverlo, hacer zoom y cargar mosaicos no añade peticiones geográficas. La cartografía vectorial mundial usa datos de OpenStreetMap y Protomaps. No incluye imágenes satelitales, descarga masiva ni uso sin conexión.</p>
+        <p>Crear el mapa consume una petición. Abrirlo, moverlo, hacer zoom y cargar mosaicos no añade peticiones geográficas. La cartografía vectorial de América usa datos de OpenStreetMap y Protomaps. No incluye imágenes satelitales, descarga masiva ni uso sin conexión.</p>
       </section>
       <section className="docs-section" id="docs-sdk">
         <h2>React y JavaScript</h2>
@@ -84,7 +84,7 @@ import '@mapora/react/style.css';
   initialCenter={{ latitude: -12.12, longitude: -77.03 }}
   onSelect={(location) => guardarDireccion(location)}
 />`}</pre>
-        <p>Usa una clave de navegador con <code>search</code> y <code>reverse</code> y registra el origen exacto de tu web. Omite <code>country</code> para búsqueda mundial. Puedes cambiar <code>theme</code>, <code>accent</code>, <code>className</code> y <code>style</code>. <code>onSelect</code> puede recibir primero el pin y luego su referencia de dirección: conserva siempre las coordenadas elegidas. Incluye declaraciones TypeScript y un worker empaquetado para el mapa.</p>
+        <p>Usa una clave de navegador con <code>search</code> y <code>reverse</code> y registra el origen exacto de tu web. Omite <code>country</code> para búsqueda en América. Puedes cambiar <code>theme</code>, <code>accent</code>, <code>className</code> y <code>style</code>. <code>onSelect</code> puede recibir primero el pin y luego su referencia de dirección: conserva siempre las coordenadas elegidas. Incluye declaraciones TypeScript y un worker empaquetado para el mapa.</p>
         <h3>Cliente JavaScript para los endpoints</h3>
         <pre>{`// Guarda el archivo descargado en tu proyecto.
 import { Mapora } from './mapora-client.js';

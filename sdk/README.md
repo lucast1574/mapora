@@ -19,7 +19,7 @@ Use a browser key restricted to your exact HTTPS origin, with `search` and
 restrictions reduce accidental browser reuse; they are not server identity
 verification. Never embed a secret key. Quotas apply to autocomplete/reverse
 calls; tiles do not add API requests. Autocomplete waits 350 ms and cancels stale
-results. Maps require WebGL. `country` is optional (worldwide search).
+results. Maps require WebGL. `country` is optional (search across the Americas).
 
 Optional props: `theme` (`light`, `dark`, `grayscale`), `accent` (six-digit hex),
 `initialCenter` (`{latitude, longitude}`). `onSelect` can first receive a pin

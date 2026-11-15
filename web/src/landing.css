@@ -593,11 +593,60 @@
   font-size: 13px;
   color: var(--mint);
 }
-.route-discovery { margin: 70px auto; padding: 52px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: 1240px; }
-.route-discovery h2 { font-size: clamp(30px,3.7vw,48px); line-height: 1.12; letter-spacing: -.045em; margin: 0 0 22px; max-width: 14ch; }
-.route-discovery p { color: var(--muted); line-height: 1.8; max-width: 50ch; margin-bottom: 24px; }
-.discovery-diagram { color: var(--accent); padding: 18px; background: var(--raised); border-radius: 16px; }
-.discovery-diagram svg { width: 100%; display: block; }
-.discovery-diagram > div { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; }
-.discovery-diagram small { display: block; margin-top: 24px; color: var(--muted); font-size: 11px; }
-@media(max-width:760px) { .route-discovery {grid-template-columns:1fr;gap:28px;margin:40px 0;padding:36px 0}.route-discovery h2{max-width:20ch} }
+.route-discovery {
+  margin: 70px auto;
+  padding: 52px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  max-width: 1240px;
+}
+.route-discovery h2 {
+  font-size: clamp(30px, 3.7vw, 48px);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  margin: 0 0 22px;
+  max-width: 14ch;
+}
+.route-discovery p {
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 50ch;
+  margin-bottom: 24px;
+}
+.discovery-diagram {
+  color: var(--accent);
+  padding: 18px;
+  background: var(--raised);
+  border-radius: 16px;
+}
+.discovery-diagram svg {
+  width: 100%;
+  display: block;
+}
+.discovery-diagram > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+.discovery-diagram small {
+  display: block;
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .route-discovery {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin: 40px 0;
+    padding: 36px 0;
+  }
+  .route-discovery h2 {
+    max-width: 20ch;
+  }
+}

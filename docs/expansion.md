@@ -1,6 +1,6 @@
 # Mapora: expansión geográfica
 
-La búsqueda y la cartografía vectorial cubren el mundo. El motor de rutas y matrices está activo en toda América, incluidos Estados Unidos y Canadá, según las vías disponibles para cada perfil. No confundir la cobertura mundial de búsqueda/cartografía con la de rutas. La landing y el panel comparten la referencia de `web/src/pages/Docs.jsx` y el catálogo de ejemplos de `web/src/docs/operations.js`.
+La búsqueda y la cartografía vectorial cubren América. El motor de rutas y matrices está activo en toda América, incluidos Estados Unidos y Canadá, según las vías disponibles para cada perfil. La disponibilidad depende de los registros y vías de cada zona. La landing y el panel comparten la referencia de `web/src/pages/Docs.jsx` y el catálogo de ejemplos de `web/src/docs/operations.js`.
 
 ## Contratos y consumo
 
@@ -28,7 +28,7 @@ Claves secretas mp_live_ solo en servidor. Claves de navegador mp_pub_: permisos
 
 ## Servicios y operación
 
-Photon ya está privado en `infra/photon`. La cartografía en `infra/tiles` usa el archivo mundial Protomaps verificado, fuentes/sprites locales y un gateway privado; no usa los mosaicos públicos de OpenStreetMap. Valhalla en `infra/routing` se inicia directamente como servidor con datos preparados, sin ejecutar descargas ni reconstrucciones durante el arranque de producción. Todos los servicios son internos en dokploy-network, sin puertos publicados.
+Photon ya está privado en `infra/photon`. La cartografía en `infra/tiles` usa un archivo regional de América extraído de Protomaps y verificado, fuentes/sprites locales y un gateway privado; no usa los mosaicos públicos de OpenStreetMap. Valhalla en `infra/routing` se inicia directamente como servidor con datos preparados, sin ejecutar descargas ni reconstrucciones durante el arranque de producción. Todos los servicios son internos en dokploy-network, sin puertos publicados.
 
 `GET /health` comprueba el proceso; `GET /status` consulta motores y conserva sus respuestas hasta un minuto; también comprueba el acceso a PostgreSQL con un timeout de dos segundos. Una caída del almacenamiento devuelve 503 en las operaciones privadas, sin presentarla como una sesión caducada. `/service-status` presenta ese estado; no inventa historial/SLA. El panel Consumo ya conserva operación, estado y latencia por petición; Administración conserva métricas globales.
 

@@ -77,7 +77,7 @@ pagada nueva automáticamente. No se guardan números de tarjeta.
 ## Proveedor geográfico
 
 PHOTON_BASE_URL configura el motor geográfico. Producción utiliza una instancia
-privada de Photon 1.3.0 con el índice mundial de OpenStreetMap en el mismo servidor,
+privada de Photon 1.3.0 con el índice de América de OpenStreetMap en el mismo servidor,
 sin puertos ni dominio públicos. Configuración y mantenimiento: `infra/photon/`.
 PHOTON_MIN_INTERVAL_MS permite ajustar el ritmo: 50 ms para el motor privado,
 con cuatro consultas simultáneas como máximo. El valor por defecto sigue siendo
@@ -97,7 +97,7 @@ los assets embebidos en el binario Go. PORT=4000.
 Variables: DATABASE_URL, ADMIN_EMAIL, ADMIN_PASSWORD (solo bootstrap), APP_URL,
 SITE_URL, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PORTAL_CONFIG,
 STRIPE_PRICE_LAUNCH, STRIPE_PRICE_SCALE, RESEND_API_KEY, MAIL_FROM,
-PHOTON_BASE_URL. Inyectar en el despliegue; nunca escribir secretos al repositorio.
+PHOTON_BASE_URL, PLACES_BASE_URL. Inyectar en el despliegue; nunca escribir secretos al repositorio.
 
 ```sh
 cd web && npm ci && npm run build && cd ..
@@ -122,7 +122,7 @@ General Sans de Fontshare, autoalojada. GSAP/ScrollTrigger con prefers-reduced-m
 
 La respuesta devuelve `url`, `embedHtml`, `expiresAt` y el mapa normalizado. La URL usa un token aleatorio de lectura de un solo mapa; en PostgreSQL se guarda su hash. Nunca incluye la API key. El visor `/map/{token}` puede incrustarse en otras páginas; las páginas de cuenta mantienen su protección contra iframes. La vista se consulta con `GET /v1/maps/view/{token}` y revisa caducidad, revocación de clave y suspensión del usuario en cada carga. Crear el mapa consume una petición. Las cargas y las interacciones del visor no suman peticiones a Mapora.
 
-La API `POST /v1/maps` permite generar el enlace/iframe para integrarlo directamente en aplicaciones. MapLibre GL muestra cartografía vectorial mundial propia con datos OpenStreetMap/Protomaps, fuentes y sprites locales, atribución visible y caché HTTP normal. El visor admite temas, agrupación de marcadores, polígonos y geometría de ruta. No hay modo sin conexión, satélite ni geolocalización del dispositivo.
+La API `POST /v1/maps` permite generar el enlace/iframe para integrarlo directamente en aplicaciones. MapLibre GL muestra cartografía vectorial de América propia con datos OpenStreetMap/Protomaps, fuentes y sprites locales, atribución visible y caché HTTP normal. El visor admite temas, agrupación de marcadores, polígonos y geometría de ruta. No hay modo sin conexión, satélite ni geolocalización del dispositivo.
 
 ## Google mediante Firebase
 
@@ -158,7 +158,7 @@ petición; batch10, ruta10, matriz10×10. Claves públicas de navegador por orig
 `ROUTING_BASE_URL` configura Valhalla privado (`infra/routing`);
 `ROUTING_COVERAGE=americas` declara el índice validado de toda América,
 incluidos Estados Unidos y Canadá. La búsqueda y el fondo cartográfico cubren
-el mundo. Los trayectos dependen de las vías disponibles para cada perfil.
+América. Los trayectos dependen de las vías disponibles para cada perfil.
 
 `/service-status` presenta la comprobación actual de motores; no es un historial
 de disponibilidad. CI comprueba respaldo/restauración en PostgreSQL aislado.
@@ -200,3 +200,20 @@ sociales, JSON-LD, sitemap y `llms.txt`. El panel, autenticación y operaciones
 de API permanecen fuera del índice. El subdominio API dirige la portada y
 documentación al sitio canónico. Las URLs de OAuth son
 `https://mapora.dev/__/auth/handler`, con helpers servidos bajo el mismo dominio.
+
+## Lugares y recorridos avanzados
+
+El catálogo propio de América, aislado en el HDD dedicado, ofrece búsqueda de
+lugares, fichas, CSV, polígonos y paradas durante rutas. Configurar
+`PLACES_BASE_URL=http://mapora-places_catalog:8090`; ver `infra/places/README.md`.
+Las rutas añaden polyline6. Isócronas, orden de paradas y ajuste GPS usan el motor
+existente, sin tráfico en vivo. Contratos y límites en `docs/expansion.md`.
+El MCP incorpora las operaciones y `mapora_status`, que consulta disponibilidad,
+cobertura y versión del catálogo sin cuota. Las claves MCP dedicadas activas
+reciben el nuevo permiso places; las claves normales conservan sus permisos.
+
+La política pública de búsqueda se limita a América incluso durante la reducción
+física del índice. La reducción de Photon usa una copia de staging; el recorte
+cartográfico utiliza una máscara Natural Earth para seleccionar mosaicos.
+Los mosaicos generales de bajo zoom pueden incluir contexto fuera de la región;
+no constituyen cobertura de búsqueda/rutas de otros continentes.

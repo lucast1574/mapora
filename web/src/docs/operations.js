@@ -11,7 +11,7 @@ const polygon = {
 export const operations = [
   {
     id: "search", title: "Buscar direcciones y lugares", method: "GET", path: "/v1/search", scope: "search", group: "buscar",
-    description: "Búsqueda mundial de calles, direcciones, distritos y lugares. Devuelve candidatos para que la persona confirme su ubicación.",
+    description: "Búsqueda en América de calles, direcciones, distritos y lugares. Devuelve candidatos para que la persona confirme su ubicación.",
     query: "q=Miraflores&countrycodes=PE&limit=5",
     parameters: ["q: texto de 2–200 caracteres, obligatorio.", "limit: 1–20, por defecto 8. countrycodes: hasta 10 códigos ISO de dos letras separados por comas.", "city, district y state: filtros por nombre administrativo normalizado (hasta 200 bytes). Usa countrycodes=PE para el índice propio de calles peruanas.", "lat y lng (o lon): priorizan resultados cercanos; no sustituyen un filtro de área.", "bbox: minLng,minLat,maxLng,maxLat. lang: es, local, en, de o fr; es/local conservan el nombre local disponible."],
     response: "results contiene ubicaciones; count indica cuántas. Cada ubicación puede incluir placeName, address, streetAddress, latitude, longitude, street, houseNumber, district, city, state, country, countryCode, postcode, source, attribution y quality. Los campos descriptivos dependen de la fuente. Las referencias del índice propio añaden match.coordinateType:street_reference, sourceURL y sourceDate; houseNumberMatched:false indica que el número solicitado no fue confirmado.",
@@ -88,7 +88,7 @@ export const operations = [
   },
   {
     id: "maps", title: "Crear un mapa para compartir", method: "POST", path: "/v1/maps", scope: "maps", group: "mapas",
-    description: "Crea un enlace de lectura y un iframe con cartografía mundial, marcadores, zonas y una geometría de ruta opcional.",
+    description: "Crea un enlace de lectura y un iframe con cartografía de América, marcadores, zonas y una geometría de ruta opcional.",
     body: { title: "Mi ubicación", center: lima, zoom: 14, theme: "light", accent: "#174c43", markers: [{ ...lima, label: "Punto de entrega" }], expiresIn: 604800 },
     parameters: ["center: latitude y longitude; si se omite, se usa el primer marcador. markers: hasta 200, con label opcional de hasta 160 bytes y agrupación automática.", "theme: light, dark o grayscale. accent: color hexadecimal de seis dígitos. zoom: 1–19, por defecto 14. title: hasta 160 bytes.", "shapes: hasta 10 Polygon GeoJSON. route: LineString GeoJSON, hasta 10000 puntos. Cuerpo completo: máximo 512 KiB.", "expiresIn: 60–2592000 segundos; por defecto 604800 (7 días). Coordenadas del mapa: latitud entre −85.05112878 y 85.05112878, longitud entre −180 y 180."],
     response: "url, embedHtml, expiresAt y map con la especificación normalizada. GET /v1/maps/view/{token} lee ese mapa mediante su token, sin API key. El token no da acceso a otros mapas ni a tu cuenta. Crear consume una petición; visualizar y cargar cartografía no añade peticiones geográficas.",

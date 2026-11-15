@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   catalog:
-    image: 192.168.15.8:5005/dokploy/mapora-places:1.0.1
+    image: 192.168.15.8:5005/dokploy/mapora-places:1.1.0@sha256:a88830d8c5dceea9380ef694147e401d193c1e63b4c894a3672af03d01071cbb
     volumes:
       - /var/lib/mapora-next/places:/data:ro
     networks:

@@ -1,6 +1,6 @@
 # Motor privado de Mapora
 
-Photon 1.3.0 oficial, Java 21 y un índice global 1.x de GraphHopper. El servicio no publica puertos ni dominio; solo la API Mapora lo consume por la red Docker interna. Los datos y el código del motor no se incluyen en el repositorio.
+Photon 1.3.0 oficial, Java 21 y un índice 1.x reducido a América de GraphHopper. El servicio no publica puertos ni dominio; solo la API Mapora lo consume por la red Docker interna. Los datos y el código del motor no se incluyen en el repositorio.
 
 - DNS interno: `http://mapora-photon_photon:2322`.
 - Raíz de datos exclusiva: `/var/lib/mapora-photon`.
@@ -12,7 +12,7 @@ Para una instalación nueva, preparar `runtime` vacío con propietario 10001:100
 
 Las imágenes de Photon y PMTiles están publicadas en el registro privado `192.168.15.8:5005/dokploy/` y fijadas por digest en sus archivos Compose. Publicar una imagen reconstruida antes de actualizar ese digest; una etiqueta solo local no permite recuperarla después de una limpieza de imágenes. El registro debe estar accesible desde el nodo de producción.
 
-En producción, `/var/lib/mapora-photon` enlaza a `/srv/hdd1/mapora-photon` y `/var/lib/mapora-next` a `/srv/hdd1/mapora-next`. Antes de desplegar cualquiera de los motores, comprobar `mountpoint -q /srv/hdd1` y que los datos existentes estén presentes. Para recuperar una imagen ausente, descargarla del registro y redesplegar conservando los volúmenes; no volver a extraer el índice ni reemplazar `world.pmtiles`.
+En producción, `/var/lib/mapora-photon` enlaza a `/srv/mapora-hdd/mapora-photon` y `/var/lib/mapora-next` a `/srv/mapora-hdd/mapora-next`. Antes de desplegar cualquiera de los motores, comprobar `mountpoint -q /srv/mapora-hdd` y que los datos existentes estén presentes. Para recuperar una imagen ausente, descargarla del registro y redesplegar conservando los volúmenes; no volver a extraer el índice ni reemplazar `world.pmtiles`.
 
 Configurar `PHOTON_MIN_INTERVAL_MS=50` únicamente con el motor privado (el valor por defecto para proveedores públicos es 500).
 
@@ -31,3 +31,14 @@ Comprueba estado, búsquedas filtradas en PE/CO/GB/JP e inversa. Solo utiliza
 ubicaciones públicas de prueba; no necesita claves de clientes. Guarda evidencia
 en `/var/lib/mapora-photon/smoke-results.json`. Después del cambio de conexión,
 validar también los endpoints públicos con una clave temporal de la API.
+
+## Reducción regional
+
+`infra/regions/photon-americas.py` prepara un clon de staging del índice existente
+y elimina documentos fuera de la política regional. No altera el índice que
+atiende consultas durante la preparación. El OpenSearch embebido no incluye el
+módulo reindex; se usan scroll/bulk del núcleo. Después de compactar se validan
+conteos y muestras antes de activar el clon como photon y retirar los datos
+originales. Los procesos, logs y marcadores viven bajo
+`/var/lib/mapora-next/regions`, en el disco dedicado. No repetir la clonación ni
+eliminar el índice activo sin revisar los marcadores y el estado de los jobs.

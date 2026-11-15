@@ -125,7 +125,7 @@ export const pages = {
     sections: [
       {
         title: "Qué incluye el visor",
-        text: "El visor de Mapora utiliza MapLibre y cartografía vectorial mundial de OpenStreetMap/Protomaps alojada por Mapora. Permite acercar, alejar, desplazarse, volver a las ubicaciones y abrir pantalla completa cuando el navegador lo admite. Puedes enviar hasta 200 marcadores con latitude, longitude y label. Los controles funcionan con teclado y el movimiento reducido se respeta automáticamente.",
+        text: "El visor de Mapora utiliza MapLibre y cartografía vectorial de América de OpenStreetMap/Protomaps alojada por Mapora. Permite acercar, alejar, desplazarse, volver a las ubicaciones y abrir pantalla completa cuando el navegador lo admite. Puedes enviar hasta 200 marcadores con latitude, longitude y label. Los controles funcionan con teclado y el movimiento reducido se respeta automáticamente.",
       },
       {
         title: "Cómo insertarlo en otra web",
