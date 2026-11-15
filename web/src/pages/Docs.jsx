@@ -51,7 +51,7 @@ export default function Docs({ heading = "Documentación de Mapora" }) {
       </nav>
       <section className="docs-auth">
         <h2>Conecta tu asistente con MCP</h2>
-        <p>Abre <a href={`${appURL}/app/mcp`}>Conectar IA en tu panel</a>, copia las instrucciones para Claude Code o Codex y pégalas en tu asistente. Tu clave ya está incluida. El MCP consulta la documentación actual y utiliza los permisos y la cuota de tu cuenta.</p>
+        <p>Abre <a href={`${appURL}/app?connect=codex`}>Resumen en tu panel</a>, copia las instrucciones para Claude Code o Codex y pégalas en tu asistente. Tu clave ya está incluida. El MCP consulta la documentación actual y utiliza los permisos y la cuota de tu cuenta.</p>
         <p>Endpoint: <code>https://api.mapora.dev/mcp</code>. <a href="https://mapora.dev/mcp">Guía de conexión MCP</a>.</p>
       </section>
       <section className="docs-section" id="docs-inicio">

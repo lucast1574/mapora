@@ -14,7 +14,7 @@ export function McpPromo() {
           rutas y crea mapas. Tu asistente puede consultar el contrato de la API
           y tu consumo antes de integrar.
         </p>
-        <a className="button" href={`${appURL}/app/mcp`}>
+        <a className="button" href={`${appURL}/app?connect=codex`}>
           Conectar mi asistente <ArrowRight size={18} />
         </a>
         <a className="text-link" href="/mcp">
@@ -27,7 +27,7 @@ export function McpPromo() {
           Conecta Mapora a mi app: quiero un buscador de direcciones en Perú y
           un mapa con la ubicación elegida.
         </blockquote>
-        <p>Una copia desde tu panel. Tu cuenta ya va conectada.</p>
+        <p>Una copia desde tu Resumen. Tu cuenta ya va conectada.</p>
       </div>
     </section>
   );
@@ -49,7 +49,7 @@ export default function McpPage() {
           rutas y crea mapas. Tu asistente puede consultar el contrato de la API
           y tu consumo antes de integrar.
         </p>
-        <a className="button" href={`${appURL}/app/mcp`}>
+        <a className="button" href={`${appURL}/app?connect=codex`}>
           Conectar desde mi panel <ArrowRight size={18} />
         </a>
         <section>
@@ -58,7 +58,7 @@ export default function McpPage() {
             <li>
               Inicia sesión en{" "}
               <a href="https://app.mapora.dev">app.mapora.dev</a> y abre
-              Conectar IA.
+              Conectar mi asistente en el Resumen.
             </li>
             <li>
               Elige tu asistente y copia las instrucciones. Tu API key privada

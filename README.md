@@ -177,7 +177,7 @@ Producción: [sitio](https://mapora.dev), [panel](https://app.mapora.dev),
 [API](https://api.mapora.dev), [documentación](https://mapora.dev/documentacion),
 [guía MCP](https://mapora.dev/mcp) y [OpenAPI](https://api.mapora.dev/openapi.json).
 
-Abre **Conectar IA** en el panel y copia las instrucciones para tu asistente.
+Abre **Conectar mi asistente** en el Resumen del panel y copia las instrucciones para tu asistente.
 La API key privada se prepara automáticamente y se reutiliza entre asistentes.
 Se guarda cifrada con AES-256-GCM y AAD por usuario; el hash se valida como el
 resto de API keys. Se puede revocar desde API keys; copiar no revive claves revocadas

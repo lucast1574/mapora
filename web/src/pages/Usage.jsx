@@ -1,3 +1,4 @@
+import McpConnect from "../McpConnect";
 import React from "react";
 import { ArrowUpRight, KeyRound, ArrowRight } from "lucide-react";
 import { useData } from "../useData";
@@ -172,6 +173,7 @@ export function Overview({ user }) {
           Gestionar API keys
         </a>
       </div>
+      <McpConnect userId={user.id} />
       <Notice error>{error}</Notice>
       {data ? (
         <>
