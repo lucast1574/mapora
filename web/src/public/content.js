@@ -7,7 +7,7 @@ export const pages = {
     navTitle: "MCP para IA",
   },
   "/": {
-    title: "Mapora | API de mapas, direcciones y geocodificación",
+    title: "API de mapas, lugares y rutas en América | Mapora",
     description:
       "Busca lugares, calcula rutas y desvíos en América, ordena paradas y visualiza áreas alcanzables. Catálogo OSM, mapas, API y MCP con plan gratuito.",
   },
@@ -147,6 +147,152 @@ export const pages = {
       "Consulta las condiciones de Mapora: cuentas, API keys, planes por peticiones, suscripciones, mapas compartidos, privacidad y proveedores de datos geográficos.",
   },
 };
+Object.assign(pages, {
+  "/api-lugares": {
+    "title": "API de lugares y negocios en América | Mapora",
+    "description": "Busca negocios y servicios por categoría, radio o polígono. Fichas OSM, contactos disponibles, exportación CSV y paradas durante rutas con Mapora.",
+    "heading": "Una API para descubrir lugares.",
+    "summary": "Encuentra negocios y servicios en América y utiliza sus datos en buscadores, directorios y experiencias de entrega.",
+    "navTitle": "Catálogo de lugares",
+    "scope": "places",
+    "operation": "GET /v1/places?lat=-12.12&lng=-77.03&radius=3000&category=pharmacy",
+    "code": "curl \"https://api.mapora.dev/v1/places?lat=-12.12&lng=-77.03&radius=3000&category=pharmacy\" \\\n  -H \"X-API-Key: TU_API_KEY\"",
+    "sections": [
+      {
+        "title": "Del punto al negocio",
+        "text": "Busca con un centro y radio, una caja geográfica o un nombre. Filtra categorías como farmacias, restaurantes, hoteles o supermercados. Cada resultado incluye identificador OSM, nombre, categoría, coordenadas y atribución. Los datos de dirección y contacto dependen de lo publicado en OpenStreetMap."
+      },
+      {
+        "title": "Fichas y exportación",
+        "text": "Consulta GET /v1/places/details con el identificador de un resultado. Teléfono, web, correo y horarios se incluyen únicamente cuando existen en el origen. GET /v1/places/export devuelve una página CSV; utiliza X-Has-More y X-Next-Offset para recorrerla. No hay reseñas, puntuaciones ni fotografías de Google."
+      },
+      {
+        "title": "Áreas y paradas de camino",
+        "text": "POST /v1/places/area filtra puntos dentro de un polígono GeoJSON y respeta sus huecos. POST /v1/places/along-route compara lugares por el tiempo adicional de desvío entre dos puntos. Su selección tiene límites de candidatos: revisa truncated y hasMore antes de describirla como completa."
+      },
+      {
+        "title": "Qué representa la cobertura",
+        "text": "El catálogo corresponde a un snapshot de América. dataset.builtAt indica cuándo se construyó, no cuándo se verificó cada negocio. Los centros de vías OSM son referencias, no entradas comprobadas. countrycodes y city dependen de etiquetas de dirección; para delimitar un territorio utiliza coordenadas o un polígono."
+      }
+    ]
+  },
+  "/api-rutas": {
+    "title": "API de rutas y optimización de paradas | Mapora",
+    "description": "Calcula rutas a pie, en auto o bicicleta en América. Geometría GeoJSON y polyline6, matrices de tiempos y orden de paradas con Mapora.",
+    "heading": "Conecta destinos con rutas.",
+    "summary": "Calcula recorridos por calles y compara tiempos para organizar entregas, visitas o desplazamientos en América.",
+    "navTitle": "Rutas y paradas",
+    "scope": "routing",
+    "operation": "POST /v1/routes",
+    "code": "curl \"https://api.mapora.dev/v1/routes\" \\\n  -H \"X-API-Key: TU_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"locations\":[{\"latitude\":-12.1199,\"longitude\":-77.029},{\"latitude\":-12.125,\"longitude\":-77.032}],\"profile\":\"walking\"}'",
+    "sections": [
+      {
+        "title": "Rutas para tres formas de viajar",
+        "text": "Utiliza driving, walking o cycling. Mapora devuelve distancia, duración estimada, geometría y maniobras cuando el motor encuentra un recorrido. La cobertura depende de la red vial disponible en América y no incorpora tráfico en vivo. Un recorrido calculado no acredita que una persona haya viajado por él."
+      },
+      {
+        "title": "GeoJSON y polylines",
+        "text": "La respuesta incluye geometría LineString y polyline con polylinePrecision igual a 6. Al decodificar la cadena utiliza precisión de seis decimales. Conserva las ubicaciones originales y distingue el ajuste que realiza la red vial para calcular el trayecto."
+      },
+      {
+        "title": "Orden de paradas y matrices",
+        "text": "POST /v1/routes/optimize conserva origen y destino y organiza las paradas intermedias. waypointOrder hace referencia a los índices originales. POST /v1/matrix compara fuentes y destinos por tiempo y distancia. No prometas el óptimo global ni incluyas tiempos de servicio que no has modelado."
+      },
+      {
+        "title": "De un trayecto a una parada útil",
+        "text": "Combina una ruta con el catálogo para encontrar farmacias, combustible o servicios durante el viaje. Los candidatos se ordenan por desvío estimado y tienen límites publicados. Consulta el contrato completo para manejar trayectos no disponibles y resultados truncados."
+      }
+    ]
+  },
+  "/api-isocronas": {
+    "title": "API de isócronas y áreas alcanzables | Mapora",
+    "description": "Visualiza hasta dónde se puede llegar en auto, bicicleta o a pie en América. Isócronas por minutos para ubicaciones y zonas de servicio con Mapora.",
+    "heading": "Hasta dónde llegas en minutos.",
+    "summary": "Compara áreas alcanzables por las calles disponibles, en lugar de tratar una distancia circular como tiempo real de viaje.",
+    "navTitle": "Áreas alcanzables",
+    "scope": "routing",
+    "operation": "POST /v1/isochrones",
+    "code": "curl \"https://api.mapora.dev/v1/isochrones\" \\\n  -H \"X-API-Key: TU_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"center\":{\"latitude\":-12.1199,\"longitude\":-77.029},\"minutes\":[5,10,15],\"profile\":\"walking\"}'",
+    "sections": [
+      {
+        "title": "Un área basada en el recorrido",
+        "text": "Una isócrona delimita un alcance estimado para un tiempo de viaje. Puede ayudar a estudiar el entorno de una tienda o comparar ubicaciones. No es una garantía de entrega: depende del motor, la red vial y el perfil elegido, sin tráfico en vivo."
+      },
+      {
+        "title": "De minutos a polígonos",
+        "text": "Envía un centro, perfil y entre uno y cuatro contornos de minutos distintos, de 1 a 120. La respuesta incluye una FeatureCollection GeoJSON con Polygon o MultiPolygon. Lee la propiedad de cada contorno y utiliza la geometría para dibujar o analizar el área."
+      },
+      {
+        "title": "Isócronas y zonas de cobertura",
+        "text": "La isócrona calcula alcance por tiempo. Una zona de cobertura define una regla de negocio que tu aplicación conserva. Puedes combinar ambas, pero mantén separadas la estimación del motor y la política de atención que aplicas a tus usuarios."
+      },
+      {
+        "title": "Integra la visualización",
+        "text": "El panel Lugares y recorridos permite probar áreas de 5, 10 y 15 minutos. En tu aplicación utiliza las geometrías devueltas en el visor o SDK, conserva la atribución de datos y comunica el perfil y la ausencia de tráfico en vivo."
+      }
+    ]
+  },
+  "/api-ajuste-gps": {
+    "title": "API de ajuste GPS a calles | Mapora",
+    "description": "Relaciona puntos GPS con la red vial de América. Recorrido original, geometría ajustada, polyline6 e indicadores de confianza con Mapora.",
+    "heading": "Del GPS al recorrido probable.",
+    "summary": "Interpreta una secuencia de observaciones GPS y conserva la diferencia entre los puntos medidos y el camino inferido.",
+    "navTitle": "Ajuste de GPS",
+    "scope": "routing",
+    "operation": "POST /v1/match",
+    "code": "curl \"https://api.mapora.dev/v1/match\" \\\n  -H \"X-API-Key: TU_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"locations\":[{\"latitude\":-12.1199,\"longitude\":-77.029},{\"latitude\":-12.1225,\"longitude\":-77.0305},{\"latitude\":-12.125,\"longitude\":-77.032}],\"profile\":\"walking\"}'",
+    "sections": [
+      {
+        "title": "Qué hace el ajuste de GPS",
+        "text": "El map matching relaciona observaciones con segmentos de la red vial. Puede ayudar a representar recorridos con ruido de posición. El resultado es una inferencia del motor y no verifica presencia, identidad, velocidad real ni desplazamiento de una persona."
+      },
+      {
+        "title": "Puntos originales y confianza",
+        "text": "La respuesta conserva las observaciones y añade geometría ajustada, segmentos e indicadores de confianza. Guarda el original junto a la inferencia para que puedan revisarse. No sustituyas automáticamente los registros originales por un trazado aparentemente más limpio."
+      },
+      {
+        "title": "Límites de una consulta",
+        "text": "Se admiten entre 2 y 2.000 puntos y una longitud acumulada máxima de 200 kilómetros. El perfil debe corresponder al tipo de recorrido. Los huecos de cobertura o puntos lejanos a la red pueden impedir el ajuste. Consulta los errores del contrato antes de reintentar."
+      },
+      {
+        "title": "Privacidad de los recorridos",
+        "text": "Una secuencia GPS puede contener ubicaciones personales. Envía solo los datos que estás autorizado a procesar, protege tu API key en el servidor y define tu política de conservación. Evita compartir mapas que expongan un recorrido privado a quien tenga el enlace."
+      }
+    ]
+  },
+  "/alternativa-google-maps-api": {
+    "title": "Alternativa a Google Maps API para América | Mapora",
+    "description": "Conoce Mapora como alternativa para mapas, lugares, geocodificación y rutas en América. Datos OSM, SDK React, MCP y planes por peticiones.",
+    "heading": "Una alternativa para construir con mapas.",
+    "summary": "Mapora reúne datos y funciones geográficas para productos que atienden América: encuentra lugares, calcula rutas y muestra el resultado en tu aplicación.",
+    "navTitle": "Alternativa a Google Maps API",
+    "scope": "search",
+    "operation": "GET /v1/search?q=Lima&countrycodes=PE",
+    "code": "curl \"https://api.mapora.dev/v1/search?q=Lima&countrycodes=PE\" \\\n  -H \"X-API-Key: TU_API_KEY\"",
+    "sections": [
+      {
+        "title": "Cuándo considerar Mapora",
+        "text": "Si tu producto necesita direcciones, negocios y servicios, geocodificación inversa o rutas en América, puedes evaluar Mapora con tu propia muestra de ubicaciones. Prueba datos y cobertura en las ciudades que atiendes antes de migrar. La fuente y precisión de cada resultado importan más que una comparación genérica de cantidad de funciones."
+      },
+      {
+        "title": "Lo que puedes integrar",
+        "text": "La API incluye autocompletado, búsqueda por país y ciudad, cercanos por distancia o tiempo, catálogo OSM con fichas y CSV, consultas por polígonos y lugares durante rutas. Añade matrices, orden de paradas, isócronas, ajuste GPS y mapas con marcadores, polígonos y recorridos. El SDK React y el MCP facilitan su uso desde aplicaciones y asistentes."
+      },
+      {
+        "title": "Diferencias que debes evaluar",
+        "text": "Mapora utiliza sus propios motores y datos de OpenStreetMap y Protomaps. No ofrece reseñas, puntuaciones o fotos de Google, tráfico en vivo, imágenes satelitales ni cobertura de soporte fuera de América. Los horarios y contactos dependen de lo publicado en OSM; una dirección no verifica automáticamente su número de puerta."
+      },
+      {
+        "title": "Cómo plantear una migración",
+        "text": "No es un reemplazo con el mismo contrato de Google Maps Platform. Define qué operaciones consume tu aplicación, adapta sus respuestas al contrato de Mapora y revisa coordenadas, errores, atribución y límites. Mantén la clave privada en el backend o utiliza una clave de navegador con orígenes exactos cuando la operación lo permita."
+      },
+      {
+        "title": "Empieza con una prueba real",
+        "text": "El plan Free incluye 1.000 peticiones al mes. Cada petición autenticada admitida cuenta una unidad, también desde caché o si el proveedor devuelve un error. No hay cargos automáticos por excedentes. Consulta los planes vigentes en la landing y usa el panel para observar el consumo de tu integración."
+      }
+    ]
+  }
+});
 export const guides = Object.entries(pages).filter(([, p]) => p.operation);
 export const notFound = {
   title: "Página no encontrada | Mapora",

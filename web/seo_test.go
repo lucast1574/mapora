@@ -29,7 +29,7 @@ func TestSocialImagesAndIconsHaveExpectedDimensions(t *testing.T) {
 func TestPublicPagesContainHTMLAndUniqueMetadata(t *testing.T) {
 	h := Handler()
 	titles := map[string]bool{}
-	for _, path := range []string{"/", "/mcp", "/documentacion", "/api-busqueda-direcciones", "/resolver-enlaces-google-maps", "/geocodificacion-inversa", "/mapas-interactivos", "/legal"} {
+	for _, path := range []string{"/", "/mcp", "/documentacion", "/api-busqueda-direcciones", "/resolver-enlaces-google-maps", "/geocodificacion-inversa", "/mapas-interactivos", "/legal", "/api-lugares", "/api-rutas", "/api-isocronas", "/api-ajuste-gps", "/alternativa-google-maps-api"} {
 		w := httptest.NewRecorder()
 		h.ServeHTTP(w, httptest.NewRequest("GET", "https://mapora.dev"+path, nil))
 		body := w.Body.String()
@@ -106,7 +106,7 @@ func TestSitemapContainsOnlyIndexablePublicPages(t *testing.T) {
 			Location string `xml:"loc"`
 		} `xml:"url"`
 	}
-	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &sitemap) != nil || len(sitemap.URLs) != 8 {
+	if w.Code != 200 || xml.Unmarshal(w.Body.Bytes(), &sitemap) != nil || len(sitemap.URLs) != 13 {
 		t.Fatal("sitemap", w.Code, w.Body.String())
 	}
 	for _, u := range sitemap.URLs {

@@ -20,11 +20,9 @@ export function McpPromo() {
         <span className="mcp-eyebrow">MCP · TU CUENTA YA CONECTADA</span>
         <h2>Tu asistente también sabe de mapas.</h2>
         <AssistantLinks />
-        <p>
-          Busca direcciones y lugares, convierte enlaces de Google Maps, calcula
-          rutas, ordena paradas, consulta áreas alcanzables y crea mapas. Busca fichas de lugares OSM, exporta datos y encuentra paradas durante el trayecto. Tu asistente puede consultar el contrato de la API
-          y tu consumo antes de integrar.
-        </p>
+        <p>Conecta Claude Code o Codex y pídele que encuentre lugares,
+          organice recorridos o lleve Mapora a tu aplicación. Tu asistente puede
+          consultar las funciones disponibles y trabajar con tu cuenta.</p>
         <a className="button" href={`${appURL}/app?connect=codex`}>
           Conectar mi asistente <ArrowRight size={18} />
         </a>

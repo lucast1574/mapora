@@ -87,3 +87,13 @@ CREATE TABLE IF NOT EXISTS mcp_connections (
 UPDATE api_keys k SET scopes=array_append(k.scopes,'places')
 WHERE k.revoked_at IS NULL AND NOT ('places'=ANY(k.scopes))
 AND EXISTS (SELECT 1 FROM mcp_connections c WHERE c.key_id=k.id);
+
+-- Durable transactional notifications; no retrospective welcome emails.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS cancel_at_period_end boolean NOT NULL DEFAULT false;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS notification_version bigint NOT NULL DEFAULT 0;
+CREATE TABLE IF NOT EXISTS notification_outbox (
+ id text PRIMARY KEY,payload jsonb NOT NULL,attempts integer NOT NULL DEFAULT 0,
+ created_at timestamptz NOT NULL DEFAULT now(),next_attempt_at timestamptz NOT NULL DEFAULT now(),
+ sent_at timestamptz,failed_at timestamptz,last_status integer
+);
+CREATE INDEX IF NOT EXISTS notification_outbox_pending ON notification_outbox(next_attempt_at) WHERE sent_at IS NULL AND failed_at IS NULL;

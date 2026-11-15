@@ -1,0 +1,21 @@
+mapora.
+
+{{.Label}}
+
+
+{{.Title}}
+
+Hola, {{.Name}}.
+
+{{.Body}}
+
+{{.Detail}}
+
+{{.Action}} {{.ActionURL}}
+
+----------------------------------------
+
+{{.Footnote}}
+
+Mapora · Lugares, rutas y mapas de América
+mapora.dev https://mapora.dev

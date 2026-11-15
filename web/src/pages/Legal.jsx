@@ -72,7 +72,7 @@ export default function Legal() {
           historial personal mostrado en el panel.
         </p>
         <p>
-          Stripe procesa la facturación, Resend entrega los correos de acceso y
+          Stripe procesa la facturación, Resend entrega los correos de bienvenida, suscripción, avisos de registro para los administradores activos, acceso y
           Los motores privados Photon, Valhalla y el catálogo OSM procesan las consultas geográficas. Usamos cookies necesarias
           para mantener tu sesión; no incluimos seguimiento publicitario. Para
           solicitar acceso, corrección o eliminación de tus datos, escribe desde

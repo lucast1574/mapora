@@ -1,3 +1,18 @@
+# Instrucción vigente: conservar datos de Photon
+
+El usuario pidió detener la limpieza y conservar los datos restantes fuera de
+América. photon-filter.pid y activation.pid fueron detenidos y verificados;
+photon-activation.json marca cancelled_by_user. NO reanudar scripts ni activar el
+índice staging sin una nueva solicitud. La cobertura del producto sigue América.
+La ampliación anterior se publicó en 2ad2f7d, con 16 smoke checks públicos aprobados.
+
+El siguiente cambio añade correos React Email/Resend, notificaciones persistentes,
+SEO y una landing visual más breve. Evidencia de su publicación final en
+`/home/rangel/mapora-mail-release/release.json`; no confundir con el release anterior.
+Las claves de Resend se guardan solo en Dokploy, con permiso de envío por dominio.
+
+---
+
 # Mapora: lugares y rutas avanzadas — continuidad
 
 Estado de publicación: candidato validado; publicar este commit por main y comprobar

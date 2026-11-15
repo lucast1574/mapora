@@ -92,7 +92,7 @@ const maps = new Mapora({ apiKey: API_KEY });
 const results = await maps.geocode({
   street: 'Avenida Larco', city: 'Lima', countrycodes: 'PE'
 });`}</pre>
-        <p>El cliente expone <code>search</code>, <code>autocomplete</code>, <code>geocode</code>, <code>reverse</code>, <code>nearby</code>, <code>resolve</code>, <code>batch</code>, <code>coverage</code>, <code>checkCoverage</code>, <code>routes</code>, <code>matrix</code> <code>map</code>, <code>places</code>, <code>place</code>, <code>placesInArea</code>, <code>placesAlongRoute</code>, <code>exportPlaces</code>, <code>isochrones</code>, <code>optimize</code> y <code>match</code>. Usa claves privadas solo en servidor; en navegador se aplican las restricciones de <code>mp_pub_</code>. Los errores HTTP incluyen <code>status</code>, <code>code</code> y <code>retryAfter</code>.</p>
+        <p>El cliente expone <code>status</code>, <code>search</code>, <code>autocomplete</code>, <code>geocode</code>, <code>reverse</code>, <code>nearby</code>, <code>resolve</code>, <code>batch</code>, <code>coverage</code>, <code>checkCoverage</code>, <code>routes</code>, <code>matrix</code> <code>map</code>, <code>places</code>, <code>place</code>, <code>placesInArea</code>, <code>placesAlongRoute</code>, <code>exportPlaces</code>, <code>isochrones</code>, <code>optimize</code> y <code>match</code>. Usa claves privadas solo en servidor; en navegador se aplican las restricciones de <code>mp_pub_</code>. Los errores HTTP incluyen <code>status</code>, <code>code</code> y <code>retryAfter</code>.</p>
       </section>
       <section className="docs-section" id="docs-cuotas">
         <h2>Consumo, cuotas y errores</h2>

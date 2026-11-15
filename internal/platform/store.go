@@ -18,10 +18,10 @@ import (
 var schema string
 
 type Config struct {
-	TileURL                                                                                                                          string
-	DatabaseURL, AdminEmail, AdminPassword, AppURL, SiteURL, StripeKey, StripeWebhookSecret, StripePortalConfig, ResendKey, MailFrom string
-	StripePrices                                                                                                                     map[string]string
-	FirebaseProjectID, FirebaseAPIKey, FirebaseAppID                                                                                 string
+	TileURL                                                                                                                                       string
+	DatabaseURL, AdminEmail, AdminPassword, AppURL, SiteURL, StripeKey, StripeWebhookSecret, StripePortalConfig, ResendKey, MailFrom, MailReplyTo string
+	StripePrices                                                                                                                                  map[string]string
+	FirebaseProjectID, FirebaseAPIKey, FirebaseAppID                                                                                              string
 }
 type Platform struct {
 	db         *sql.DB

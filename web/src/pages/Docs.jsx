@@ -1,3 +1,4 @@
+import AccountNotifications from "./AccountNotifications";
 import { appURL } from "../client";
 import React, { useState } from "react";
 import { Play, ArrowUpRight, ChevronDown } from "lucide-react";
@@ -130,6 +131,7 @@ GET /v1/autocomplete?q=Avenida+Larco&countrycodes=PE&city=Lima&district=Miraflor
         </div>
       </section>
       <ExpansionDocs />
+      <AccountNotifications />
     </div>
   );
 }

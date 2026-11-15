@@ -85,7 +85,6 @@ export default function PublicPage({ path }) {
             <a href="/">Mapora</a>
             <span>/</span>
             <a href="/documentacion">Documentación</a>
-            <a href="/mcp">MCP para IA</a>
             <span>/</span>
             <span>{page.navTitle}</span>
           </nav>

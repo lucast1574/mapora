@@ -6,7 +6,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
-  Code2,
   MapPin,
   Navigation,
   Search,
@@ -14,105 +13,9 @@ import {
 } from "lucide-react";
 import { Logo, Button } from "./ui";
 import { api, appURL, number } from "./client";
-import { ResourceLinks } from "./public/PublicPage";
+import ProductOverview from "./public/ProductOverview";
 import BrandArrival, { createBrandArrival } from "./BrandArrival";
 gsap.registerPlugin(ScrollTrigger);
-const samples = {
-  places: {
-    title: "Descubre lo que está cerca.",
-    description:
-      "Busca negocios y servicios por categoría, radio o área. Consulta datos de contacto y horarios cuando estén disponibles en OpenStreetMap.",
-    route:
-      "GET /v1/places?category=amenity:pharmacy&lat=-12.12&lng=-77.03&radius=3000",
-    result: {
-      results: [
-        {
-          placeName: "Farmacia de ejemplo",
-          category: "amenity:pharmacy",
-          distanceMeters: 320,
-          source: "openstreetmap",
-          verified: false,
-        },
-      ],
-    },
-  },
-  isochrones: {
-    title: "Mide hasta dónde llegas.",
-    description:
-      "Áreas alcanzables en 5, 10 o 15 minutos. Ordena paradas y encuentra lugares durante tu ruta según su tiempo adicional de desvío, sin tráfico en vivo.",
-    route: "POST /v1/isochrones",
-    result: {
-      profile: "walking",
-      minutes: [5, 10, 15],
-      coverage: "americas",
-      traffic: "not_included",
-    },
-  },
-  search: {
-    title: "Encuentra una dirección.",
-    description:
-      "Calles, distritos y lugares con país, ciudad y coordenadas. Prioriza lo que está cerca de tu usuario.",
-    route: "/v1/search?q=Avenida+José+Larco&countrycodes=pe",
-    result: {
-      placeName: "Avenida José Larco",
-      city: "Miraflores",
-      countryCode: "PE",
-      latitude: -12.1199058,
-      longitude: -77.0289708,
-    },
-  },
-  resolve: {
-    title: "Un enlace. Un lugar.",
-    description:
-      "Convierte un enlace corto de Google Maps en coordenadas y conserva el nombre del lugar seleccionado.",
-    route: "/v1/resolve",
-    result: {
-      placeName: "Plaza Mayor",
-      latitude: -12.0453,
-      longitude: -77.0309,
-      addressStatus: "resolved",
-    },
-  },
-  reverse: {
-    title: "Dale contexto al punto.",
-    description:
-      "Convierte coordenadas en una referencia de dirección, sin mover el punto que tu aplicación necesita.",
-    route: "/v1/reverse?lat=-12.12&lng=-77.03",
-    result: {
-      streetAddress: "Avenida José Larco, Miraflores, Lima",
-      latitude: -12.12,
-      longitude: -77.03,
-      source: "photon",
-    },
-  },
-  routes: {
-    title: "Recorre las calles.",
-    description:
-      "Rutas en América para auto, bicicleta y a pie. Geometría GeoJSON, instrucciones y matrices de tiempos, conservando tus puntos originales.",
-    route: "POST /v1/routes",
-    result: {
-      profile: "driving",
-      distanceMeters: 1183,
-      coverage: "americas",
-      traffic: "not_included",
-    },
-  },
-  maps: {
-    status: "201 Created",
-    title: "Muéstralo a tu manera.",
-    description:
-      "Mapas con marcadores agrupados, polígonos y rutas. Elige estilo y color, y comparte un enlace o iframe sin exponer tu clave.",
-    route: "POST /v1/maps",
-    result: {
-      map: {
-        title: "Mi ubicación",
-        theme: "light",
-        accent: "#174c43",
-        center: { latitude: -12.1199, longitude: -77.029 },
-      },
-    },
-  },
-};
 function MapArtwork() {
   return (
     <div className="map-art" aria-hidden="true">
@@ -160,28 +63,8 @@ function MapArtwork() {
     </div>
   );
 }
-function CodeSample({ sample }) {
-  return (
-    <div className="response-specimen" data-ui>
-      <div className="specimen-top">
-        <span>
-          <span className="status-dot" />
-          {sample.status || "200 OK"}
-        </span>
-        <span>Extracto de respuesta de ejemplo</span>
-      </div>
-      <code className="request-path">{sample.route}</code>
-      <pre>{JSON.stringify(sample.result, null, 2)}</pre>
-      <div className="specimen-bottom">
-        <span>JSON, listo para tu aplicación</span>
-        <Code2 size={18} />
-      </div>
-    </div>
-  );
-}
 export default function Landing() {
   const root = useRef(null);
-  const [selected, setSelected] = useState("search");
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     api("/console/plans")
@@ -354,8 +237,8 @@ export default function Landing() {
               en tu código.
             </h1>
             <p>
-              Lugares, direcciones y mapas de América. Calcula rutas, desvíos y
-              áreas alcanzables en América, y conecta los datos a tu aplicación.
+              Una API de mapas para tu próxima idea. Encuentra lugares, conecta
+              direcciones y calcula recorridos en América.
             </p>
             <div className="hero-actions">
               <a className="button" href={`${appURL}/signup`}>
@@ -376,117 +259,10 @@ export default function Landing() {
             </div>
           </div>
         </section>
-        <section className="product-section reveal-group" id="producto">
-          <div className="section-intro reveal">
-            <h2>
-              Encuentra. Ubica.
-              <br />
-              Construye.
-            </h2>
-            <p>
-              La parte geográfica de tu producto, resuelta. Elige una operación
-              y explora su respuesta.
-            </p>
-          </div>
-          <div className="product-grid">
-            <div
-              className="feature-index reveal"
-              role="tablist"
-              aria-label="Operaciones de la API"
-            >
-              {Object.entries(samples).map(([key, sample]) => (
-                <button
-                  role="tab"
-                  aria-selected={selected === key}
-                  className={`feature-row ${selected === key ? "selected" : ""}`}
-                  onClick={() => setSelected(key)}
-                  key={key}
-                >
-                  <span>{sample.title}</span>
-                  <ArrowUpRight size={24} />
-                  {selected === key && <p>{sample.description}</p>}
-                </button>
-              ))}
-            </div>
-            <div className="reveal sample-stage" key={selected}>
-              <CodeSample sample={samples[selected]} />
-            </div>
-          </div>
-        </section>
-        <section className="route-discovery">
-          <div>
-            <h2>El trayecto también tiene lugares.</h2>
-            <p>
-              Encuentra una gasolinera durante el viaje, compara farmacias por
-              tiempo a pie o calcula el alcance de una tienda. Combina lugares y
-              rutas con datos de Mapora.
-            </p>
-            <a className="text-link" href="/documentacion#docs-lugares">
-              Explorar lugares y recorridos <ArrowUpRight size={18} />
-            </a>
-          </div>
-          <div
-            className="discovery-diagram"
-            aria-label="Ejemplo ilustrativo de una parada durante una ruta"
-          >
-            <svg
-              viewBox="0 0 440 210"
-              role="img"
-              aria-label="Una ruta conecta el origen, una parada y el destino"
-            >
-              <path
-                d="M35 150 C110 150 80 50 180 65 S280 170 405 50"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="5"
-              />
-              <path
-                d="M180 65 Q220 10 260 60 Q270 100 300 115"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeDasharray="5 7"
-              />
-              {[
-                [35, 150],
-                [260, 60],
-                [405, 50],
-              ].map(([x, y]) => (
-                <g key={x}>
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r="12"
-                    fill="var(--mint)"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                  />
-                  <circle cx={x} cy={y} r="3" fill="currentColor" />
-                </g>
-              ))}
-            </svg>
-            <div>
-              <span>Origen</span>
-              <span>Parada en el camino</span>
-              <span>Destino</span>
-            </div>
-            <small>
-              Esquema ilustrativo. Los desvíos se calculan por calles.
-            </small>
-          </div>
-        </section>
-        <section className="landing-resources">
-          <h2>De la consulta a tu integración.</h2>
-          <p>
-            Catálogo de lugares con fichas y CSV, búsqueda durante rutas, áreas
-            alcanzables y optimización de paradas. También direcciones, lotes,
-            zonas y ajuste de recorridos GPS. Integra con JSON, el SDK React o
-            tu asistente mediante MCP.
-          </p>
-          <a className="text-link" href="/documentacion#docs-referencia">
-            Consultar todos los endpoints <ArrowUpRight size={18} />
-          </a>
-          <ResourceLinks />
+        <ProductOverview />
+        <section className="landing-search-context">
+          <div><h2>Tu alternativa para crear con mapas.</h2><p>Mapora reúne búsqueda de lugares, geocodificación y rutas en una API propia para América. Integra mapas en tu producto y conecta tu asistente, con planes por peticiones y un panel para seguir tu consumo.</p></div>
+          <a href="/alternativa-google-maps-api">Conoce Mapora <ArrowUpRight size={18}/></a>
         </section>
         <section className="journey reveal-group" id="integracion">
           <div className="section-intro reveal">
@@ -552,13 +328,7 @@ export default function Landing() {
               </p>
             </article>
           </div>
-          <div className="integration-code reveal" data-ui>
-            <span>Desde tu backend, con tu clave privada.</span>
-            <pre>{`const response = await fetch(\n  "https://api.mapora.dev/v1/search?q=Lima",\n  { headers: { "X-API-Key": process.env.MAPORA_API_KEY } }\n);\nif (!response.ok) throw new Error("No se pudo buscar");\nconst locations = await response.json();`}</pre>
-            <a href="/documentacion">
-              Ver documentación <ArrowUpRight size={18} />
-            </a>
-          </div>
+          <a className="integration-doc-link" href="/documentacion">Abre la guía de integración <ArrowUpRight size={18}/></a>
         </section>
         <McpPromo />
         <section className="pricing-section reveal-group" id="planes">
