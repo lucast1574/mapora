@@ -1,3 +1,4 @@
+import { advancedOperations } from "./advanced";
 export const apiBase = "https://api.mapora.dev";
 const lima = { latitude: -12.1199, longitude: -77.029 };
 const destination = { latitude: -12.122, longitude: -77.034 };
@@ -47,7 +48,7 @@ export const operations = [
     id: "nearby", title: "Encontrar lugares cercanos", method: "GET", path: "/v1/nearby", scope: "nearby", group: "descubrir",
     description: "Consulta lugares indexados dentro de un radio y los ordena por distancia en línea recta al centro.",
     query: "lat=-12.1199&lng=-77.029&category=pharmacy&radius=1000&limit=8",
-    parameters: ["lat, lng y category son obligatorios. Categorías: pharmacy, restaurant, hospital, fuel, supermarket, hotel, bank, parking y cafe.", "radius: 50–50000 metros, por defecto 5000. limit: 1–20, por defecto 8.", "Son candidatos del índice disponible, no un inventario exhaustivo. La distancia no es un recorrido ni un tiempo de viaje."],
+    parameters: ["lat, lng y category son obligatorios. Categorías: pharmacy, restaurant, hospital, fuel, supermarket, hotel, bank, parking y cafe.", "radius: 50–50000 metros, por defecto 5000. limit: 1–20, por defecto 8.", "sort: distance (por defecto) o travel_time. Con travel_time usa profile: driving, walking o cycling y añade durationSeconds. Ordena los candidatos devueltos por Photon, no un inventario exhaustivo."],
     response: "results con distanceMeters por lugar; count, radiusMeters, category y distanceType:straight_line. Usa /v1/routes o /v1/matrix para medir desplazamientos por calles.",
   },
   {
@@ -92,11 +93,13 @@ export const operations = [
     parameters: ["center: latitude y longitude; si se omite, se usa el primer marcador. markers: hasta 200, con label opcional de hasta 160 bytes y agrupación automática.", "theme: light, dark o grayscale. accent: color hexadecimal de seis dígitos. zoom: 1–19, por defecto 14. title: hasta 160 bytes.", "shapes: hasta 10 Polygon GeoJSON. route: LineString GeoJSON, hasta 10000 puntos. Cuerpo completo: máximo 512 KiB.", "expiresIn: 60–2592000 segundos; por defecto 604800 (7 días). Coordenadas del mapa: latitud entre −85.05112878 y 85.05112878, longitud entre −180 y 180."],
     response: "url, embedHtml, expiresAt y map con la especificación normalizada. GET /v1/maps/view/{token} lee ese mapa mediante su token, sin API key. El token no da acceso a otros mapas ni a tu cuenta. Crear consume una petición; visualizar y cargar cartografía no añade peticiones geográficas.",
   },
+  ...advancedOperations,
 ];
 
 export const operationGroups = [
   { id: "buscar", title: "Direcciones y enlaces" },
   { id: "descubrir", title: "Cercanos y lotes" },
+  { id: "lugares", title: "Catálogo de lugares" },
   { id: "cobertura", title: "Zonas de cobertura" },
   { id: "rutas", title: "Rutas y matrices" },
   { id: "mapas", title: "Mapas interactivos" },

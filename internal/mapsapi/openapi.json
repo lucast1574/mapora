@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Mapora API",
-    "version": "3.0.0",
-    "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap. Autocompletado, búsqueda estructurada mundial, lugares cercanos, lotes (10 direcciones), cobertura GeoJSON y rutas y matrices por calles en América, según cobertura disponible. Cada llamada HTTP admitida consume una petición; no hay tráfico en tiempo real.",
+    "version": "4.0.0",
+    "description": "API geográfica de Mapora. Requiere API key. Cada petición geográfica autenticada admitida consume una unidad, también si responde desde caché o devuelve un error. Free: 1.000/mes; Launch: 25.000/mes; Scale: sin cuota mensual. Se aplican límites por minuto. Búsqueda y consulta inversa con Photon/OpenStreetMap. Autocompletado, búsqueda estructurada mundial, lugares cercanos, lotes (10 direcciones), cobertura GeoJSON y rutas y matrices por calles en América, según cobertura disponible. Cada llamada HTTP admitida consume una petición; no hay tráfico en tiempo real. Independent OSM place catalog, CSV and polygon search, route corridor discovery, travel-time ranking, isochrones, stop optimization and GPS map matching. Place contacts/hours exist only when recorded in OSM; no Google review data.",
     "license": {
       "name": "Private application; geographic data © OpenStreetMap contributors (ODbL)",
       "url": "https://www.openstreetmap.org/copyright"
@@ -1285,6 +1285,7 @@
             "name": "category",
             "required": true,
             "schema": {
+              "type": "string",
               "enum": [
                 "pharmacy",
                 "restaurant",
@@ -1294,7 +1295,17 @@
                 "hotel",
                 "bank",
                 "parking",
-                "cafe"
+                "cafe",
+                "veterinary",
+                "bakery",
+                "school",
+                "clinic",
+                "dentist",
+                "atm",
+                "fast_food",
+                "convenience",
+                "police",
+                "fire_station"
               ]
             }
           },
@@ -1319,6 +1330,33 @@
               "maximum": 20,
               "default": 8
             }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "distance",
+                "travel_time"
+              ],
+              "default": "distance"
+            },
+            "description": "travel_time ranks returned Photon candidates by a street-time matrix, excluding unreachable candidates. Not an exhaustive fastest-place search."
+          },
+          {
+            "name": "profile",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "driving",
+                "walking",
+                "cycling"
+              ],
+              "default": "driving"
+            },
+            "description": "Travel profile for travel_time ranking; Americas routing coverage."
           }
         ]
       }
@@ -1925,6 +1963,829 @@
           }
         }
       }
+    },
+    "/v1/isochrones": {
+      "post": {
+        "summary": "Compute areas reachable within travel-time contours",
+        "description": "routing permission. Returns geometry as a GeoJSON FeatureCollection of Polygon/MultiPolygon contours. Estimates without live traffic; Americas routing coverage. Independent contour polygons are not automatically valid saved delivery zones.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "center": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "latitude",
+                      "longitude"
+                    ],
+                    "properties": {
+                      "latitude": {
+                        "type": "number",
+                        "minimum": -90,
+                        "maximum": 90
+                      },
+                      "longitude": {
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180
+                      }
+                    }
+                  },
+                  "profile": {
+                    "type": "string",
+                    "enum": [
+                      "driving",
+                      "walking",
+                      "cycling"
+                    ],
+                    "default": "driving"
+                  },
+                  "minutes": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 120
+                    },
+                    "minItems": 1,
+                    "maxItems": 4
+                  }
+                },
+                "required": [
+                  "center",
+                  "minutes"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful result; geographic data includes attribution.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "Missing permission"
+          },
+          "422": {
+            "description": "No connected route"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Engine unavailable"
+          }
+        }
+      }
+    },
+    "/v1/routes/optimize": {
+      "post": {
+        "summary": "Order stops and compute a street route",
+        "description": "routing permission. Keeps first and last stops fixed, optimizes intermediate stop order. waypointOrder maps routed stops to original input indices. Returns geometry, polyline (precision 6), instructions and estimates. No fleet, capacity or time-window optimization.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "locations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "latitude",
+                        "longitude"
+                      ],
+                      "properties": {
+                        "latitude": {
+                          "type": "number",
+                          "minimum": -90,
+                          "maximum": 90
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "minimum": -180,
+                          "maximum": 180
+                        }
+                      }
+                    },
+                    "minItems": 2,
+                    "maxItems": 10
+                  },
+                  "profile": {
+                    "type": "string",
+                    "enum": [
+                      "driving",
+                      "walking",
+                      "cycling"
+                    ],
+                    "default": "driving"
+                  }
+                },
+                "required": [
+                  "locations"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful result; geographic data includes attribution.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "Missing permission"
+          },
+          "422": {
+            "description": "No connected route"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Engine unavailable"
+          }
+        }
+      }
+    },
+    "/v1/match": {
+      "post": {
+        "summary": "Match GPS observations to the street network",
+        "description": "routing permission. Up to 200 km accumulated straight-line trace length. Returns matched geometry, polyline6, matchedPoints, edges, confidence when available. Preserve original observations; this is an inferred match, not proof of travel.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "locations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "latitude",
+                        "longitude"
+                      ],
+                      "properties": {
+                        "latitude": {
+                          "type": "number",
+                          "minimum": -90,
+                          "maximum": 90
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "minimum": -180,
+                          "maximum": 180
+                        }
+                      }
+                    },
+                    "minItems": 2,
+                    "maxItems": 2000
+                  },
+                  "profile": {
+                    "type": "string",
+                    "enum": [
+                      "driving",
+                      "walking",
+                      "cycling"
+                    ],
+                    "default": "driving"
+                  }
+                },
+                "required": [
+                  "locations"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful result; geographic data includes attribution.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "Missing permission"
+          },
+          "422": {
+            "description": "No connected route"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Engine unavailable"
+          }
+        }
+      }
+    },
+    "/v1/places": {
+      "get": {
+        "summary": "Search the independent OSM place catalog",
+        "description": "Americas-only catalog. places permission. Node/way references, name, category, coordinates and optional phone, website, email, openingHours, wheelchair and cuisine. No Google ratings/reviews/photos. Ordered by distance if center provided, otherwise catalog ID. Returns results,count,hasMore,nextOffset,dataset and attribution. Never promises complete business coverage or verified entrances. openingHours is raw OSM syntax, not an evaluated open-now state.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Name prefix/full-text query; requires q, bbox or center."
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "OSM category such as amenity:pharmacy, shop:bakery, tourism:hotel; nearby aliases also accepted."
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "description": "Latitude; use together with lng."
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "description": "Longitude; use together with lat."
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 50,
+              "maximum": 50000,
+              "default": 5000
+            },
+            "description": "Meters around center, filtered by great-circle distance."
+          },
+          {
+            "name": "bbox",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "minLng,minLat,maxLng,maxLat; no antimeridian crossing."
+          },
+          {
+            "name": "countrycodes",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Up to 10 ISO codes. Filters explicit OSM addr:country only: missing tags are excluded."
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized exact OSM addr:city; missing city tags are excluded."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            },
+            "description": "Results per page."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000,
+              "default": 0
+            },
+            "description": "Continue with nextOffset. Pages are stable within one dataset version; restart after a dataset change."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OSM catalog results. Optional fields are absent when not recorded in OSM.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "places permission required; server keys only"
+          },
+          "404": {
+            "description": "Place not found"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Catalog unavailable or query timeout"
+          }
+        }
+      }
+    },
+    "/v1/places/details": {
+      "get": {
+        "summary": "Read a place by its OSM ID",
+        "description": "places permission. Returns place and attribution from the current catalog snapshot.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^osm:[NW]:[1-9][0-9]{0,19}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OSM catalog results. Optional fields are absent when not recorded in OSM.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "places permission required; server keys only"
+          },
+          "404": {
+            "description": "Place not found"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Catalog unavailable or query timeout"
+          }
+        }
+      }
+    },
+    "/v1/places/export": {
+      "get": {
+        "summary": "Export a page of places as CSV",
+        "description": "places permission. Up to 1000 rows per admitted request; default 20. X-Has-More and X-Next-Offset continue pagination. Attribution retained; text cells protected against spreadsheet formula injection. OSM-derived database remains subject to ODbL.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Name prefix/full-text query; requires q, bbox or center."
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "OSM category such as amenity:pharmacy, shop:bakery, tourism:hotel; nearby aliases also accepted."
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "description": "Latitude; use together with lng."
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "description": "Longitude; use together with lat."
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 50,
+              "maximum": 50000,
+              "default": 5000
+            },
+            "description": "Meters around center, filtered by great-circle distance."
+          },
+          {
+            "name": "bbox",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "minLng,minLat,maxLng,maxLat; no antimeridian crossing."
+          },
+          {
+            "name": "countrycodes",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Up to 10 ISO codes. Filters explicit OSM addr:country only: missing tags are excluded."
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Normalized exact OSM addr:city; missing city tags are excluded."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 20
+            },
+            "description": "Results per page."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000,
+              "default": 0
+            },
+            "description": "Continue with nextOffset. Pages are stable within one dataset version; restart after a dataset change."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OSM catalog results. Optional fields are absent when not recorded in OSM.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "places permission required; server keys only"
+          },
+          "404": {
+            "description": "Place not found"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Catalog unavailable or query timeout"
+          }
+        }
+      }
+    },
+    "/v1/places/area": {
+      "post": {
+        "summary": "Find places inside a polygon",
+        "description": "places permission. Same valid Polygon rules as coverage: up to 200 vertices and 4 holes; no antimeridian. Scans up to 1000 bbox candidates per call; pages can be empty with hasMore=true. Continue nextOffset until hasMore=false; stable within dataset version.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "geometry": {
+                    "$ref": "#/components/schemas/Polygon"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "q": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
+                    "default": 20
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1000000,
+                    "default": 0
+                  }
+                },
+                "required": [
+                  "geometry"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful result; geographic data includes attribution.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "Missing permission"
+          },
+          "422": {
+            "description": "No connected route"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Engine unavailable"
+          }
+        }
+      }
+    },
+    "/v1/places/along-route": {
+      "post": {
+        "summary": "Find places along a route ranked by added travel time",
+        "description": "places permission. Routes up to 100 km; checks up to 1000 bbox POIs and evaluates at most 20 corridor candidates. candidateSearchTruncated signals incomplete candidate evaluation. durationSeconds is total estimated journey via the place; detourSeconds is added time against baseline. No stop/service time or live traffic. Search does not guarantee finding every business or globally minimum detour.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "locations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "latitude",
+                        "longitude"
+                      ],
+                      "properties": {
+                        "latitude": {
+                          "type": "number",
+                          "minimum": -90,
+                          "maximum": 90
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "minimum": -180,
+                          "maximum": 180
+                        }
+                      }
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "profile": {
+                    "type": "string",
+                    "enum": [
+                      "driving",
+                      "walking",
+                      "cycling"
+                    ],
+                    "default": "driving"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "corridorMeters": {
+                    "type": "number",
+                    "minimum": 50,
+                    "maximum": 5000,
+                    "default": 1000
+                  },
+                  "maxDetourSeconds": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 7200,
+                    "default": 600
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "default": 10
+                  }
+                },
+                "required": [
+                  "locations",
+                  "category"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful result; geographic data includes attribution.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Invalid API key"
+          },
+          "403": {
+            "description": "Missing permission"
+          },
+          "422": {
+            "description": "No connected route"
+          },
+          "429": {
+            "description": "Quota or rate exceeded"
+          },
+          "503": {
+            "description": "Engine unavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2405,6 +3266,23 @@
           "tookMs": {
             "type": "number",
             "minimum": 0
+          },
+          "polyline": {
+            "type": "string",
+            "description": "Encoded polyline6"
+          },
+          "polylinePrecision": {
+            "type": "integer",
+            "const": 6
+          },
+          "waypointOrder": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "optimized": {
+            "type": "boolean"
           }
         },
         "required": [

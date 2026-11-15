@@ -48,7 +48,7 @@ func (p *Platform) createKey(w http.ResponseWriter, r *http.Request) {
 		Kind           string
 		AllowedOrigins []string
 	}
-	if decode(w, r, &in) != nil || len(strings.TrimSpace(in.Name)) < 2 || len(in.Name) > 80 || len(in.Scopes) == 0 || len(in.Scopes) > 8 {
+	if decode(w, r, &in) != nil || len(strings.TrimSpace(in.Name)) < 2 || len(in.Name) > 80 || len(in.Scopes) == 0 || len(in.Scopes) > 9 {
 		problem(w, 400, "invalid", "Pon un nombre a la clave y elige al menos un permiso.")
 		return
 	}
@@ -117,7 +117,7 @@ func (p *Platform) createKey(w http.ResponseWriter, r *http.Request) {
 }
 func validScope(s string) bool {
 	switch s {
-	case "search", "reverse", "resolve", "maps", "coverage", "routing", "batch", "nearby":
+	case "search", "reverse", "resolve", "maps", "coverage", "routing", "batch", "nearby", "places":
 		return true
 	}
 	return false

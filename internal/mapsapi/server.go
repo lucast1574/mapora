@@ -22,6 +22,7 @@ type API struct {
 	routingURL      string
 	routingSlots    chan struct{}
 	routingCoverage string
+	placesURL       string
 	tileURL         string
 }
 
@@ -64,6 +65,14 @@ func (s *API) Handler() http.Handler {
 	mux.HandleFunc("POST /v1/batch", s.batch)
 	mux.HandleFunc("POST /v1/coverage", coverageHTTP)
 	mux.HandleFunc("POST /v1/routes", s.routes)
+	mux.HandleFunc("POST /v1/routes/optimize", s.routes)
+	mux.HandleFunc("POST /v1/isochrones", s.isochrones)
+	mux.HandleFunc("POST /v1/match", s.match)
+	mux.HandleFunc("GET /v1/places", s.places)
+	mux.HandleFunc("GET /v1/places/details", s.placeDetails)
+	mux.HandleFunc("GET /v1/places/export", s.exportPlaces)
+	mux.HandleFunc("POST /v1/places/along-route", s.alongRoute)
+	mux.HandleFunc("POST /v1/places/area", s.placesArea)
 	mux.HandleFunc("POST /v1/matrix", s.matrix)
 	mux.HandleFunc("GET /status", s.status)
 	for _, path := range []string{"/v1/search", "/search"} {

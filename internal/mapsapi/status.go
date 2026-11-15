@@ -10,10 +10,10 @@ import (
 func (s *API) status(w http.ResponseWriter, r *http.Request) {
 	body, _, err := s.cache.get(r.Context(), "service-status", time.Minute, func(ctx context.Context) ([]byte, error) {
 		type result struct{ name, status string }
-		results := make(chan result, 3)
+		results := make(chan result, 4)
 		components := map[string]string{}
 		pending := 0
-		for name, endpoint := range map[string]string{"search": s.provider + "/status", "routing": optionalEndpoint(s.routingURL, "/status"), "cartography": optionalEndpoint(s.tileURL, "/world/0/0/0.mvt")} {
+		for name, endpoint := range map[string]string{"search": s.provider + "/status", "routing": optionalEndpoint(s.routingURL, "/status"), "cartography": optionalEndpoint(s.tileURL, "/world/0/0/0.mvt"), "places": optionalEndpoint(s.placesURL, "/status")} {
 			if endpoint == "" {
 				components[name] = "not_configured"
 				continue

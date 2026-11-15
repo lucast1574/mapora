@@ -53,8 +53,8 @@ export default function Legal() {
           Los mapas compartidos guardan centro, marcadores, etiquetas y
           caducidad. Cualquier persona que tenga el enlace puede ver esas
           ubicaciones hasta que caduque o se revoque la clave que lo creó. El
-          navegador solicita el fondo cartográfico a OpenStreetMap, que recibe
-          la dirección IP y la zona consultada.
+          navegador solicita el fondo cartográfico a la infraestructura de Mapora,
+          que utiliza datos OpenStreetMap/Protomaps.
         </p>
         <p>
           Si eliges Google, Firebase verifica tu identidad y Mapora recibe tu
@@ -73,14 +73,14 @@ export default function Legal() {
         </p>
         <p>
           Stripe procesa la facturación, Resend entrega los correos de acceso y
-          Photon procesa las consultas geográficas. Usamos cookies necesarias
+          Los motores privados Photon, Valhalla y el catálogo OSM procesan las consultas geográficas. Usamos cookies necesarias
           para mantener tu sesión; no incluimos seguimiento publicitario. Para
           solicitar acceso, corrección o eliminación de tus datos, escribe desde
           el correo de tu cuenta a hola@nexode.app.
         </p>
         <h2>Atribución</h2>
         <p>
-          Los datos geográficos pertenecen a{" "}
+          El catálogo de lugares, las rutas y la cartografía utilizan datos de{" "}
           <a href="https://www.openstreetmap.org/copyright">
             © OpenStreetMap contributors
           </a>

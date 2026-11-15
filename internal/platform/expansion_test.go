@@ -178,3 +178,55 @@ func TestCoverageOwnershipAndTilesAuthentication(t *testing.T) {
 		}
 	}
 }
+
+func TestCatalogPermissionsAndMCPUpgradeIsolation(t *testing.T) {
+	t.Setenv("MCP_KEY_ENCRYPTION_KEY", strings.Repeat("ab", 32))
+	p := databasePlatform(t)
+	u, cookie := signupTest(t, p)
+	w, normal := callHTTP(p, "POST", "/console/keys", `{"name":"Original","scopes":["search"]}`, cookie, "")
+	if w.Code != 201 {
+		t.Fatal(w.Code)
+	}
+	for _, path := range []string{"/v1/places?q=test", "/v1/places/details?id=osm:N:1", "/v1/places/export?q=test"} {
+		w, _ = callHTTP(p, "GET", path, "", nil, text(normal["key"]))
+		if w.Code != 403 {
+			t.Fatal(path, w.Code)
+		}
+	}
+	w, _ = callHTTP(p, "POST", "/console/keys", `{"name":"Browser places","kind":"browser","scopes":["places"],"allowedOrigins":["https://shop.example"]}`, cookie, "")
+	if w.Code != 400 {
+		t.Fatal(w.Code)
+	}
+	w, mcp := callHTTP(p, "POST", "/console/mcp/prepare", `{}`, cookie, "")
+	if w.Code != 200 {
+		t.Fatal(w.Code)
+	}
+	// Simulate an existing assistant connection without the newly introduced scope.
+	p.db.Exec("UPDATE api_keys SET scopes=array_remove(scopes,'places') WHERE token_hash=$1", digest(text(mcp["key"])))
+	if _, err := p.db.Exec(schema); err != nil {
+		t.Fatal(err)
+	}
+	var assistantHas, normalHas bool
+	if err := p.db.QueryRow("SELECT 'places'=ANY(scopes) FROM api_keys WHERE token_hash=$1", digest(text(mcp["key"]))).Scan(&assistantHas); err != nil {
+		t.Fatal(err)
+	}
+	p.db.QueryRow("SELECT 'places'=ANY(scopes) FROM api_keys WHERE token_hash=$1", digest(text(normal["key"]))).Scan(&normalHas)
+	if !assistantHas || normalHas {
+		t.Fatal("scope migration affected wrong keys", assistantHas, normalHas)
+	}
+	var used int
+	p.db.QueryRow("SELECT COALESCE(sum(used),0) FROM usage_buckets WHERE user_id=$1", u.ID).Scan(&used)
+	if used != 0 {
+		t.Fatal("permission rejection charged quota", used)
+	}
+	for _, path := range []string{"/v1/places", "/v1/places/details", "/v1/places/export", "/v1/places/area", "/v1/places/along-route"} {
+		if geoEndpoint(path) != "places" {
+			t.Fatal(path)
+		}
+	}
+	for _, path := range []string{"/v1/isochrones", "/v1/match", "/v1/routes/optimize"} {
+		if geoEndpoint(path) != "routing" {
+			t.Fatal(path)
+		}
+	}
+}

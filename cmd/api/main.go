@@ -59,6 +59,10 @@ func main() {
 		slog.Error("invalid tile configuration")
 		os.Exit(1)
 	}
+	if err := api.ConfigurePlaces(os.Getenv("PLACES_BASE_URL")); err != nil {
+		slog.Error("invalid places configuration", "error", err)
+		os.Exit(1)
+	}
 	geo := api.Handler()
 	site := web.Handler()
 	combined := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

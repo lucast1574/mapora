@@ -18,6 +18,8 @@ import { ResourceLinks } from "./public/PublicPage";
 import BrandArrival, { createBrandArrival } from "./BrandArrival";
 gsap.registerPlugin(ScrollTrigger);
 const samples = {
+  places: {title:"Descubre lo que está cerca.", description:"Busca negocios y servicios por categoría, radio o área. Consulta datos de contacto y horarios cuando estén disponibles en OpenStreetMap.", route:"GET /v1/places?category=amenity:pharmacy&lat=-12.12&lng=-77.03&radius=3000", result:{results:[{placeName:"Farmacia de ejemplo",category:"amenity:pharmacy",distanceMeters:320,source:"openstreetmap",verified:false}]}},
+  isochrones: {title:"Mide hasta dónde llegas.", description:"Áreas alcanzables en 5, 10 o 15 minutos. Ordena paradas y encuentra lugares durante tu ruta según su tiempo adicional de desvío, sin tráfico en vivo.", route:"POST /v1/isochrones", result:{profile:"walking",minutes:[5,10,15],coverage:"americas",traffic:"not_included"}},
   search: {
     title: "Encuentra una dirección.",
     description:
@@ -322,8 +324,7 @@ export default function Landing() {
               en tu código.
             </h1>
             <p>
-              Búsqueda mundial, ubicaciones y rutas por calles en América.
-              Conecta los datos a tu aplicación y muestra un mapa cuando lo necesites.
+              Lugares, direcciones y mapas del mundo. Calcula rutas, desvíos y áreas alcanzables en América, y conecta los datos a tu aplicación.
             </p>
             <div className="hero-actions">
               <a className="button" href={`${appURL}/signup`}>
@@ -381,9 +382,13 @@ export default function Landing() {
             </div>
           </div>
         </section>
+        <section className="route-discovery">
+          <div><h2>El trayecto también tiene lugares.</h2><p>Encuentra una gasolinera durante el viaje, compara farmacias por tiempo a pie o calcula el alcance de una tienda. Combina lugares y rutas con datos de Mapora.</p><a className="text-link" href="/documentacion#docs-lugares">Explorar lugares y recorridos <ArrowUpRight size={18}/></a></div>
+          <div className="discovery-diagram" aria-label="Ejemplo ilustrativo de una parada durante una ruta"><svg viewBox="0 0 440 210" role="img" aria-label="Una ruta conecta el origen, una parada y el destino"><path d="M35 150 C110 150 80 50 180 65 S280 170 405 50" fill="none" stroke="currentColor" strokeWidth="5"/><path d="M180 65 Q220 10 260 60 Q270 100 300 115" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5 7"/>{[[35,150],[260,60],[405,50]].map(([x,y])=><g key={x}><circle cx={x} cy={y} r="12" fill="var(--mint)" stroke="currentColor" strokeWidth="3"/><circle cx={x} cy={y} r="3" fill="currentColor"/></g>)}</svg><div><span>Origen</span><span>Parada en el camino</span><span>Destino</span></div><small>Esquema ilustrativo. Los desvíos se calculan por calles.</small></div>
+        </section>
         <section className="landing-resources">
           <h2>De la consulta a tu integración.</h2>
-          <p>Autocompletado, búsqueda por país y ciudad, lugares cercanos, lotes de direcciones y zonas de cobertura. Usa respuestas JSON, un buscador sin mapa o el selector visual de React.</p>
+          <p>Catálogo de lugares con fichas y CSV, búsqueda durante rutas, áreas alcanzables y optimización de paradas. También direcciones, lotes, zonas y ajuste de recorridos GPS. Integra con JSON, el SDK React o tu asistente mediante MCP.</p>
           <a className="text-link" href="/documentacion#docs-referencia">Consultar todos los endpoints <ArrowUpRight size={18} /></a>
           <ResourceLinks />
         </section>

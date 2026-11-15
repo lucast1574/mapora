@@ -88,7 +88,7 @@ func (s *API) discover(w http.ResponseWriter, r *http.Request, path string, quer
 	respond(w, body, cached, start)
 }
 
-var categories = map[string]string{"pharmacy": "amenity:pharmacy", "restaurant": "amenity:restaurant", "hospital": "amenity:hospital", "fuel": "amenity:fuel", "supermarket": "shop:supermarket", "hotel": "tourism:hotel", "bank": "amenity:bank", "parking": "amenity:parking", "cafe": "amenity:cafe"}
+var categories = map[string]string{"veterinary": "amenity:veterinary", "bakery": "shop:bakery", "school": "amenity:school", "clinic": "amenity:clinic", "dentist": "amenity:dentist", "atm": "amenity:atm", "fast_food": "amenity:fast_food", "convenience": "shop:convenience", "police": "amenity:police", "fire_station": "amenity:fire_station", "pharmacy": "amenity:pharmacy", "restaurant": "amenity:restaurant", "hospital": "amenity:hospital", "fuel": "amenity:fuel", "supermarket": "shop:supermarket", "hotel": "tourism:hotel", "bank": "amenity:bank", "parking": "amenity:parking", "cafe": "amenity:cafe"}
 
 func distanceMeters(lat1, lon1, lat2, lon2 float64) float64 {
 	rad := math.Pi / 180
@@ -123,8 +123,18 @@ func (s *API) nearby(w http.ResponseWriter, r *http.Request) {
 	query.Set("lon", strconv.FormatFloat(lng, 'f', 7, 64))
 	query.Set("radius", strconv.FormatFloat(radius/1000, 'f', 3, 64))
 	query.Set("osm_tag", tag)
+	sortBy := r.URL.Query().Get("sort")
+	if sortBy != "" && sortBy != "distance" && sortBy != "travel_time" {
+		fail(w, 400, "invalid_sort", "sort: distance o travel_time.")
+		return
+	}
+	costing, ok := profile(r.URL.Query().Get("profile"))
+	if !ok {
+		fail(w, 400, "invalid_profile", "Perfil inválido.")
+		return
+	}
 	start := time.Now()
-	body, cached, err := s.cache.get(r.Context(), "nearby:"+query.Encode(), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
+	body, cached, err := s.cache.get(r.Context(), "nearby:"+query.Encode()+"|"+sortBy+"|"+costing, 15*time.Minute, func(ctx context.Context) ([]byte, error) {
 		results, err := s.photon(ctx, "/reverse", query)
 		if err != nil {
 			return nil, err
@@ -138,7 +148,28 @@ func (s *API) nearby(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		sort.SliceStable(filtered, func(i, j int) bool { return *filtered[i].DistanceMeters < *filtered[j].DistanceMeters })
-		return json.Marshal(map[string]any{"results": filtered, "count": len(filtered), "radiusMeters": radius, "distanceType": "straight_line", "category": r.URL.Query().Get("category"), "attribution": attribution})
+		distanceType := "straight_line"
+		if sortBy == "travel_time" && len(filtered) > 0 {
+			points := []Point{}
+			for i := range filtered {
+				points = append(points, Point{&filtered[i].Latitude, &filtered[i].Longitude})
+			}
+			times, e := s.travelTimes(ctx, []Point{{&lat, &lng}}, points, costing)
+			if e != nil {
+				return nil, e
+			}
+			reachable := []Place{}
+			for i, p := range filtered {
+				if times[0][i] != nil {
+					p.DurationSeconds = times[0][i]
+					reachable = append(reachable, p)
+				}
+			}
+			filtered = reachable
+			sort.SliceStable(filtered, func(i, j int) bool { return *filtered[i].DurationSeconds < *filtered[j].DurationSeconds })
+			distanceType = "straight_line_with_travel_time"
+		}
+		return json.Marshal(map[string]any{"results": filtered, "count": len(filtered), "radiusMeters": radius, "distanceType": distanceType, "rankingScope": "returned_candidates", "traffic": "not_included", "category": r.URL.Query().Get("category"), "attribution": attribution})
 	})
 	if err != nil {
 		fail(w, 502, "search_unavailable", "No se pudieron obtener lugares cercanos.")

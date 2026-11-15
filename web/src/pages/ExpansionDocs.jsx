@@ -4,6 +4,15 @@ import { appURL } from "../client";
 export default function ExpansionDocs() {
   return (
     <>
+      <section className="docs-section" id="docs-lugares">
+        <h2>Un catálogo propio para decidir dónde ir</h2>
+        <p>Busca lugares por nombre, categoría, radio o polígono con <code>/v1/places</code>, consulta fichas, descarga páginas CSV y encuentra paradas durante una ruta. El catálogo se prepara desde OpenStreetMap y publica su versión en <code>dataset</code>. Su cobertura depende de la información de la fuente; no es un directorio exhaustivo de negocios.</p>
+        <p>Teléfono, web, correo, horario, cocina y accesibilidad aparecen solo cuando están registrados. No se incorporan reseñas, valoraciones ni fotos de Google. El horario conserva la sintaxis OSM y no confirma que el lugar esté abierto ahora. Los filtros de ciudad y país de este catálogo requieren etiquetas explícitas; usa centro o bbox para delimitar una zona.</p>
+        <p>El permiso <code>places</code> se usa desde backend. Las claves normales existentes no adquieren permisos nuevos; crea una clave con Catálogo de lugares. Las conexiones MCP activas se actualizan para incluir estas herramientas. Cada petición admitida consume una unidad, incluidas las páginas CSV y las operaciones que combinan motores.</p>
+        <h3>Viaja por tiempo, no solo por distancia</h3>
+        <p><code>/v1/nearby?sort=travel_time</code> ordena candidatos por tiempo de viaje. <code>/v1/isochrones</code> devuelve áreas alcanzables; <code>/v1/routes/optimize</code> ordena paradas manteniendo origen y destino. <code>/v1/match</code> ajusta observaciones GPS a la red vial, conservando los puntos originales. Rutas también devuelve una polyline codificada con precisión seis.</p>
+        <p>Las estimaciones no incluyen tráfico en vivo. El buscador durante una ruta limita candidatos y lo informa con <code>candidateSearchTruncated</code>; no promete encontrar todos los lugares. Las isócronas pueden ser MultiPolygon y no se convierten automáticamente en zonas guardadas.</p>
+      </section>
       <section className="docs-section" id="docs-guias-rutas">
         <h2>Rutas por calles en América</h2>
         <p>La búsqueda y la cartografía cubren el mundo. El motor de rutas y matrices cubre América: Sudamérica, Centroamérica, Caribe, México, Estados Unidos y Canadá, según las vías disponibles para el perfil. Europa queda fuera de la cobertura de rutas actual.</p>
@@ -83,7 +92,7 @@ const maps = new Mapora({ apiKey: API_KEY });
 const results = await maps.geocode({
   street: 'Avenida Larco', city: 'Lima', countrycodes: 'PE'
 });`}</pre>
-        <p>El cliente expone <code>search</code>, <code>autocomplete</code>, <code>geocode</code>, <code>reverse</code>, <code>nearby</code>, <code>resolve</code>, <code>batch</code>, <code>coverage</code>, <code>checkCoverage</code>, <code>routes</code>, <code>matrix</code> y <code>map</code>. Usa claves privadas solo en servidor; en navegador se aplican las restricciones de <code>mp_pub_</code>. Los errores HTTP incluyen <code>status</code>, <code>code</code> y <code>retryAfter</code>.</p>
+        <p>El cliente expone <code>search</code>, <code>autocomplete</code>, <code>geocode</code>, <code>reverse</code>, <code>nearby</code>, <code>resolve</code>, <code>batch</code>, <code>coverage</code>, <code>checkCoverage</code>, <code>routes</code>, <code>matrix</code> <code>map</code>, <code>places</code>, <code>place</code>, <code>placesInArea</code>, <code>placesAlongRoute</code>, <code>exportPlaces</code>, <code>isochrones</code>, <code>optimize</code> y <code>match</code>. Usa claves privadas solo en servidor; en navegador se aplican las restricciones de <code>mp_pub_</code>. Los errores HTTP incluyen <code>status</code>, <code>code</code> y <code>retryAfter</code>.</p>
       </section>
       <section className="docs-section" id="docs-cuotas">
         <h2>Consumo, cuotas y errores</h2>

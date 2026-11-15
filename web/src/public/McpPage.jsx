@@ -22,7 +22,7 @@ export function McpPromo() {
         <AssistantLinks />
         <p>
           Busca direcciones y lugares, convierte enlaces de Google Maps, calcula
-          rutas y crea mapas. Tu asistente puede consultar el contrato de la API
+          rutas, ordena paradas, consulta áreas alcanzables y crea mapas. Busca fichas de lugares OSM, exporta datos y encuentra paradas durante el trayecto. Tu asistente puede consultar el contrato de la API
           y tu consumo antes de integrar.
         </p>
         <a className="button" href={`${appURL}/app?connect=codex`}>
@@ -57,7 +57,7 @@ export default function McpPage() {
         <h1>Conecta Mapora a Claude Code y Codex.</h1>
         <p>
           Busca direcciones y lugares, convierte enlaces de Google Maps, calcula
-          rutas y crea mapas. Tu asistente puede consultar el contrato de la API
+          rutas, ordena paradas, consulta áreas alcanzables y crea mapas. Busca fichas de lugares OSM, exporta datos y encuentra paradas durante el trayecto. Tu asistente puede consultar el contrato de la API
           y tu consumo antes de integrar.
         </p>
         <a className="button" href={`${appURL}/app?connect=codex`}>
@@ -99,7 +99,7 @@ export default function McpPage() {
           </p>
           <p>
             Busca direcciones y lugares, convierte enlaces de Google Maps,
-            calcula rutas y crea mapas. Tu asistente puede consultar el contrato
+            calcula rutas, ordena paradas, consulta áreas alcanzables y crea mapas. Busca fichas de lugares OSM, exporta datos y encuentra paradas durante el trayecto. Tu asistente puede consultar el contrato
             de la API y tu consumo antes de integrar.
           </p>
           <p>

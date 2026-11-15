@@ -8,3 +8,5 @@
 /.taste-skill/
 /.interface-design/
 /sdk/dist/
+__pycache__/
+*.pyc

@@ -33,7 +33,11 @@ export default function Docs({ heading = "Documentación de Mapora" }) {
       if (operation.method === "POST" && (!body || typeof body !== "object" || Array.isArray(body)))
         throw new Error("El cuerpo debe ser un objeto JSON.");
       const query = operation.method === "GET" ? new URLSearchParams(input.replace(/^\?/, "")).toString() : "";
-      setResult(await api(operation.path + (query ? "?" + query : ""), operation.method, body, { "X-API-Key": key.trim() }));
+      if (operation.id === "places-export") {
+        const response=await fetch(operation.path+"?"+query,{headers:{"X-API-Key":key.trim()},credentials:"omit"});
+        if(!response.ok){const data=await response.json();throw new Error(data.error||"No se pudo exportar.");}
+        setResult({format:"csv",csv:await response.text(),hasMore:response.headers.get("X-Has-More"),nextOffset:response.headers.get("X-Next-Offset")});
+      } else setResult(await api(operation.path + (query ? "?" + query : ""), operation.method, body, { "X-API-Key": key.trim() }));
     } catch (err) {
       setError(err instanceof SyntaxError ? "El cuerpo no es JSON válido. Revisa comillas, comas y llaves." : err.message);
     } finally {
@@ -58,11 +62,11 @@ export default function Docs({ heading = "Documentación de Mapora" }) {
         <h2>Empieza con una petición</h2>
         <p>Base URL: <code>{apiBase}</code>. Crea una clave en API keys con los permisos que vayas a usar. Envía <code>X-API-Key</code> o <code>Authorization: Bearer TU_API_KEY</code>; nunca la clave en la URL.</p>
         <pre>{curlExample(operations[0])}</pre>
-        <p><strong>No necesitas mostrar un mapa.</strong> Todos los endpoints de consulta devuelven JSON. Puedes guardar los datos desde tu backend, mostrar solo un buscador o añadir un mapa cuando tu flujo lo requiera.</p>
+        <p><strong>No necesitas mostrar un mapa.</strong> Las consultas devuelven JSON; la exportación de lugares devuelve CSV. Puedes guardar los datos desde tu backend, mostrar solo un buscador o añadir un mapa cuando tu flujo lo requiera.</p>
         <h3>Claves de servidor y de navegador</h3>
         <p><code>mp_live_</code> es una clave privada para tu backend. <code>mp_pub_</code> es una clave visible para navegador y permite únicamente <code>search</code>, <code>reverse</code> y <code>nearby</code>, según los permisos elegidos. Registra de 1 a 10 orígenes HTTPS exactos, sin rutas ni comodines; HTTP se admite solo para localhost y loopback en desarrollo.</p>
         <p>La restricción de Origin limita el uso desde otros navegadores; no autentica servidores ni convierte la clave en un secreto. Para rutas, matrices, cobertura, lotes, resolución de enlaces y creación de mapas, llama desde tu backend con una clave privada. No incluyas secretos en React ni en un repositorio público.</p>
-        <p>Permisos disponibles: <code>search</code>, <code>reverse</code>, <code>resolve</code>, <code>maps</code>, <code>nearby</code>, <code>batch</code>, <code>coverage</code> y <code>routing</code>. Las claves existentes conservan sus permisos; crea una nueva si necesitas otras operaciones. La clave completa se muestra solo al crearla y puedes revocarla desde el panel.</p>
+        <p>Permisos disponibles: <code>search</code>, <code>reverse</code>, <code>resolve</code>, <code>maps</code>, <code>nearby</code>, <code>batch</code>, <code>coverage</code> <code>routing</code> y <code>places</code>. Las claves existentes conservan sus permisos; crea una nueva si necesitas otras operaciones. La clave completa se muestra solo al crearla y puedes revocarla desde el panel.</p>
       </section>
       <section className="docs-section" id="docs-referencia">
         <h2>Referencia de endpoints</h2>

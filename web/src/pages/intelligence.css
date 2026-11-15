@@ -1,0 +1,15 @@
+.intelligence-results { margin-top: 36px; }
+.intelligence-results h2 { font-size: 24px; letter-spacing: -.03em; }
+.intelligence-place { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+.intelligence-place h3 { margin: 0 0 6px; font-size: 17px; }
+.intelligence-place p { margin: 0 0 4px; font-size: 14px; color: var(--muted); }
+.intelligence-place small,.intelligence-stop small { color: var(--muted); }
+.intelligence-stop { display: grid; gap: 5px; }
+.intelligence-detail { margin-top: 24px; background: var(--raised); border-radius: 12px; padding: 28px; position: relative; }
+.intelligence-detail > button { position: absolute; right: 16px; top: 16px; }
+.intelligence-detail h2 { margin-right: 24px; }
+.intelligence-detail dl > div { display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.intelligence-detail dt { color: var(--muted); }
+.intelligence-detail dd { margin: 0; overflow-wrap: anywhere; }
+.intelligence-detail p { font-size: 13px; color: var(--muted); max-width: 75ch; }
+@media(max-width:600px) { .intelligence-place { align-items: flex-start; flex-direction: column; gap: 12px; }.intelligence-detail {padding:20px}.intelligence-detail dl > div {grid-template-columns:1fr;gap:4px} }

@@ -14,27 +14,28 @@ import (
 const attribution = "© OpenStreetMap contributors"
 
 type Place struct {
-	Match          *StreetMatch   `json:"match,omitempty"`
-	County         string         `json:"county,omitempty"`
-	Quality        AddressQuality `json:"quality"`
-	DistanceMeters *float64       `json:"distanceMeters,omitempty"`
-	ID             string         `json:"id,omitempty"`
-	PlaceName      string         `json:"placeName"`
-	Address        string         `json:"address"`
-	StreetAddress  string         `json:"streetAddress"`
-	Latitude       float64        `json:"latitude"`
-	Longitude      float64        `json:"longitude"`
-	Street         string         `json:"street,omitempty"`
-	HouseNumber    string         `json:"houseNumber,omitempty"`
-	District       string         `json:"district,omitempty"`
-	City           string         `json:"city,omitempty"`
-	State          string         `json:"state,omitempty"`
-	Country        string         `json:"country,omitempty"`
-	CountryCode    string         `json:"countryCode,omitempty"`
-	Postcode       string         `json:"postcode,omitempty"`
-	GoogleMapsLink string         `json:"googleMapsLink"`
-	Source         string         `json:"source"`
-	Attribution    string         `json:"attribution"`
+	Match           *StreetMatch   `json:"match,omitempty"`
+	County          string         `json:"county,omitempty"`
+	Quality         AddressQuality `json:"quality"`
+	DurationSeconds *float64       `json:"durationSeconds,omitempty"`
+	DistanceMeters  *float64       `json:"distanceMeters,omitempty"`
+	ID              string         `json:"id,omitempty"`
+	PlaceName       string         `json:"placeName"`
+	Address         string         `json:"address"`
+	StreetAddress   string         `json:"streetAddress"`
+	Latitude        float64        `json:"latitude"`
+	Longitude       float64        `json:"longitude"`
+	Street          string         `json:"street,omitempty"`
+	HouseNumber     string         `json:"houseNumber,omitempty"`
+	District        string         `json:"district,omitempty"`
+	City            string         `json:"city,omitempty"`
+	State           string         `json:"state,omitempty"`
+	Country         string         `json:"country,omitempty"`
+	CountryCode     string         `json:"countryCode,omitempty"`
+	Postcode        string         `json:"postcode,omitempty"`
+	GoogleMapsLink  string         `json:"googleMapsLink"`
+	Source          string         `json:"source"`
+	Attribution     string         `json:"attribution"`
 }
 
 type feature struct {

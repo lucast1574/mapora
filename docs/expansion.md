@@ -41,3 +41,31 @@ Las actualizaciones de datos son explícitas: descargar en staging, verificar ch
 Al combinar extractos regionales, comprobar que el PBF esté ordenado y no tenga múltiples versiones de un objeto. Un merge de instantáneas con fechas distintas puede conservar versiones duplicadas: normalizar con `osmium time-filter` sin fecha y comprobar `osmium fileinfo -e -j` antes de construir. Los datos regionales corregidos se preparan en `/var/lib/mapora-next/routing-v2`, separados del primer intento descartado. El volumen de producción es de solo lectura y el proceso arranca directamente con `valhalla_service`, sin ejecutar el constructor.
 
 Para toda América: unir el extracto fechado y verificado de Norteamérica con el PBF normalizado de Latinoamérica en un área nueva, verificar orden y versiones, construir y probar EE. UU./Canadá además de los trayectos existentes. Reutilizar la base administrativa preparada y conservar exactamente los mismos endpoints. La cobertura se declara como `americas` solo después de validar el motor. No sustituirlo por una demo pública ni anunciar países no cargados.
+
+## Catálogo propio y recorridos avanzados
+
+API 4.0 añade `/v1/places`, `/v1/places/details`, `/v1/places/export`,
+`/v1/places/area` y `/v1/places/along-route`, con permiso `places` de servidor.
+Catálogo limitado a América. Fuente, preparación y límites del índice: `infra/places/README.md`. Exportación
+hasta1000 filas por página; consulta hasta50. Paginación por offset/nextOffset,
+ligada a la versión dataset.builtAt. Fichas opcionales: teléfono, web, correo,
+horario OSM sin evaluar, cocina y accesibilidad. No hay reseñas/fotos de Google.
+
+La consulta por polígono conserva las reglas de coverage y examina hasta1000
+candidatos por página; puede devolver una página vacía con hasMore=true. El
+corredor admite rutas de dos puntos/hasta100km, ancho50–5000m y hasta20 candidatos
+con tiempos de desvío. Informa candidateSearchTruncated; no es búsqueda exhaustiva.
+
+`/v1/nearby?sort=travel_time` ordena los candidatos Photon por tiempo de matriz.
+`POST /v1/isochrones`: center, perfil y1–4 minutos distintos entre1–120; devuelve
+FeatureCollection Polygon/MultiPolygon. `POST /v1/routes/optimize`:2–10 puntos,
+con extremos fijos y waypointOrder referido a los índices originales. No es
+optimización de flotas/ventanas/cargas. `POST /v1/match`:2–2000 observaciones,
+hasta200km acumulados, geometría ajustada y observaciones originales. Permiso
+routing en las tres operaciones, América, sin tráfico en vivo. Las rutas añaden
+polyline y polylinePrecision:6 conservando GeoJSON y contratos anteriores.
+
+El cliente JS, panel, OpenAPI y MCP comparten las operaciones. La migración
+amplía únicamente claves activas asociadas a mcp_connections con places; claves
+normales y claves de navegador conservan sus permisos. MCP versión2.0; catálogo
+regenerado con scripts/generate-mcp-tools.py después de editar OpenAPI.

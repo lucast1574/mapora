@@ -24,12 +24,14 @@ import Profile from "./pages/Profile";
 import Docs from "./pages/Docs";
 import Admin from "./pages/Admin";
 const Explore = lazy(() => import("./pages/Explore"));
+const Intelligence = lazy(() => import("./pages/Intelligence"));
 const Batch = lazy(() => import("./pages/Batch"));
 import { siteURL } from "./client";
 const links = [
   ["", "Resumen", LayoutDashboard],
   ["keys", "API keys", KeyRound],
   ["explore", "Explorar", Compass],
+  ["intelligence", "Lugares y recorridos", Compass],
   ["batch", "Importar direcciones", FileSpreadsheet],
   ["usage", "Consumo", ChartNoAxesCombined],
   ["billing", "Plan y facturación", CreditCard],
@@ -138,6 +140,8 @@ export default function Dashboard() {
             {page === "explore" ? (
               <Explore />
 
+            ) : page === "intelligence" ? (
+              <Intelligence />
             ) : page === "batch" ? (
               <Batch />
             ) : page === "keys" ? (

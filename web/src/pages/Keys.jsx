@@ -209,7 +209,8 @@ export default function Keys() {
                 ["maps", "Crear mapas interactivos"],
                 ["nearby", "Lugares cercanos"],
                 ["coverage", "Comprobar cobertura"],
-                ["routing", "Rutas y matrices"],
+                ["routing", "Rutas, matrices, isócronas y recorridos GPS"],
+                ["places", "Catálogo de lugares y exportaciones"],
                 ["batch", "Procesar lotes"],
               ]
                 .filter(

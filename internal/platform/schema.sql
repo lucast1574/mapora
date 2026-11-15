@@ -82,3 +82,8 @@ CREATE TABLE IF NOT EXISTS mcp_connections (
  key_id text NOT NULL UNIQUE REFERENCES api_keys(id) ON DELETE CASCADE,
  encrypted_secret text NOT NULL
 );
+
+-- Extend only dedicated assistant connections; ordinary user keys keep explicit scopes.
+UPDATE api_keys k SET scopes=array_append(k.scopes,'places')
+WHERE k.revoked_at IS NULL AND NOT ('places'=ANY(k.scopes))
+AND EXISTS (SELECT 1 FROM mcp_connections c WHERE c.key_id=k.id);

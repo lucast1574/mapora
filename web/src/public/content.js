@@ -9,12 +9,12 @@ export const pages = {
   "/": {
     title: "Mapora | API de mapas, direcciones y geocodificación",
     description:
-      "Integra búsqueda mundial, autocompletado, rutas por calles en América, matrices, zonas y mapas. API keys y planes por peticiones, con un plan gratuito.",
+      "Busca lugares, calcula rutas y desvíos en América, ordena paradas y visualiza áreas alcanzables. Catálogo OSM, mapas, API y MCP con plan gratuito.",
   },
   "/documentacion": {
     title: "Documentación de la API de mapas | Mapora",
     description:
-      "Referencia de Mapora: direcciones, filtros por país y ciudad, lotes, cobertura, rutas, matrices, mapas y SDK. Ejemplos, claves, cuotas y probador de API.",
+      "Referencia de Mapora: catálogo de lugares, CSV, rutas, isócronas, optimización de paradas, GPS, matrices, mapas y SDK. Ejemplos, permisos y probador de API.",
     heading: "Documentación de la API de Mapora",
   },
   "/api-busqueda-direcciones": {

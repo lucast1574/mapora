@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  catalog:
+    image: 192.168.15.8:5005/dokploy/mapora-places:1.0.1
+    volumes:
+      - /var/lib/mapora-next/places:/data:ro
+    networks:
+      dokploy-network:
+        aliases: [mapora-places_catalog]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/status',timeout=5)"]
+      interval: 30s
+      timeout: 6s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.hostname == rangelserver1]
+      resources:
+        limits: {cpus: "2", memory: 2G}
+networks:
+  dokploy-network: {external: true}

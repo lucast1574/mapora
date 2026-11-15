@@ -47,3 +47,20 @@ by the bundler; Vite consumer installation/build is part of validation.
 
 The archive is distributed directly by Mapora; it has not been published to the
 public npm registry. React 19 is a peer dependency.
+
+## Routing and the independent place catalog
+
+The downloadable JavaScript client now also exposes `isochrones(center, minutes,
+profile)`, `optimize(locations, profile)`, `match(locations, profile)`,
+`places(params)`, `place(id)`, `placesInArea(params)`, `placesAlongRoute(params)`
+and `exportPlaces(params)` (returns `{csv, hasMore, nextOffset}`). These are
+server operations with a private API key; do not embed it in the React components.
+The existing React 2.1.0 components remain compatible. Route responses add an
+encoded `polyline` with `polylinePrecision: 6` alongside their GeoJSON geometry.
+
+Use `places` permission for catalog operations and `routing` for isochrones,
+optimization and GPS matching. Catalog contact/hours fields depend on OSM tags;
+raw openingHours is not an evaluated opening state. Country/city filters require
+explicit OSM address tags. Follow pagination and dataset version. Corridor
+results report candidate truncation and estimate added travel time without live
+traffic or service time. Preserve attribution and original GPS observations.

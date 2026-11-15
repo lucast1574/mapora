@@ -14,13 +14,15 @@ func geoEndpoint(path string) string {
 	switch path {
 	case "/v1/autocomplete", "/v1/geocode":
 		return "search"
+	case "/v1/places", "/v1/places/details", "/v1/places/export", "/v1/places/area", "/v1/places/along-route":
+		return "places"
 	case "/v1/nearby":
 		return "nearby"
 	case "/v1/batch":
 		return "batch"
 	case "/v1/coverage", "/v1/coverage/check":
 		return "coverage"
-	case "/v1/routes", "/v1/matrix":
+	case "/v1/routes", "/v1/matrix", "/v1/routes/optimize", "/v1/isochrones", "/v1/match":
 		return "routing"
 	case "/v1/maps":
 		return "maps"

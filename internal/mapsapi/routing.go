@@ -192,9 +192,10 @@ func (s *API) routes(w http.ResponseWriter, r *http.Request) {
 	}
 	start := time.Now()
 	key, _ := json.Marshal(in)
+	key = append(key, []byte(r.URL.Path)...)
 
 	body, cached, err := s.cache.get(r.Context(), "route:"+string(key), 15*time.Minute, func(ctx context.Context) ([]byte, error) {
-		raw, status, err := s.router(ctx, "/route", map[string]any{"locations": routingPoints(in.Locations), "costing": costing, "directions_options": map[string]any{"units": "kilometers", "language": "es-ES"}, "shape_format": "polyline6"})
+		raw, status, err := s.router(ctx, routeAction(r.URL.Path), map[string]any{"locations": routingPoints(in.Locations), "costing": costing, "directions_options": map[string]any{"units": "kilometers", "language": "es-ES"}, "shape_format": "polyline6"})
 
 		if err != nil {
 			return nil, routingFailure{status}
@@ -205,8 +206,12 @@ func (s *API) routes(w http.ResponseWriter, r *http.Request) {
 					Length float64 `json:"length"`
 					Time   float64 `json:"time"`
 				} `json:"summary"`
-				Locations []json.RawMessage `json:"locations"`
-				Legs      []struct {
+				Locations []struct {
+					Lat           float64 `json:"lat"`
+					Lon           float64 `json:"lon"`
+					OriginalIndex int     `json:"original_index"`
+				} `json:"locations"`
+				Legs []struct {
 					Shape     string `json:"shape"`
 					Maneuvers []struct {
 						Instruction string   `json:"instruction"`
@@ -246,7 +251,11 @@ func (s *API) routes(w http.ResponseWriter, r *http.Request) {
 				steps = append(steps, map[string]any{"instruction": step.Instruction, "distanceMeters": math.Round(step.Length * 1000), "durationSeconds": step.Time, "type": step.Type, "streetNames": step.StreetNames, "beginShapeIndex": step.Begin + offset, "endShapeIndex": step.End + offset, "legIndex": legIndex})
 			}
 		}
-		return json.Marshal(map[string]any{"profile": in.Profile, "locations": in.Locations, "snappedLocations": snapped, "distanceMeters": math.Round(out.Trip.Summary.Length * 1000), "durationSeconds": out.Trip.Summary.Time, "geometry": map[string]any{"type": "LineString", "coordinates": coords}, "steps": steps, "traffic": "not_included", "coverage": s.routingCoverage, "attribution": attribution})
+		order := []int{}
+		for _, loc := range out.Trip.Locations {
+			order = append(order, loc.OriginalIndex)
+		}
+		return json.Marshal(map[string]any{"waypointOrder": order, "optimized": r.URL.Path == "/v1/routes/optimize", "polyline": encodeShape(coords, 6), "polylinePrecision": 6, "profile": in.Profile, "locations": in.Locations, "snappedLocations": snapped, "distanceMeters": math.Round(out.Trip.Summary.Length * 1000), "durationSeconds": out.Trip.Summary.Time, "geometry": map[string]any{"type": "LineString", "coordinates": coords}, "steps": steps, "traffic": "not_included", "coverage": s.routingCoverage, "attribution": attribution})
 	})
 	if err != nil {
 		status := 502
@@ -319,3 +328,10 @@ func (s *API) matrix(w http.ResponseWriter, r *http.Request) {
 type routingFailure struct{ status int }
 
 func (e routingFailure) Error() string { return fmt.Sprintf("routing failed: %d", e.status) }
+
+func routeAction(path string) string {
+	if path == "/v1/routes/optimize" {
+		return "/optimized_route"
+	}
+	return "/route"
+}
